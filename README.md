@@ -25,8 +25,22 @@
 * Code Style wird eingehalten
 * Code ist aufgeräumt
 ## Codestyle
-* 
+### Code
+* Tabs statt Spaces
+* Align when multiline
+* Align 'throws' to method start when multiline
+### JavaDoc
+* Align parameter descriptions
+* Align thrown exception descriptions 
+* Blank line after description 
+* Blank line after parameter description 
+* Blank line after return tag 
+* Wrap at right margin 
+* Keep empty lines 
+* Preserve line feeds
+* Parameter description on new line
 ## Fazit 
 ### Positiv 
 *
 ### Negativ
+*

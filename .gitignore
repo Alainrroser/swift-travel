@@ -1,5 +1,9 @@
-*.xml
-/.idea/
+# XML Files which don't get ignored
+/.idea/runConfigurations.xml
+/.idea/misc.xml
+/.idea/compiler.xml
+/.idea/.name
+/.idea/shelf/
 
 # Built application files
 *.apk

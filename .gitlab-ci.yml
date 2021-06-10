@@ -1,0 +1,2 @@
+include:
+  - template: Android.gitlab-ci.yml

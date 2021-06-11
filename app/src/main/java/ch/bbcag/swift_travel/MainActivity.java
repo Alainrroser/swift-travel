@@ -35,9 +35,9 @@ public class MainActivity extends AppCompatActivity {
 
         List<Trip> trips = TripDao.getAll();
         adapter = new Three_line_list(this, trips);
+        progressBar.setVisibility(View.VISIBLE);
         addTripsToClickableList();
 
-        progressBar.setVisibility(View.VISIBLE);
         onFloatingActionButtonClick();
     }
 

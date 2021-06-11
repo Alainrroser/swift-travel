@@ -27,6 +27,12 @@ public class Trip {
         this.duration = duration;
     }
 
+    public Trip(String name, String description, Uri imageURI){
+        this.name = name;
+        this.description = description;
+        this.imageURI = imageURI;
+    }
+
     public int getId() {
         return id;
     }

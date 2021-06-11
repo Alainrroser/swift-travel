@@ -1,5 +1,7 @@
 package ch.bbcag.swift_travel.model;
 
+import android.net.Uri;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -10,7 +12,8 @@ public class Trip {
     private String origin;
     private String destination;
     private String duration;
-    private String pictureUrl;
+    private String description;
+    private Uri imageURI;
     private List<Country> countries = new ArrayList<>();
 
     public Trip() {
@@ -62,5 +65,29 @@ public class Trip {
 
     public void setCountries(List<Country> countries) {
         this.countries = countries;
+    }
+
+    public String getOrigin() {
+        return origin;
+    }
+
+    public void setOrigin(String origin) {
+        this.origin = origin;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public Uri getImageURI() {
+        return imageURI;
+    }
+
+    public void setImageURI(Uri imageURI) {
+        this.imageURI = imageURI;
     }
 }

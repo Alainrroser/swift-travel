@@ -1,4 +1,11 @@
 <resources>
     <string name="app_name">Swift-Travel</string>
     <string name="travel_title">Trips</string>
+    <string name="create_trip_title">Create Trip</string>
+    <string name="trip_name_hint">Name</string>
+    <string name="trip_name_error">You have to enter a name</string>
+    <string name="trip_description_hint">Description</string>
+    <string name="trip_image_place_holder_description">Place Holder image for a trip</string>
+    <string name="trip_create_button_text">Create</string>
+    <string name="add_trip">Add Trip</string>
 </resources>

@@ -4,28 +4,23 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <ProgressBar
-        android:id="@+id/loading_trips_progress"
+    <include
+        layout="@layout/progress_bar"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_gravity="center"
-        android:progressTint="#FFFFFF"
-        android:visibility="invisible"
-        app:layout_constraintTop_toBottomOf="@+id/title" />
+        android:layout_height="match_parent" />
 
     <ImageView
         android:id="@+id/imageScene"
         android:layout_width="0dp"
         android:layout_height="0dp"
+        android:contentDescription="@string/start_image_description"
         android:scaleType="centerCrop"
         android:visibility="visible"
         app:layout_constraintDimensionRatio="21:9"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/travel_picture"
-
-        />
+        app:srcCompat="@drawable/travel_picture" />
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guideline"
@@ -63,10 +58,9 @@
         android:layout_height="1dp"
         android:background="?android:attr/listDivider"
         android:visibility="visible"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintBottom_toTopOf="@id/trips"
-        />
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
 
     <ListView
         android:id="@+id/trips"
@@ -78,9 +72,9 @@
         android:divider="@android:drawable/divider_horizontal_dark"
         android:dividerHeight="1dip"
         app:layout_constraintBottom_toBottomOf="@+id/title"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/title"
-        app:layout_constraintEnd_toEndOf="parent"/>
+        app:layout_constraintTop_toBottomOf="@+id/title" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/floating_action_button"

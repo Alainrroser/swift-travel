@@ -9,4 +9,8 @@
     <string name="trip_image_place_holder_description">Platzhalterbild für eine Reise</string>
     <string name="trip_create_button_text">Erstellen</string>
     <string name="add_trip">Reise hinzufügen</string>
+    <string name="search_title">Suche</string>
+    <string name="search_hint">Suche</string>
+    <string name="error_close">Ok</string>
+    <string name="start_image_description">Platzhalterbild für den Start</string>
 </resources>

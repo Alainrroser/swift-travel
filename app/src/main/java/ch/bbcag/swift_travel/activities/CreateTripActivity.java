@@ -1,6 +1,4 @@
-package ch.bbcag.swift_travel;
-
-import androidx.annotation.Nullable;
+package ch.bbcag.swift_travel.activities;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -10,17 +8,19 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
 
+import androidx.annotation.Nullable;
+
 import com.github.dhaval2404.imagepicker.ImagePicker;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
 
 import java.util.Objects;
 
-import ch.bbcag.swift_travel.activities.MainActivity;
-import ch.bbcag.swift_travel.activities.UpButtonActivity;
+import ch.bbcag.swift_travel.Const;
+import ch.bbcag.swift_travel.R;
 import ch.bbcag.swift_travel.model.Trip;
 
-public class CreateTrip extends UpButtonActivity {
+public class CreateTripActivity extends UpButtonActivity {
 	private Trip trip = new Trip();
 
 	private TextInputLayout nameLayout;
@@ -41,12 +41,12 @@ public class CreateTrip extends UpButtonActivity {
 	protected void onStart() {
 		super.onStart();
 		getProgressBar().setVisibility(View.GONE);
-		nameLayout = findViewById(R.id.tripNameLayout);
-		descriptionLayout = findViewById(R.id.tripDescriptionLayout);
-		nameEdit = findViewById(R.id.tripNameEdit);
-		descriptionEdit = findViewById(R.id.tripDescriptionEdit);
+		nameLayout = findViewById(R.id.trip_name_layout);
+		descriptionLayout = findViewById(R.id.trip_description_layout);
+		nameEdit = findViewById(R.id.trip_name_edit);
+		descriptionEdit = findViewById(R.id.trip_description_edit);
 		create = findViewById(R.id.create);
-		chooseImage = findViewById(R.id.placeHolderImage);
+		chooseImage = findViewById(R.id.place_holder_image);
 
 		onCreateClick();
 		onChooseImageClick();
@@ -65,7 +65,6 @@ public class CreateTrip extends UpButtonActivity {
 		super.onActivityResult(requestCode, resultCode, data);
 		if (resultCode == Activity.RESULT_OK && data != null) {
 			Uri imageURI = data.getData();
-			System.out.println(imageURI.toString());
 			trip.setImageURI(imageURI);
 			chooseImage.setImageURI(imageURI);
 		}

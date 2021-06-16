@@ -20,66 +20,97 @@ import ch.bbcag.swift_travel.model.Country;
 import ch.bbcag.swift_travel.model.Trip;
 
 public class TripDetailsActivity extends UpButtonActivity {
-    private FloatingActionButton floatingActionButton;
-    private CountryAdapter adapter;
+	private FloatingActionButton floatingActionButton;
+	private CountryAdapter adapter;
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_trip_details);
+	private String tripName;
 
-        Intent intent = getIntent();
-        String name = intent.getStringExtra(Const.TRIP_NAME);
-        setTitle(name);
-    }
+	@Override
+	protected void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+		setContentView(R.layout.activity_trip_details);
 
-    @Override
-    protected void onStart() {
-        super.onStart();
-        getProgressBar().setVisibility(View.GONE);
-        Intent intent = getIntent();
-        List<Trip> trips = TripDao.getAll();
-        Trip selected = new Trip();
-        for (Trip trip : trips) {
-            if (trip.getName().equals(intent.getStringExtra(Const.TRIP_NAME))) {
-                selected = trip;
-            }
-        }
+		Intent intent = getIntent();
+		tripName = intent.getStringExtra(Const.TRIP_NAME);
+		setTitle(tripName);
 
-        TextView titleView = findViewById(R.id.tripTitle);
-        titleView.setText(selected.getName());
+		floatingActionButton = findViewById(R.id.floating_action_button_countries);
+	}
 
-        TextView descriptionView = findViewById(R.id.tripDescription);
-        if (selected.getDescription() == null) {
-        	//TODO
-            descriptionView.setText(R.string.add_description);
-        } else {
-            descriptionView.setText(selected.getDescription());
-        }
-        descriptionView.setMovementMethod(new ScrollingMovementMethod());
-        List<Country> countries = selected.getCountries();
-        adapter = new CountryAdapter(this, countries);
-        addTripsToClickableList();
-//		onFloatingActionButtonClick();
-    }
+	@Override
+	protected void onStart() {
+		super.onStart();
+		getProgressBar().setVisibility(View.GONE);
 
-    public void addTripsToClickableList() {
-        ListView listView = findViewById(R.id.countries);
-        listView.setAdapter(adapter);
+		Intent intent = getIntent();
+		Trip selected = new Trip();
+		if(intent.getStringExtra(Const.TRIP_DESCRIPTION) != null) {
+			selected.setDescription(intent.getStringExtra(Const.TRIP_DESCRIPTION));
+		}
+		List<Trip> trips = TripDao.getAll();
+		for (Trip trip : trips) {
+			if (trip.getName().equals(intent.getStringExtra(Const.TRIP_NAME))) {
+				selected = trip;
+			}
+		}
 
-        getProgressBar().setVisibility(View.GONE);
+		TextView titleView = findViewById(R.id.trip_title);
+		titleView.setText(selected.getName());
 
-        AdapterView.OnItemClickListener mListClickedHandler = (parent, v, position, id) -> {
-            Intent intent = new Intent(getApplicationContext(), CityDetailsActivity.class);
-            Country selected = (Country) parent.getItemAtPosition(position);
-            intent.putExtra("countryName", selected.getName());
-            startActivity(intent);
-        };
+		TextView descriptionView = findViewById(R.id.trip_description);
+		if (selected.getDescription() == null) {
+			//TODO
+			descriptionView.setText(R.string.add_description);
+		} else {
+			descriptionView.setText(selected.getDescription());
+		}
+		descriptionView.setMovementMethod(new ScrollingMovementMethod());
 
-        listView.setOnItemClickListener(mListClickedHandler);
-    }
+		List<Country> countries = selected.getCountries();
+		adapter = new CountryAdapter(this, countries);
+		createCountryFromIntent();
+		addTripsToClickableList();
+		onFloatingActionButtonClick();
+	}
 
-//	private void onFloatingActionButtonClick() {
-//		floatingActionButton.setOnClickListener(v -> startActivity(new Intent(getApplicationContext(), CreateTrip.class)));
-//	}
+	/**
+	 * Creates a trip from the information in the intent if they aren't null.
+	 */
+	private void createCountryFromIntent() {
+		Intent intent = getIntent();
+		Country country = new Country();
+		addTripInformation(intent, country);
+	}
+
+	private void addTripInformation(Intent intent, Country country) {
+		if (intent.getStringExtra(Const.COUNTRY_NAME) != null) {
+			country.setName(intent.getStringExtra(Const.COUNTRY_NAME));
+			adapter.add(country);
+		}
+	}
+
+	public void addTripsToClickableList() {
+		ListView listView = findViewById(R.id.countries);
+		listView.setAdapter(adapter);
+
+		getProgressBar().setVisibility(View.GONE);
+
+		AdapterView.OnItemClickListener mListClickedHandler = (parent, v, position, id) -> {
+			Intent intent = new Intent(getApplicationContext(), CityDetailsActivity.class);
+			Country selected = (Country) parent.getItemAtPosition(position);
+			intent.putExtra(Const.COUNTRY_NAME, selected.getName());
+			startActivity(intent);
+		};
+
+		listView.setOnItemClickListener(mListClickedHandler);
+	}
+
+	private void onFloatingActionButtonClick() {
+		floatingActionButton.setOnClickListener(v -> {
+			Intent intent = new Intent(getApplicationContext(), ChooseActivity.class);
+			intent.putExtra(Const.NAME, Const.COUNTRY);
+			intent.putExtra(Const.TRIP_NAME, tripName);
+			startActivity(intent);
+		});
+	}
 }

@@ -20,7 +20,7 @@ public class BaseActivity extends AppCompatActivity {
 	@Override
 	protected void onStart() {
 		super.onStart();
-		progressBar = findViewById(R.id.loading_progress);
+		progressBar = findViewById(R.id.progress_bar);
 		progressBar.setVisibility(View.VISIBLE);
 	}
 

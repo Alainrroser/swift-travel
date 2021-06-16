@@ -1,6 +1,7 @@
 package ch.bbcag.swift_travel.activities;
 
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -17,7 +18,6 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import java.util.List;
 
 import ch.bbcag.swift_travel.Const;
-import ch.bbcag.swift_travel.CreateTrip;
 import ch.bbcag.swift_travel.R;
 import ch.bbcag.swift_travel.adapter.TripAdapter;
 import ch.bbcag.swift_travel.dal.TripDao;
@@ -36,7 +36,7 @@ public class MainActivity extends BaseActivity implements SearchView.OnQueryText
 		setContentView(R.layout.activity_main);
 		setTitle(getString(R.string.app_name));
 
-		floatingActionButton = findViewById(R.id.floating_action_button);
+		floatingActionButton = findViewById(R.id.floatingActionButtonTrips);
 	}
 
 	@Override
@@ -45,6 +45,7 @@ public class MainActivity extends BaseActivity implements SearchView.OnQueryText
 		List<Trip> trips = TripDao.getAll();
 		adapter = new TripAdapter(this, trips);
 		addTripsToClickableList();
+		createTripFromIntent();
 		onFloatingActionButtonClick();
 	}
 
@@ -55,7 +56,7 @@ public class MainActivity extends BaseActivity implements SearchView.OnQueryText
 
 		searchItem = menu.findItem(R.id.search);
 		searchView = (SearchView) searchItem.getActionView();
-		searchView.setQueryHint(getString(R.string.search_hint));
+		searchView.setQueryHint(getString(R.string.search));
 		searchView.setIconified(false);
 		searchView.setOnQueryTextListener(this);
 		searchView.setOnCloseListener(this);
@@ -101,6 +102,36 @@ public class MainActivity extends BaseActivity implements SearchView.OnQueryText
 		return false;
 	}
 
+	/**
+	 * Creates a trip from the information in the intent if they aren't null.
+	 */
+	private void createTripFromIntent() {
+		Intent intent = getIntent();
+		Trip trip = new Trip();
+		addTripInformation(intent, trip);
+	}
+
+	private void addTripInformation(Intent intent, Trip trip) {
+		if (intent.getStringExtra(Const.TRIP_NAME) != null) {
+			trip.setName(intent.getStringExtra(Const.TRIP_NAME));
+			addDescription(intent, trip);
+			addImageURI(intent, trip);
+			adapter.add(trip);
+		}
+	}
+
+	private void addDescription(Intent intent, Trip trip) {
+		if (intent.getStringExtra(Const.TRIP_DESCRIPTION) != null) {
+			trip.setDescription(intent.getStringExtra(Const.TRIP_DESCRIPTION));
+		}
+	}
+
+	private void addImageURI(Intent intent, Trip trip) {
+		if (intent.getStringExtra(Const.TRIP_IMAGE_URI) != null) {
+			trip.setImageURI(Uri.parse(intent.getStringExtra(Const.TRIP_IMAGE_URI)));
+		}
+	}
+
 	public void addTripsToClickableList() {
 		ListView listView = findViewById(R.id.trips);
 		listView.setAdapter(adapter);
@@ -118,6 +149,6 @@ public class MainActivity extends BaseActivity implements SearchView.OnQueryText
 	}
 
 	private void onFloatingActionButtonClick() {
-		floatingActionButton.setOnClickListener(v -> startActivity(new Intent(getApplicationContext(), CreateTrip.class)));
+		floatingActionButton.setOnClickListener(v -> startActivity(new Intent(getApplicationContext(), CreateTripActivity.class)));
 	}
 }

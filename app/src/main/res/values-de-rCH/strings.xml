@@ -1,19 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">Swift-Travel</string>
-    <string name="travel_title">Reisen</string>
+
+    <string name="trips_title">Reisen</string>
     <string name="create_trip_title">Reise erstellen</string>
+    <string name="trip_name">Trip name</string>
+    <string name="trip_destination">Destination</string>
+    <string name="trip_duration">Duration</string>
     <string name="trip_name_hint">Name</string>
     <string name="trip_name_error">Du musst einen Namen eingeben</string>
     <string name="trip_description_hint">Beschreibung</string>
-    <string name="trip_image_place_holder_description">Platzhalterbild für eine Reise</string>
     <string name="trip_create_button_text">Erstellen</string>
     <string name="add_trip">Reise hinzufügen</string>
-    <string name="search_title">Suche</string>
-    <string name="search_hint">Suche</string>
+
+    <string name="search">Suche</string>
     <string name="error_close">Ok</string>
-    <string name="start_image_description">Platzhalterbild für den Start</string>
+    <string name="place_holder_image">Platzhalterbild</string>
+
     <string name="countries_title">Länder</string>
     <string name="add_country">Land hinzufügen</string>
+    <string name="add_countries_to_list_error_title">Länder auflisten</string>
+    <string name="add_countries_to_list_error_text">Beim Auflisten der Länder ist ein Fehler aufgetreten, versuche es später erneut.</string>
     <string name="add_description">Beschreibung hinzufügen</string>
 </resources>

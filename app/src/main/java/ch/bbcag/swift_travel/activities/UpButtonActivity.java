@@ -17,16 +17,16 @@ public class UpButtonActivity extends BaseActivity {
 	@Override
 	public boolean onOptionsItemSelected(@NonNull MenuItem item) {
 		int itemId = item.getItemId();
-		if(itemId == android.R.id.home) {
+		if (itemId == android.R.id.home) {
 			onBackPressed();
 			return true;
 		}
 		return super.onOptionsItemSelected(item);
 	}
 
-	private void setActionBar(){
+	private void setActionBar() {
 		ActionBar actionBar = getSupportActionBar();
-		if(actionBar != null) {
+		if (actionBar != null) {
 			getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 		}
 	}

@@ -17,7 +17,7 @@
 ## Testing
 *
 ## Daily Scrum
-* Das Daily Scrum wird jeweils um ..:.. gehalten.
+* Das Daily Scrum wird jeweils um 08:15 gehalten.
 ## Definition of Done
 * Die Userstory ist angemessen dokumentiert
 * Testprotokolle vorhanden und ausgefüllt

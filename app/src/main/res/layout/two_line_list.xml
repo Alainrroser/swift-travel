@@ -11,34 +11,35 @@
         android:layout_height="40dp"
         android:layout_marginStart="16dp"
         android:layout_marginTop="16dp"
+        android:contentDescription="@string/place_holder_image"
         android:src="@drawable/placeholder_trip"
-        app:layout_constraintBottom_toBottomOf="@+id/tvDuration"
+        app:layout_constraintBottom_toBottomOf="@+id/duration"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
-        android:id="@+id/tvCountry"
+        android:id="@+id/country"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="72dp"
         android:layout_marginTop="16dp"
-        android:textSize="14sp"
-        android:textColor="@color/black"
-        android:textStyle="bold"
         android:text="@string/countries_title"
         android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+        android:textColor="@color/black"
+        android:textSize="14sp"
+        android:textStyle="bold"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
-        android:id="@+id/tvDuration"
+        android:id="@+id/duration"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textSize="14sp"
-        android:textColor="@color/black"
         android:text="@string/trip_duration"
-        app:layout_constraintStart_toStartOf="@+id/tvCountry"
-        app:layout_constraintTop_toBottomOf="@+id/tvCountry" />
+        android:textColor="@color/black"
+        android:textSize="14sp"
+        app:layout_constraintStart_toStartOf="@+id/country"
+        app:layout_constraintTop_toBottomOf="@+id/country" />
 
     <View
         android:id="@+id/divider"
@@ -46,23 +47,22 @@
         android:layout_height="1dp"
         android:background="?android:attr/listDivider"
         android:visibility="visible"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent" />
+        app:layout_constraintStart_toStartOf="parent" />
 
     <androidx.constraintlayout.widget.Guideline
-        android:id="@+id/guideline5"
+        android:id="@+id/guideline_left_two_line_list"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="vertical"
         app:layout_constraintGuide_begin="16dp" />
 
     <androidx.constraintlayout.widget.Guideline
-        android:id="@+id/guideline6"
+        android:id="@+id/guideline_right_two_line_list"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="vertical"
         app:layout_constraintGuide_end="16dp" />
-
 
 </androidx.constraintlayout.widget.ConstraintLayout>

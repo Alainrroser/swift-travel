@@ -17,4 +17,5 @@
     <string name="trip_duration">Duration</string>
     <string name="countries_title">Countries</string>
     <string name="add_country">Add country</string>
+    <string name="add_description">Add description</string>
 </resources>

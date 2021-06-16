@@ -16,6 +16,7 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.List;
 
+import ch.bbcag.swift_travel.Const;
 import ch.bbcag.swift_travel.CreateTrip;
 import ch.bbcag.swift_travel.R;
 import ch.bbcag.swift_travel.adapter.TripAdapter;
@@ -109,7 +110,7 @@ public class MainActivity extends BaseActivity implements SearchView.OnQueryText
 		AdapterView.OnItemClickListener mListClickedHandler = (parent, v, position, id) -> {
 			Intent intent = new Intent(getApplicationContext(), TripDetailsActivity.class);
 			Trip selected = (Trip) parent.getItemAtPosition(position);
-			intent.putExtra("tripName", selected.getName());
+			intent.putExtra(Const.TRIP_NAME, selected.getName());
 			startActivity(intent);
 		};
 

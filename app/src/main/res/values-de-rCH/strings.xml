@@ -15,4 +15,5 @@
     <string name="start_image_description">Platzhalterbild für den Start</string>
     <string name="countries_title">Länder</string>
     <string name="add_country">Land hinzufügen</string>
+    <string name="add_description">Beschreibung hinzufügen</string>
 </resources>

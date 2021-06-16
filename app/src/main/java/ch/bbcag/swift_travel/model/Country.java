@@ -14,10 +14,9 @@ public class Country {
 
     }
 
-    public Country(String name, String duration, Uri imageURI) {
+    public Country(String name, String duration) {
         this.name = name;
         this.duration = duration;
-        this.imageURI = imageURI;
     }
 
     public String getName() {

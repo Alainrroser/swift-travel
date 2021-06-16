@@ -1,4 +1,4 @@
-package ch.bbcag.swift_travel;
+package ch.bbcag.swift_travel.activities;
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
@@ -6,6 +6,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ProgressBar;
+
+import ch.bbcag.swift_travel.R;
 
 public class BaseActivity extends AppCompatActivity {
 	private ProgressBar progressBar;

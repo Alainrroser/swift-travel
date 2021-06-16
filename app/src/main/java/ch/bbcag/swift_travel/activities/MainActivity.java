@@ -1,4 +1,4 @@
-package ch.bbcag.swift_travel;
+package ch.bbcag.swift_travel.activities;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -16,13 +16,15 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.List;
 
-import ch.bbcag.swift_travel.adapter.Multi_line_list;
+import ch.bbcag.swift_travel.CreateTrip;
+import ch.bbcag.swift_travel.R;
+import ch.bbcag.swift_travel.adapter.TripAdapter;
 import ch.bbcag.swift_travel.dal.TripDao;
 import ch.bbcag.swift_travel.model.Trip;
 
 public class MainActivity extends BaseActivity implements SearchView.OnQueryTextListener, SearchView.OnCloseListener {
 	private FloatingActionButton floatingActionButton;
-	private Multi_line_list adapter;
+	private TripAdapter adapter;
 
 	private SearchView searchView;
 	private MenuItem searchItem;
@@ -40,7 +42,7 @@ public class MainActivity extends BaseActivity implements SearchView.OnQueryText
 	protected void onStart() {
 		super.onStart();
 		List<Trip> trips = TripDao.getAll();
-		adapter = new Multi_line_list(this, trips);
+		adapter = new TripAdapter(this, trips);
 		addTripsToClickableList();
 		onFloatingActionButtonClick();
 	}

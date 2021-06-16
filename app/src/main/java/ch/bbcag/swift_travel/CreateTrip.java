@@ -16,6 +16,8 @@ import com.google.android.material.textfield.TextInputLayout;
 
 import java.util.Objects;
 
+import ch.bbcag.swift_travel.activities.MainActivity;
+import ch.bbcag.swift_travel.activities.UpButtonActivity;
 import ch.bbcag.swift_travel.model.Trip;
 
 public class CreateTrip extends UpButtonActivity {

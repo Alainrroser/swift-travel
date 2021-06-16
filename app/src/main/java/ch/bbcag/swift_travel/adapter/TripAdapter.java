@@ -13,8 +13,9 @@ package ch.bbcag.swift_travel.adapter;
         import ch.bbcag.swift_travel.R;
         import ch.bbcag.swift_travel.model.Trip;
 
-public class Multi_line_list extends ArrayAdapter<Trip> {
-    public Multi_line_list(Context context, List<Trip> trips) {
+public class TripAdapter extends ArrayAdapter<Trip> {
+
+    public TripAdapter(Context context, List<Trip> trips) {
         super(context, 0, trips);
     }
 

@@ -2,7 +2,8 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    >
 
     <include
         layout="@layout/progress_bar"
@@ -10,7 +11,7 @@
         android:layout_height="match_parent" />
 
     <ImageView
-        android:id="@+id/imageScene"
+        android:id="@+id/tripsImage"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:contentDescription="@string/start_image_description"
@@ -20,7 +21,8 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/travel_picture" />
+        app:srcCompat="@drawable/travel_picture"
+        android:adjustViewBounds="true"/>
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guideline"
@@ -37,7 +39,7 @@
         app:layout_constraintGuide_end="16dp" />
 
     <TextView
-        android:id="@+id/title"
+        android:id="@+id/countriesTitle"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="72dp"
@@ -50,7 +52,7 @@
         android:textSize="34sp"
         app:layout_constraintBottom_toTopOf="@id/trips"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/imageScene" />
+        app:layout_constraintTop_toBottomOf="@id/tripsImage" />
 
     <View
         android:id="@+id/divider"
@@ -62,20 +64,6 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
 
-    <ListView
-        android:id="@+id/trips"
-        style="@style/Widget.AppCompat.Light.ListView.DropDown"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:background="#FBFBFB"
-        android:descendantFocusability="afterDescendants"
-        android:divider="@android:drawable/divider_horizontal_dark"
-        android:dividerHeight="1dip"
-        app:layout_constraintBottom_toBottomOf="@+id/title"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/title" />
-
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/floating_action_button"
         android:layout_width="wrap_content"
@@ -85,5 +73,20 @@
         android:contentDescription="@string/add_trip"
         android:src="@drawable/add"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/guideline3" />
+        app:layout_constraintEnd_toStartOf="@id/guideline3" />
+
+    <ListView
+        android:id="@+id/trips"
+        style="@style/Widget.AppCompat.Light.ListView.DropDown"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:background="#FBFBFB"
+        android:divider="@android:drawable/divider_horizontal_dark"
+        android:dividerHeight="1dp"
+
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/countriesTitle"
+        app:layout_constraintBottom_toBottomOf="parent"/>
+
 </androidx.constraintlayout.widget.ConstraintLayout>

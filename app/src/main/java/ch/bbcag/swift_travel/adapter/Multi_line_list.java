@@ -1,6 +1,5 @@
 package ch.bbcag.swift_travel.adapter;
 
-        import java.util.ArrayList;
         import java.util.List;
 
         import android.content.Context;
@@ -14,8 +13,8 @@ package ch.bbcag.swift_travel.adapter;
         import ch.bbcag.swift_travel.R;
         import ch.bbcag.swift_travel.model.Trip;
 
-public class Three_line_list extends ArrayAdapter<Trip> {
-    public Three_line_list(Context context, List<Trip> trips) {
+public class Multi_line_list extends ArrayAdapter<Trip> {
+    public Multi_line_list(Context context, List<Trip> trips) {
         super(context, 0, trips);
     }
 
@@ -24,7 +23,7 @@ public class Three_line_list extends ArrayAdapter<Trip> {
 
         // Check if an existing view is being reused, otherwise inflate the view
         if (convertView == null) {
-            convertView = LayoutInflater.from(getContext()).inflate(R.layout.multi_lines, parent, false);
+            convertView = LayoutInflater.from(getContext()).inflate(R.layout.three_line_list, parent, false);
         }
 
         // Get the data item for this position

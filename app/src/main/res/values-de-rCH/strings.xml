@@ -13,4 +13,6 @@
     <string name="search_hint">Suche</string>
     <string name="error_close">Ok</string>
     <string name="start_image_description">Platzhalterbild für den Start</string>
+    <string name="countries_title">Länder</string>
+    <string name="add_country">Land hinzufügen</string>
 </resources>

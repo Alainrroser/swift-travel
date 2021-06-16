@@ -17,7 +17,7 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.List;
 
-import ch.bbcag.swift_travel.Const;
+import ch.bbcag.swift_travel.utils.Const;
 import ch.bbcag.swift_travel.R;
 import ch.bbcag.swift_travel.adapter.TripAdapter;
 import ch.bbcag.swift_travel.dal.TripDao;

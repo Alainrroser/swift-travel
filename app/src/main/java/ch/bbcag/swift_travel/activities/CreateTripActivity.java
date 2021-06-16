@@ -16,7 +16,7 @@ import com.google.android.material.textfield.TextInputLayout;
 
 import java.util.Objects;
 
-import ch.bbcag.swift_travel.Const;
+import ch.bbcag.swift_travel.utils.Const;
 import ch.bbcag.swift_travel.R;
 import ch.bbcag.swift_travel.model.Trip;
 

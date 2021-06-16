@@ -31,10 +31,10 @@ public class TripAdapter extends ArrayAdapter<Trip> {
 		Trip trip = getItem(position);
 
 		// Lookup view for data population
-		TextView name = convertView.findViewById(R.id.name);
-		TextView destination = convertView.findViewById(R.id.destination);
-		TextView duration = convertView.findViewById(R.id.duration);
-		ImageView imageURI = convertView.findViewById(R.id.trip_image);
+		TextView name = convertView.findViewById(R.id.name_three_line_list);
+		TextView destination = convertView.findViewById(R.id.destination_three_line_list);
+		TextView duration = convertView.findViewById(R.id.duration_three_line_list);
+		ImageView imageURI = convertView.findViewById(R.id.image_three_line_list);
 		// Populate the data into the template view using the data object
 		name.setText(trip.getName());
 		destination.setText(trip.getDestination());

@@ -6,7 +6,8 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.widget.ArrayAdapter;
+import android.view.View;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.SearchView;
 import android.widget.TextView;
@@ -21,14 +22,14 @@ import org.json.JSONException;
 import java.util.ArrayList;
 import java.util.List;
 
-import ch.bbcag.swift_travel.Const;
+import ch.bbcag.swift_travel.adapter.ChooseCountryAdapter;
+import ch.bbcag.swift_travel.utils.Const;
 import ch.bbcag.swift_travel.R;
-import ch.bbcag.swift_travel.adapter.CountryAdapter;
 import ch.bbcag.swift_travel.dal.ApiRepository;
 import ch.bbcag.swift_travel.model.Country;
 
 public class ChooseActivity extends UpButtonActivity implements SearchView.OnQueryTextListener, SearchView.OnCloseListener {
-	private ArrayAdapter<Country> adapter;
+	private ChooseCountryAdapter adapter;
 
 	private SearchView searchView;
 	private MenuItem searchItem;
@@ -105,8 +106,9 @@ public class ChooseActivity extends UpButtonActivity implements SearchView.OnQue
 
 	private void addCountriesToClickableList() {
 		Response.Listener<JSONArray> responseListener = this::addCountriesToAdapter;
-		Response.ErrorListener errorListener = Throwable::printStackTrace;
+		Response.ErrorListener errorListener = error -> generateAlertDialog(getString(R.string.add_countries_to_list_error_title), getString(R.string.add_countries_to_list_error_text));
 		ApiRepository.getJsonArray(getApplicationContext(), Const.COUNTRIES_URL, responseListener, errorListener);
+		getProgressBar().setVisibility(View.GONE);
 	}
 
 	private void addCountriesToAdapter(JSONArray response) {
@@ -116,9 +118,9 @@ public class ChooseActivity extends UpButtonActivity implements SearchView.OnQue
 		allCountries.setOnItemClickListener((parent, view, position, id) -> {
 			Intent intent = new Intent(getApplicationContext(), TripDetailsActivity.class);
 			intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-
-			TextView textView = (TextView) view.findViewById(R.id.country);
-			intent.putExtra(Const.COUNTRY_NAME, textView.getText().toString());
+			Country country = (Country) ((ListView)parent).getItemAtPosition(position);
+			intent.putExtra(Const.COUNTRY_NAME, country.getName());
+			intent.putExtra(Const.FLAG_URI, country.getImageURI().toString());
 			intent.putExtra(Const.TRIP_NAME, tripName);
 
 			startActivity(intent);
@@ -129,9 +131,9 @@ public class ChooseActivity extends UpButtonActivity implements SearchView.OnQue
 		try {
 			List<Country> countriesList = new ArrayList<>();
 			addCountryToList(response, countriesList);
-			adapter = new CountryAdapter(getApplicationContext(), countriesList);
-		} catch (JSONException e) {
-			generateAlertDialog(getString(R.string.add_countries_to_list_error_text), getString(R.string.add_countries_to_list_error_text));
+			adapter = new ChooseCountryAdapter(getApplicationContext(), countriesList);
+		} catch (Exception e) {
+			generateAlertDialog(getString(R.string.add_countries_to_list_error_title), getString(R.string.add_countries_to_list_error_text));
 		}
 	}
 

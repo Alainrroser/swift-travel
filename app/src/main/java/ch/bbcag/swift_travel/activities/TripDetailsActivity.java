@@ -1,6 +1,7 @@
 package ch.bbcag.swift_travel.activities;
 
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.text.method.ScrollingMovementMethod;
 import android.view.View;
@@ -12,7 +13,7 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.List;
 
-import ch.bbcag.swift_travel.Const;
+import ch.bbcag.swift_travel.utils.Const;
 import ch.bbcag.swift_travel.R;
 import ch.bbcag.swift_travel.adapter.CountryAdapter;
 import ch.bbcag.swift_travel.dal.TripDao;
@@ -85,6 +86,7 @@ public class TripDetailsActivity extends UpButtonActivity {
 	private void addTripInformation(Intent intent, Country country) {
 		if (intent.getStringExtra(Const.COUNTRY_NAME) != null) {
 			country.setName(intent.getStringExtra(Const.COUNTRY_NAME));
+			country.setImageURI(Uri.parse(intent.getStringExtra(Const.FLAG_URI)));
 			adapter.add(country);
 		}
 	}

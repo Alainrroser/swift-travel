@@ -4,7 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 
-import ch.bbcag.swift_travel.Const;
+import ch.bbcag.swift_travel.utils.Const;
 import ch.bbcag.swift_travel.R;
 
 public class CityDetailsActivity extends UpButtonActivity {

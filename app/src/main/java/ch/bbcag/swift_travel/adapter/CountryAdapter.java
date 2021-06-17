@@ -1,7 +1,5 @@
 package ch.bbcag.swift_travel.adapter;
 
-import java.util.List;
-
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,6 +9,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.github.twocoffeesoneteam.glidetovectoryou.GlideToVectorYou;
+
+import java.util.List;
 
 import ch.bbcag.swift_travel.R;
 import ch.bbcag.swift_travel.model.Country;

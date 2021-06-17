@@ -6,113 +6,184 @@ import android.os.Bundle;
 import android.text.method.ScrollingMovementMethod;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.TextView;
+
+import androidx.constraintlayout.widget.Group;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.List;
 
-import ch.bbcag.swift_travel.utils.Const;
 import ch.bbcag.swift_travel.R;
 import ch.bbcag.swift_travel.adapter.CountryAdapter;
 import ch.bbcag.swift_travel.dal.TripDao;
 import ch.bbcag.swift_travel.model.Country;
 import ch.bbcag.swift_travel.model.Trip;
+import ch.bbcag.swift_travel.utils.Const;
 
 public class TripDetailsActivity extends UpButtonActivity {
-	private FloatingActionButton floatingActionButton;
-	private CountryAdapter adapter;
+    private FloatingActionButton floatingActionButton;
+    private ImageButton editDescriptionButton;
+    private Button submitButton;
+    private CountryAdapter adapter;
 
-	private String tripName;
+    private String tripName;
+    private Trip selected;
 
-	@Override
-	protected void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_trip_details);
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_trip_details);
 
-		Intent intent = getIntent();
-		tripName = intent.getStringExtra(Const.TRIP_NAME);
-		setTitle(tripName);
+        Intent intent = getIntent();
+        tripName = intent.getStringExtra(Const.TRIP_NAME);
+        setTitle(tripName);
 
-		floatingActionButton = findViewById(R.id.floating_action_button_countries);
-	}
+        List<Trip> trips = TripDao.getAll();
+        for (Trip trip : trips) {
+            if (trip.getName().equals(intent.getStringExtra(Const.TRIP_NAME))) {
+                selected = trip;
+            }
+        }
 
-	@Override
-	protected void onStart() {
-		super.onStart();
-		getProgressBar().setVisibility(View.GONE);
+        floatingActionButton = findViewById(R.id.floating_action_button_countries);
+        editDescriptionButton = findViewById(R.id.edit_button);
+        submitButton = findViewById(R.id.submit_button);
+    }
 
-		Intent intent = getIntent();
-		Trip selected = new Trip();
-		if(intent.getStringExtra(Const.TRIP_DESCRIPTION) != null) {
-			selected.setDescription(intent.getStringExtra(Const.TRIP_DESCRIPTION));
-		}
-		List<Trip> trips = TripDao.getAll();
-		for (Trip trip : trips) {
-			if (trip.getName().equals(intent.getStringExtra(Const.TRIP_NAME))) {
-				selected = trip;
-			}
-		}
+    @Override
+    protected void onStart() {
+        super.onStart();
+        getProgressBar().setVisibility(View.GONE);
 
-		TextView titleView = findViewById(R.id.trip_title);
-		titleView.setText(selected.getName());
+        Intent intent = getIntent();
 
-		TextView descriptionView = findViewById(R.id.trip_description);
-		if (selected.getDescription() == null) {
-			//TODO
-			descriptionView.setText(R.string.add_description);
-		} else {
-			descriptionView.setText(selected.getDescription());
-		}
-		descriptionView.setMovementMethod(new ScrollingMovementMethod());
+        if (intent.getStringExtra(Const.TRIP_DESCRIPTION) != null) {
+            selected.setDescription(intent.getStringExtra(Const.TRIP_DESCRIPTION));
+        }
 
-		List<Country> countries = selected.getCountries();
-		adapter = new CountryAdapter(this, countries);
-		createCountryFromIntent();
-		addTripsToClickableList();
-		onFloatingActionButtonClick();
-	}
+        TextView title = findViewById(R.id.trip_title);
+        title.setText(selected.getName());
 
-	/**
-	 * Creates a trip from the information in the intent if they aren't null.
-	 */
-	private void createCountryFromIntent() {
-		Intent intent = getIntent();
-		Country country = new Country();
-		addTripInformation(intent, country);
-	}
+        TextView description = findViewById(R.id.trip_description);
+        if (selected.getDescription() == null) {
+            //TODO
+            description.setText(R.string.add_description);
+        } else {
+            description.setText(selected.getDescription());
+        }
+        description.setMovementMethod(new ScrollingMovementMethod());
 
-	private void addTripInformation(Intent intent, Country country) {
-		if (intent.getStringExtra(Const.COUNTRY_NAME) != null) {
-			country.setName(intent.getStringExtra(Const.COUNTRY_NAME));
-			country.setImageURI(Uri.parse(intent.getStringExtra(Const.FLAG_URI)));
-			adapter.add(country);
-		}
-	}
+        TextView duration = findViewById(R.id.trip_duration);
+        duration.setText(selected.getDuration());
 
-	public void addTripsToClickableList() {
-		ListView listView = findViewById(R.id.countries);
-		listView.setAdapter(adapter);
+        List<Country> countries = selected.getCountries();
+        adapter = new CountryAdapter(this, countries);
 
-		getProgressBar().setVisibility(View.GONE);
+        createCountryFromIntent();
+        addTripsToClickableList();
 
-		AdapterView.OnItemClickListener mListClickedHandler = (parent, v, position, id) -> {
-			Intent intent = new Intent(getApplicationContext(), CityDetailsActivity.class);
-			Country selected = (Country) parent.getItemAtPosition(position);
-			intent.putExtra(Const.COUNTRY_NAME, selected.getName());
-			startActivity(intent);
-		};
+        Group form = findViewById(R.id.trip_form);
+        form.setVisibility(View.GONE);
 
-		listView.setOnItemClickListener(mListClickedHandler);
-	}
+        refreshContent();
 
-	private void onFloatingActionButtonClick() {
-		floatingActionButton.setOnClickListener(v -> {
-			Intent intent = new Intent(getApplicationContext(), ChooseActivity.class);
-			intent.putExtra(Const.NAME, Const.COUNTRY);
-			intent.putExtra(Const.TRIP_NAME, tripName);
-			startActivity(intent);
-		});
-	}
+        onFloatingActionButtonClick();
+        onEditDescriptionClick();
+        onSubmitButtonClick();
+    }
+
+    /**
+     * Creates a trip from the information in the intent if they aren't null.
+     */
+    private void createCountryFromIntent() {
+        Intent intent = getIntent();
+        Country country = new Country();
+        addTripInformation(intent, country);
+    }
+
+    private void addTripInformation(Intent intent, Country country) {
+        if (intent.getStringExtra(Const.COUNTRY_NAME) != null) {
+            country.setName(intent.getStringExtra(Const.COUNTRY_NAME));
+            country.setImageURI(Uri.parse(intent.getStringExtra(Const.FLAG_URI)));
+            adapter.add(country);
+        }
+    }
+
+    public void addTripsToClickableList() {
+        ListView listView = findViewById(R.id.countries);
+        listView.setAdapter(adapter);
+
+        getProgressBar().setVisibility(View.GONE);
+
+        AdapterView.OnItemClickListener mListClickedHandler = (parent, v, position, id) -> {
+            Intent intent = new Intent(getApplicationContext(), CityDetailsActivity.class);
+            Country selected = (Country) parent.getItemAtPosition(position);
+            intent.putExtra(Const.COUNTRY_NAME, selected.getName());
+            startActivity(intent);
+        };
+
+        listView.setOnItemClickListener(mListClickedHandler);
+    }
+
+    private void refreshContent() {
+        TextView title = findViewById(R.id.trip_title);
+        TextView description = findViewById(R.id.trip_description);
+
+        EditText editTitle = findViewById(R.id.edit_title);
+        EditText editDescription = findViewById(R.id.edit_description);
+
+        title.setText(selected.getName());
+        setTitle(selected.getName());
+        editTitle.setText(selected.getName());
+
+        description.setText(selected.getDescription());
+        editDescription.setText(selected.getDescription());
+    }
+
+    private void toggleForm(){
+        Group form = findViewById(R.id.trip_form);
+        Group content = findViewById(R.id.trip_content);
+
+        if (form.getVisibility() == View.VISIBLE) {
+            form.setVisibility(View.GONE);
+            content.setVisibility(View.VISIBLE);
+        } else {
+            form.setVisibility(View.VISIBLE);
+            content.setVisibility(View.GONE);
+        }
+    }
+
+    private void onFloatingActionButtonClick() {
+        floatingActionButton.setOnClickListener(v -> {
+            Intent intent = new Intent(getApplicationContext(), ChooseActivity.class);
+            intent.putExtra(Const.NAME, Const.COUNTRY);
+            intent.putExtra(Const.TRIP_NAME, tripName);
+            startActivity(intent);
+        });
+    }
+
+    private void onEditDescriptionClick() {
+        editDescriptionButton.setOnClickListener(v -> {
+            toggleForm();
+        });
+    }
+
+    private void onSubmitButtonClick() {
+        submitButton.setOnClickListener(v -> {
+            EditText editTitle = findViewById(R.id.edit_title);
+            EditText editDescription = findViewById(R.id.edit_description);
+
+            if(!editTitle.getText().toString().equals("")){selected.setName(editTitle.getText().toString());}
+
+            if(!editDescription.getText().toString().equals("")){selected.setDescription(editDescription.getText().toString());}
+
+            refreshContent();
+            toggleForm();
+        });
+    }
 }

@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
@@ -11,16 +12,16 @@
 
     <ImageView
         android:id="@+id/countries_image"
-        android:layout_width="160dp"
-        android:layout_height="174dp"
+        android:layout_width="147dp"
+        android:layout_height="101dp"
         android:layout_marginTop="16dp"
         android:contentDescription="@string/place_holder_image"
         android:scaleType="centerCrop"
         android:visibility="visible"
         app:layout_constraintDimensionRatio="21:9"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.063"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/guideline_right_country_details"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="@+id/guideline_left_country_details"
         app:layout_constraintTop_toTopOf="parent"
         app:srcCompat="@drawable/trips_image" />
 
@@ -51,8 +52,9 @@
         android:textAppearance="@style/TextAppearance.AppCompat.Title"
         android:textSize="24sp"
         app:layout_constraintBottom_toTopOf="@id/countries"
+        app:layout_constraintEnd_toStartOf="@+id/guideline_right_country_details"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/countries_image" />
+        app:layout_constraintTop_toBottomOf="@id/trip_description" />
 
     <View
         android:id="@+id/divider_trip_details"
@@ -69,11 +71,12 @@
         style="@style/Widget.AppCompat.Light.ListView.DropDown"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:background="#FBFBFB"
+        android:background="#FFFFFF"
         android:divider="@android:drawable/divider_horizontal_dark"
         android:dividerHeight="1dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/countries_title" />
 
@@ -97,21 +100,111 @@
         android:text="@string/trip_name"
         android:textColor="@color/black"
         android:textSize="24sp"
-        app:layout_constraintEnd_toStartOf="@id/guideline_right_country_details"
-        app:layout_constraintStart_toEndOf="@id/countries_image"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintEnd_toStartOf="@+id/edit_button"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toEndOf="@+id/countries_image"
+        app:layout_constraintTop_toBottomOf="@+id/edit_title"
+        tools:visibility="visible" />
 
     <TextView
         android:id="@+id/trip_description"
         android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="16dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
         android:scrollbars="vertical"
         android:text="@string/trip_description_hint"
-        app:layout_constraintBottom_toBottomOf="@id/countries_image"
+        app:layout_constraintEnd_toStartOf="@+id/guideline_right_country_details"
+        app:layout_constraintStart_toStartOf="@+id/guideline_left_country_details"
+        app:layout_constraintTop_toBottomOf="@+id/countries_image"
+        app:layout_constraintBottom_toTopOf="@id/countries_title"
+        tools:visibility="visible" />
+
+    <ImageButton
+        android:id="@+id/edit_button"
+        android:layout_width="36dp"
+        android:layout_height="36dp"
+        android:layout_marginTop="16dp"
+        android:backgroundTint="#FFFFFF"
+        android:clickable="true"
+        app:layout_constraintEnd_toStartOf="@+id/guideline_right_country_details"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/outline_edit_black_20" />
+
+    <EditText
+        android:id="@+id/edit_description"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="8dp"
+        android:ems="10"
+        android:gravity="start|top"
+        android:hint="Enter description"
+        android:inputType="textMultiLine"
+        android:textAppearance="@style/TextAppearance.AppCompat.Small"
+        app:layout_constraintBottom_toTopOf="@id/submit_button"
+        app:layout_constraintEnd_toStartOf="@id/guideline_right_country_details"
+        app:layout_constraintStart_toStartOf="@+id/guideline_left_country_details"
+        app:layout_constraintTop_toBottomOf="@+id/countries_image" />
+
+    <TextView
+        android:id="@+id/trip_duration"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="24dp"
+        android:text="@string/trip_duration"
+        app:layout_constraintEnd_toStartOf="@id/guideline_right_country_details"
+        app:layout_constraintStart_toEndOf="@id/countries_image"
+        app:layout_constraintTop_toBottomOf="@+id/edit_button"
+        tools:visibility="visible" />
+
+    <Button
+        android:id="@+id/submit_button"
+        android:layout_width="0dp"
+        android:layout_height="42dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="8dp"
+        android:text="@string/submit_text"
+        android:textSize="12sp"
+        app:layout_constraintBottom_toBottomOf="@+id/trip_description"
         app:layout_constraintEnd_toStartOf="@id/guideline_right_country_details"
         app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="@+id/guideline_left_country_details"
+        app:layout_constraintTop_toBottomOf="@id/edit_description" />
+
+    <EditText
+        android:id="@+id/edit_title"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="16dp"
+        android:ems="10"
+        android:inputType="textPersonName"
+        app:layout_constraintEnd_toStartOf="@+id/edit_button"
+        app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toEndOf="@id/countries_image"
-        app:layout_constraintTop_toBottomOf="@id/trip_title" />
+        app:layout_constraintTop_toTopOf="parent"
+        />
+
+    <androidx.constraintlayout.widget.Group
+        android:id="@+id/trip_content"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:constraint_referenced_ids="trip_title, trip_description"
+        app:layout_constraintEnd_toStartOf="@+id/guideline_right_country_details"
+        app:layout_constraintStart_toStartOf="@+id/guideline_left_country_details"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:visibility="gone" />
+
+    <androidx.constraintlayout.widget.Group
+        android:id="@+id/trip_form"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:constraint_referenced_ids="submit_button, edit_description, edit_title"
+        app:layout_constraintEnd_toStartOf="@+id/guideline_right_country_details"
+        app:layout_constraintStart_toStartOf="@+id/guideline_left_country_details"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:visibility="visible" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>

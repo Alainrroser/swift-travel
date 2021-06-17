@@ -17,12 +17,13 @@ import android.widget.SearchView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-
 import androidx.constraintlayout.widget.Group;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicReferenceArray;
 
 import ch.bbcag.swift_travel.R;
 import ch.bbcag.swift_travel.adapter.CountryAdapter;
@@ -32,11 +33,11 @@ import ch.bbcag.swift_travel.model.Trip;
 import ch.bbcag.swift_travel.utils.Const;
 
 public class TripDetailsActivity extends UpButtonActivity implements SearchView.OnQueryTextListener, SearchView.OnCloseListener {
-	private SearchView searchView;
-	private MenuItem searchItem;
+    private SearchView searchView;
+    private MenuItem searchItem;
 
-	private FloatingActionButton floatingActionButton;
-	private CountryAdapter adapter;
+    private FloatingActionButton floatingActionButton;
+    private CountryAdapter adapter;
 
     private ImageButton editDescriptionButton;
     private Button submitButton;
@@ -90,11 +91,11 @@ public class TripDetailsActivity extends UpButtonActivity implements SearchView.
         TextView duration = findViewById(R.id.trip_duration);
         duration.setText(selected.getDuration());
 
-		List<Country> countries = selected.getCountries();
-		adapter = new CountryAdapter(this, countries);
+        List<Country> countries = selected.getCountries();
+        adapter = new CountryAdapter(this, countries);
 
         createCountryFromIntent();
-	    addCountriesToClickableList();
+        addCountriesToClickableList();
 
         Group form = findViewById(R.id.trip_form);
         form.setVisibility(View.GONE);
@@ -106,81 +107,81 @@ public class TripDetailsActivity extends UpButtonActivity implements SearchView.
         onSubmitButtonClick();
     }
 
-	@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
-		MenuInflater inflater = getMenuInflater();
-		inflater.inflate(R.menu.search_menu, menu);
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.search_menu, menu);
 
-		searchItem = menu.findItem(R.id.search);
+        searchItem = menu.findItem(R.id.search);
 
-		searchView = (SearchView) searchItem.getActionView();
-		searchView.setQueryHint(getString(R.string.search));
-		searchView.setIconified(false);
-		searchView.setOnQueryTextListener(this);
-		searchView.setOnCloseListener(this);
+        searchView = (SearchView) searchItem.getActionView();
+        searchView.setQueryHint(getString(R.string.search));
+        searchView.setIconified(false);
+        searchView.setOnQueryTextListener(this);
+        searchView.setOnCloseListener(this);
 
-		searchItem.setOnActionExpandListener(new MenuItem.OnActionExpandListener() {
-			@Override
-			public boolean onMenuItemActionExpand(MenuItem item) {
-				return true;
-			}
+        searchItem.setOnActionExpandListener(new MenuItem.OnActionExpandListener() {
+            @Override
+            public boolean onMenuItemActionExpand(MenuItem item) {
+                return true;
+            }
 
-			@Override
-			public boolean onMenuItemActionCollapse(MenuItem item) {
-				searchView.setQuery("", false);
-				filterAdapter("");
-				return true;
-			}
-		});
+            @Override
+            public boolean onMenuItemActionCollapse(MenuItem item) {
+                searchView.setQuery("", false);
+                filterAdapter("");
+                return true;
+            }
+        });
 
-		return true;
-	}
+        return true;
+    }
 
-	@Override
-	public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-		int itemId = item.getItemId();
-		if (itemId == R.id.search) {
-			searchView.setIconified(false);
-			return true;
-		}
-		return super.onOptionsItemSelected(item);
-	}
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        int itemId = item.getItemId();
+        if (itemId == R.id.search) {
+            searchView.setIconified(false);
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
 
-	@Override
-	public boolean onQueryTextSubmit(String searchText) {
-		filterAdapter(searchText);
-		return true;
-	}
+    @Override
+    public boolean onQueryTextSubmit(String searchText) {
+        filterAdapter(searchText);
+        return true;
+    }
 
-	@Override
-	public boolean onQueryTextChange(String searchText) {
-		filterAdapter(searchText);
-		return false;
-	}
+    @Override
+    public boolean onQueryTextChange(String searchText) {
+        filterAdapter(searchText);
+        return false;
+    }
 
-	@Override
-	public boolean onClose() {
-		if (!searchView.isIconified()) {
-			searchItem.collapseActionView();
-		} else {
-			searchView.setIconified(false);
-		}
+    @Override
+    public boolean onClose() {
+        if (!searchView.isIconified()) {
+            searchItem.collapseActionView();
+        } else {
+            searchView.setIconified(false);
+        }
 
-		return false;
-	}
+        return false;
+    }
 
-	private void filterAdapter(String searchText) {
-		adapter.getFilter().filter(searchText);
-	}
+    private void filterAdapter(String searchText) {
+        adapter.getFilter().filter(searchText);
+    }
 
-	/**
-	 * Creates a trip from the information in the intent if they aren't null.
-	 */
-	private void createCountryFromIntent() {
-		Intent intent = getIntent();
-		Country country = new Country();
-		addTripInformation(intent, country);
-	}
+    /**
+     * Creates a trip from the information in the intent if they aren't null.
+     */
+    private void createCountryFromIntent() {
+        Intent intent = getIntent();
+        Country country = new Country();
+        addTripInformation(intent, country);
+    }
 
     private void addTripInformation(Intent intent, Country country) {
         if (intent.getStringExtra(Const.COUNTRY_NAME) != null) {
@@ -190,9 +191,9 @@ public class TripDetailsActivity extends UpButtonActivity implements SearchView.
         }
     }
 
-	public void addCountriesToClickableList() {
-		ListView countries = findViewById(R.id.countries);
-		countries.setAdapter(adapter);
+    public void addCountriesToClickableList() {
+        ListView countries = findViewById(R.id.countries);
+        countries.setAdapter(adapter);
 
         getProgressBar().setVisibility(View.GONE);
 
@@ -203,8 +204,8 @@ public class TripDetailsActivity extends UpButtonActivity implements SearchView.
             startActivity(intent);
         };
 
-		countries.setOnItemClickListener(mListClickedHandler);
-	}
+        countries.setOnItemClickListener(mListClickedHandler);
+    }
 
     private void refreshContent() {
         TextView title = findViewById(R.id.trip_title);
@@ -221,7 +222,7 @@ public class TripDetailsActivity extends UpButtonActivity implements SearchView.
         editDescription.setText(selected.getDescription());
     }
 
-    private void toggleForm(){
+    private void toggleForm() {
         Group form = findViewById(R.id.trip_form);
         Group content = findViewById(R.id.trip_content);
 
@@ -244,9 +245,7 @@ public class TripDetailsActivity extends UpButtonActivity implements SearchView.
     }
 
     private void onEditDescriptionClick() {
-        editDescriptionButton.setOnClickListener(v -> {
-            toggleForm();
-        });
+        editDescriptionButton.setOnClickListener(v -> toggleForm());
     }
 
     private void onSubmitButtonClick() {
@@ -254,12 +253,24 @@ public class TripDetailsActivity extends UpButtonActivity implements SearchView.
             EditText editTitle = findViewById(R.id.edit_title);
             EditText editDescription = findViewById(R.id.edit_description);
 
-            if(!editTitle.getText().toString().equals("")){selected.setName(editTitle.getText().toString());}
+            if (!editTitle.getText().toString().equals("")) {
+                selected.setName(editTitle.getText().toString());
+            }
 
-            if(!editDescription.getText().toString().equals("")){selected.setDescription(editDescription.getText().toString());}
+            if (!editDescription.getText().toString().equals("")) {
+                selected.setDescription(editDescription.getText().toString());
+            }
 
             refreshContent();
             toggleForm();
         });
+    }
+
+    public CountryAdapter getAdapter() {
+        return adapter;
+    }
+
+    public void setAdapter(CountryAdapter adapter) {
+        this.adapter = adapter;
     }
 }

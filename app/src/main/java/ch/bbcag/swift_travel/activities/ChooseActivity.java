@@ -118,7 +118,7 @@ public class ChooseActivity extends UpButtonActivity implements SearchView.OnQue
 
 	private void addAllCountriesToClickableList() {
 		Response.Listener<JSONArray> responseListener = this::addAllCountriesToAdapter;
-		Response.ErrorListener errorListener = error -> generateAlertDialog(getString(R.string.add_countries_to_list_error_title), getString(R.string.add_countries_to_list_error_text));
+		Response.ErrorListener errorListener = error -> generateMessageDialog(getString(R.string.add_countries_to_list_error_title), getString(R.string.add_countries_to_list_error_text));
 		ApiRepository.getJsonArray(getApplicationContext(), Const.COUNTRIES_URL, responseListener, errorListener);
 		getProgressBar().setVisibility(View.GONE);
 	}
@@ -148,7 +148,7 @@ public class ChooseActivity extends UpButtonActivity implements SearchView.OnQue
 			addCountryToList(response, countriesList);
 			adapter = new ChooseCountryAdapter(getApplicationContext(), countriesList);
 		} catch (Exception e) {
-			generateAlertDialog(getString(R.string.add_countries_to_list_error_title), getString(R.string.add_countries_to_list_error_text));
+			generateMessageDialog(getString(R.string.add_countries_to_list_error_title), getString(R.string.add_countries_to_list_error_text));
 		}
 	}
 

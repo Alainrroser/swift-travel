@@ -53,7 +53,7 @@ public class CreateTripActivity extends UpButtonActivity {
 	}
 
 	private void onCreateClick() {
-		create.setOnClickListener(v -> startTripDetailsActivityOrShowError());
+		create.setOnClickListener(v -> startMainOrShowError());
 	}
 
 	private void onChooseImageClick() {
@@ -70,7 +70,7 @@ public class CreateTripActivity extends UpButtonActivity {
 		}
 	}
 
-	private void startTripDetailsActivityOrShowError() {
+	private void startMainOrShowError() {
 		if (Objects.requireNonNull(nameEdit.getText()).toString().length() > 0) {
 			Intent intent = new Intent(getApplicationContext(), MainActivity.class);
 			intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
@@ -79,7 +79,9 @@ public class CreateTripActivity extends UpButtonActivity {
 			trip.setName(nameEdit.getText().toString());
 
 			intent.putExtra(Const.TRIP_NAME, nameEdit.getText().toString());
-			intent.putExtra(Const.TRIP_IMAGE_URI, trip.getImageURI().toString());
+			if(trip.getImageURI() != null) {
+				intent.putExtra(Const.TRIP_IMAGE_URI, trip.getImageURI().toString());
+			}
 			addDescriptionToTripAndIntentIfSet(intent);
 
 			startActivity(intent);

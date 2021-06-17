@@ -167,4 +167,12 @@ public class MainActivity extends BaseActivity implements SearchView.OnQueryText
 	private void onFloatingActionButtonClick() {
 		floatingActionButton.setOnClickListener(v -> startActivity(new Intent(getApplicationContext(), CreateTripActivity.class)));
 	}
+
+	public TripAdapter getAdapter() {
+		return adapter;
+	}
+
+	public void setAdapter(TripAdapter adapter) {
+		this.adapter = adapter;
+	}
 }

@@ -15,7 +15,7 @@ public class CountryDetailsActivity extends UpButtonActivity {
 		setContentView(R.layout.activity_country_details);
 
 		Intent intent = getIntent();
-		String name = intent.getStringExtra(Const.CITY_NAME);
+		String name = intent.getStringExtra(Const.COUNTRY_NAME);
 		setTitle(name);
 	}
 

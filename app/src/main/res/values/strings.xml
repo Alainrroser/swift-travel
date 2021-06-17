@@ -13,10 +13,16 @@
     <string name="add_trip">Add Trip</string>
 
     <string name="search">Search</string>
-    <string name="error_close">OK</string>
     <string name="place_holder_image">Placeholder image</string>
     <string name="edit">Edit</string>
+
     <string name="delete">Delete</string>
+    <string name="delete_entry_title">Delete Entry</string>
+    <string name="delete_entry_text">Do you really want to delete this entry?</string>
+
+    <string name="dialog_close">OK</string>
+    <string name="dialog_yes">Yes</string>
+    <string name="dialog_no">No</string>
 
     <string name="countries_title">Countries</string>
     <string name="add_country">Add country</string>

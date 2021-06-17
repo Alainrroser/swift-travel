@@ -22,12 +22,11 @@ public class Trip {
 
 	}
 
-	public Trip(int id, String name, String destination, String duration, List<Country> countries) {
+	public Trip(int id, String name, String destination, String duration) {
 		this.id = id;
 		this.name = name;
 		this.destination = destination;
 		this.duration = duration;
-		this.countries = countries;
 	}
 
 	public Trip(String name, String description, Uri imageURI) {

@@ -14,6 +14,4 @@ public class Const {
 
 	public static final String FLAG = "flag";
 	public static final String FLAG_URI = "flagURI";
-
-	public static final String CITY_NAME = "cityName";
 }

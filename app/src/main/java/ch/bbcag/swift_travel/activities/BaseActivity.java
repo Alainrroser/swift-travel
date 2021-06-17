@@ -24,15 +24,29 @@ public class BaseActivity extends AppCompatActivity {
 		progressBar.setVisibility(View.VISIBLE);
 	}
 
-	protected void generateAlertDialog(String errorTitle, String errorMessage) {
+	public void generateMessageDialog(String title, String message) {
 		progressBar.setVisibility(View.GONE);
 		AlertDialog.Builder dialogBuilder;
 		dialogBuilder = new AlertDialog.Builder(this);
-		dialogBuilder.setPositiveButton(getString(R.string.error_close), (dialog, id) -> {
-			// Closes this activity
+		dialogBuilder.setPositiveButton(getString(R.string.dialog_close), (dialog, id) -> {
 			finish();
 		});
-		dialogBuilder.setMessage(errorMessage).setTitle(errorTitle);
+		dialogBuilder.setMessage(message).setTitle(title);
+		AlertDialog dialog = dialogBuilder.create();
+		dialog.show();
+	}
+
+	public void generateConfirmDialog(String title, String message, Runnable runnable) {
+		progressBar.setVisibility(View.GONE);
+		AlertDialog.Builder dialogBuilder;
+		dialogBuilder = new AlertDialog.Builder(this);
+		dialogBuilder.setPositiveButton(getString(R.string.dialog_yes), (dialog, id) -> {
+			runnable.run();
+		});
+		dialogBuilder.setNegativeButton(getString(R.string.dialog_no), (dialog, id) -> {
+			dialog.cancel();
+		});
+		dialogBuilder.setMessage(message).setTitle(title);
 		AlertDialog dialog = dialogBuilder.create();
 		dialog.show();
 	}

@@ -10,6 +10,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.github.twocoffeesoneteam.glidetovectoryou.GlideToVectorYou;
+import com.github.twocoffeesoneteam.glidetovectoryou.GlideToVectorYouListener;
 
 import java.util.List;
 
@@ -45,7 +46,7 @@ public class ChooseCountryAdapter extends ArrayAdapter<Country> {
 		}
 
 		viewHolder.name.setText(country.getName());
-		GlideToVectorYou.init().with(getContext()).load(Uri.parse(country.getImageURI()), viewHolder.image);
+		GlideToVectorYou.init().with(getContext()).setPlaceHolder(R.drawable.flag_placeholder, R.drawable.flag_placeholder).load(Uri.parse(country.getImageURI()), viewHolder.image);
 		return convertView;
 	}
 }

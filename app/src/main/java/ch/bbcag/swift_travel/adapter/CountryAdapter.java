@@ -56,9 +56,7 @@ public class CountryAdapter extends ArrayAdapter<Country> {
 
 		viewHolder.name.setText(country.getName());
 		viewHolder.duration.setText(country.getDuration());
-		GlideToVectorYou.init().with(getContext()).load(Uri.parse(country.getImageURI()), viewHolder.image);
-
-
+		GlideToVectorYou.init().with(getContext()).setPlaceHolder(R.drawable.flag_placeholder, R.drawable.flag_placeholder).load(Uri.parse(country.getImageURI()), viewHolder.image);
 		return convertView;
 	}
 

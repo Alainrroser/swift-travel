@@ -11,7 +11,7 @@
         android:layout_height="match_parent" />
 
     <ImageView
-        android:id="@+id/countries_image"
+        android:id="@+id/trip_image"
         android:layout_width="147dp"
         android:layout_height="101dp"
         android:layout_marginStart="16dp"
@@ -88,7 +88,7 @@
         android:textColor="@color/black"
         android:textSize="24sp"
         app:layout_constraintEnd_toStartOf="@id/edit_button"
-        app:layout_constraintStart_toEndOf="@id/countries_image"
+        app:layout_constraintStart_toEndOf="@id/trip_image"
         app:layout_constraintTop_toTopOf="parent"
         tools:visibility="visible" />
 
@@ -105,7 +105,7 @@
         app:layout_constraintBottom_toTopOf="@id/countries_title"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/countries_image"
+        app:layout_constraintTop_toBottomOf="@id/trip_image"
         tools:visibility="visible" />
 
     <ImageButton
@@ -128,9 +128,10 @@
         android:layout_marginStart="8dp"
         android:layout_marginEnd="16dp"
         android:text="@string/trip_duration"
-        app:layout_constraintBottom_toBottomOf="@id/countries_image"
+        app:layout_constraintBottom_toTopOf="@id/duration_space"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@id/countries_image"
+        app:layout_constraintStart_toEndOf="@id/trip_image"
+        app:layout_constraintTop_toBottomOf="@+id/trip_title"
         tools:visibility="visible" />
 
     <Button
@@ -147,6 +148,13 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/edit_description_layout" />
 
+    <Space
+        android:id="@+id/duration_space"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="@id/trip_image"
+        app:layout_constraintEnd_toEndOf="@id/trip_image"/>
+
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/edit_title_layout"
         android:layout_width="0dp"
@@ -156,10 +164,10 @@
         android:layout_marginEnd="8dp"
         android:importantForAutofill="no"
         app:counterEnabled="true"
-        app:counterMaxLength="20"
+        app:counterMaxLength="40"
         app:errorEnabled="true"
         app:layout_constraintEnd_toStartOf="@id/edit_button"
-        app:layout_constraintStart_toEndOf="@id/countries_image"
+        app:layout_constraintStart_toEndOf="@id/trip_image"
         app:layout_constraintTop_toBottomOf="@id/trip_title"
         app:layout_constraintTop_toTopOf="parent">
 
@@ -168,7 +176,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="@string/trip_name_hint"
-            android:inputType="text" />
+            android:inputType="text"/>
     </com.google.android.material.textfield.TextInputLayout>
 
     <com.google.android.material.textfield.TextInputLayout
@@ -185,7 +193,7 @@
         app:layout_constraintBottom_toTopOf="@id/submit_button"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/countries_image">
+        app:layout_constraintTop_toBottomOf="@id/trip_image">
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/edit_description"
@@ -204,7 +212,7 @@
         app:layout_constraintEnd_toStartOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        tools:visibility="gone" />
+        tools:visibility="visible" />
 
     <androidx.constraintlayout.widget.Group
         android:id="@+id/trip_form"
@@ -214,6 +222,6 @@
         app:layout_constraintEnd_toStartOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        tools:visibility="visible" />
+        tools:visibility="gone" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

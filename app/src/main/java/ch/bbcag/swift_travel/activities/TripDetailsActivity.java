@@ -12,6 +12,7 @@ import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.SearchView;
 import android.widget.TextView;
@@ -21,15 +22,15 @@ import androidx.constraintlayout.widget.Group;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.atomic.AtomicReferenceArray;
 
 import ch.bbcag.swift_travel.R;
 import ch.bbcag.swift_travel.adapter.CountryAdapter;
+import ch.bbcag.swift_travel.dal.CountryDao;
+import ch.bbcag.swift_travel.dal.SwiftTravelDatabase;
 import ch.bbcag.swift_travel.dal.TripDao;
-import ch.bbcag.swift_travel.model.Country;
-import ch.bbcag.swift_travel.model.Trip;
+import ch.bbcag.swift_travel.entities.Country;
+import ch.bbcag.swift_travel.entities.Trip;
 import ch.bbcag.swift_travel.utils.Const;
 
 public class TripDetailsActivity extends UpButtonActivity implements SearchView.OnQueryTextListener, SearchView.OnCloseListener {
@@ -45,6 +46,11 @@ public class TripDetailsActivity extends UpButtonActivity implements SearchView.
     private String tripName;
     private Trip selected;
 
+    private TripDao tripDao;
+    private CountryDao countryDao;
+
+    private boolean countryExists = false;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -54,9 +60,12 @@ public class TripDetailsActivity extends UpButtonActivity implements SearchView.
         tripName = intent.getStringExtra(Const.TRIP_NAME);
         setTitle(tripName);
 
-        List<Trip> trips = TripDao.getAll();
+        tripDao = SwiftTravelDatabase.getInstance(getApplicationContext()).getTripDao();
+        countryDao = SwiftTravelDatabase.getInstance(getApplicationContext()).getCountryDao();
+
+        List<Trip> trips = tripDao.getAll();
         for (Trip trip : trips) {
-            if (trip.getName().equals(intent.getStringExtra(Const.TRIP_NAME))) {
+            if (trip.getName().equals(tripName)) {
                 selected = trip;
             }
         }
@@ -71,27 +80,7 @@ public class TripDetailsActivity extends UpButtonActivity implements SearchView.
         super.onStart();
         getProgressBar().setVisibility(View.GONE);
 
-        Intent intent = getIntent();
-
-        if (intent.getStringExtra(Const.TRIP_DESCRIPTION) != null) {
-            selected.setDescription(intent.getStringExtra(Const.TRIP_DESCRIPTION));
-        }
-
-        TextView title = findViewById(R.id.trip_title);
-        title.setText(selected.getName());
-
-        TextView description = findViewById(R.id.trip_description);
-        if (selected.getDescription() == null) {
-            description.setText(R.string.add_description);
-        } else {
-            description.setText(selected.getDescription());
-        }
-        description.setMovementMethod(new ScrollingMovementMethod());
-
-        TextView duration = findViewById(R.id.trip_duration);
-        duration.setText(selected.getDuration());
-
-        List<Country> countries = selected.getCountries();
+        List<Country> countries = countryDao.getAllFromTrip(selected.getId());
         adapter = new CountryAdapter(this, countries);
 
         createCountryFromIntent();
@@ -185,9 +174,19 @@ public class TripDetailsActivity extends UpButtonActivity implements SearchView.
 
     private void addTripInformation(Intent intent, Country country) {
         if (intent.getStringExtra(Const.COUNTRY_NAME) != null) {
-            country.setName(intent.getStringExtra(Const.COUNTRY_NAME));
-            country.setImageURI(Uri.parse(intent.getStringExtra(Const.FLAG_URI)));
-            adapter.add(country);
+            for (Country existingCountry : countryDao.getAllFromTrip(selected.getId())) {
+                if (existingCountry.getName().equals(intent.getStringExtra(Const.COUNTRY_NAME))) {
+                    countryExists = true;
+                    break;
+                }
+            }
+            if (!countryExists) {
+                country.setName(intent.getStringExtra(Const.COUNTRY_NAME));
+                country.setImageURI(intent.getStringExtra(Const.FLAG_URI));
+                country.setTripID(selected.getId());
+                adapter.add(country);
+                countryDao.insert(country);
+            }
         }
     }
 
@@ -214,12 +213,31 @@ public class TripDetailsActivity extends UpButtonActivity implements SearchView.
         EditText editTitle = findViewById(R.id.edit_title);
         EditText editDescription = findViewById(R.id.edit_description);
 
+        ImageView tripImage = findViewById(R.id.trip_image);
+
         title.setText(selected.getName());
+        if (selected.getName().length() >= 20) {
+            title.setTextSize(18);
+        } else {
+            title.setTextSize(24);
+        }
         setTitle(selected.getName());
         editTitle.setText(selected.getName());
 
-        description.setText(selected.getDescription());
+        TextView duration = findViewById(R.id.trip_duration);
+        duration.setText(selected.getDuration());
+
+        if (selected.getDescription().equals("")) {
+            description.setText(R.string.add_description);
+        } else {
+            description.setText(selected.getDescription());
+        }
+        description.setMovementMethod(new ScrollingMovementMethod());
         editDescription.setText(selected.getDescription());
+
+        if (selected.getImageURI() != null) {
+            tripImage.setImageURI(Uri.parse(selected.getImageURI()));
+        }
     }
 
     private void toggleForm() {
@@ -272,5 +290,13 @@ public class TripDetailsActivity extends UpButtonActivity implements SearchView.
 
     public void setAdapter(CountryAdapter adapter) {
         this.adapter = adapter;
+    }
+
+    public CountryDao getCountryDao() {
+        return countryDao;
+    }
+
+    public void setCountryDao(CountryDao countryDao) {
+        this.countryDao = countryDao;
     }
 }

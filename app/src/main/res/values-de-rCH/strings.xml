@@ -28,7 +28,9 @@
     <string name="countries_title">Länder</string>
     <string name="add_country">Land hinzufügen</string>
     <string name="add_countries_to_list_error_title">Länder auflisten</string>
-    <string name="add_countries_to_list_error_text">Beim Auflisten der Länder ist ein Fehler aufgetreten, versuche es später erneut.</string>
+    <string name="add_countries_to_list_error_text">Beim Auflisten der Länder ist ein Fehler aufgetreten, versuche es später erneut</string>
     <string name="add_description">Beschreibung hinzufügen</string>
     <string name="submit_text">Bestätigen</string>
+    <string name="entry_exists_error_title">Land existiert</string>
+    <string name="entry_exists_error_text">Das Land, welches du hinzufügen wolltest, existiert bereits</string>
 </resources>

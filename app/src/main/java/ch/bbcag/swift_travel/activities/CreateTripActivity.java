@@ -16,87 +16,87 @@ import com.google.android.material.textfield.TextInputLayout;
 
 import java.util.Objects;
 
-import ch.bbcag.swift_travel.utils.Const;
 import ch.bbcag.swift_travel.R;
-import ch.bbcag.swift_travel.model.Trip;
+import ch.bbcag.swift_travel.entities.Trip;
+import ch.bbcag.swift_travel.utils.Const;
 
 public class CreateTripActivity extends UpButtonActivity {
-	private Trip trip = new Trip();
+    private Trip trip = new Trip();
 
-	private TextInputLayout nameLayout;
-	private TextInputLayout descriptionLayout;
-	private TextInputEditText nameEdit;
-	private TextInputEditText descriptionEdit;
-	private ImageButton chooseImage;
-	private Button create;
+    private TextInputLayout nameLayout;
+    private TextInputLayout descriptionLayout;
+    private TextInputEditText nameEdit;
+    private TextInputEditText descriptionEdit;
+    private ImageButton chooseImage;
+    private Button create;
 
-	@Override
-	protected void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_create_trip);
-		setTitle(getString(R.string.create_trip_title));
-	}
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_create_trip);
+        setTitle(getString(R.string.create_trip_title));
+    }
 
-	@Override
-	protected void onStart() {
-		super.onStart();
-		getProgressBar().setVisibility(View.GONE);
-		nameLayout = findViewById(R.id.edit_title_layout);
-		descriptionLayout = findViewById(R.id.edit_description_layout);
-		nameEdit = findViewById(R.id.edit_title);
-		descriptionEdit = findViewById(R.id.edit_description);
-		create = findViewById(R.id.create);
-		chooseImage = findViewById(R.id.place_holder_image);
+    @Override
+    protected void onStart() {
+        super.onStart();
+        getProgressBar().setVisibility(View.GONE);
+        nameLayout = findViewById(R.id.edit_title_layout);
+        descriptionLayout = findViewById(R.id.edit_description_layout);
+        nameEdit = findViewById(R.id.edit_title);
+        descriptionEdit = findViewById(R.id.edit_description);
+        create = findViewById(R.id.create);
+        chooseImage = findViewById(R.id.place_holder_image);
 
-		onCreateClick();
-		onChooseImageClick();
-	}
+        onCreateClick();
+        onChooseImageClick();
+    }
 
-	private void onCreateClick() {
-		create.setOnClickListener(v -> startMainOrShowError());
-	}
+    private void onCreateClick() {
+        create.setOnClickListener(v -> startMainOrShowError());
+    }
 
-	private void onChooseImageClick() {
-		chooseImage.setOnClickListener(v -> ImagePicker.with(this).cropSquare().start());
-	}
+    private void onChooseImageClick() {
+        chooseImage.setOnClickListener(v -> ImagePicker.with(this).cropSquare().start());
+    }
 
-	@Override
-	protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-		super.onActivityResult(requestCode, resultCode, data);
-		if (resultCode == Activity.RESULT_OK && data != null) {
-			Uri imageURI = data.getData();
-			trip.setImageURI(imageURI);
-			chooseImage.setImageURI(imageURI);
-		}
-	}
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (resultCode == Activity.RESULT_OK && data != null) {
+            Uri imageURI = data.getData();
+            trip.setImageURI(imageURI.toString());
+            chooseImage.setImageURI(imageURI);
+        }
+    }
 
-	private void startMainOrShowError() {
-		if (Objects.requireNonNull(nameEdit.getText()).toString().length() > 0) {
-			Intent intent = new Intent(getApplicationContext(), MainActivity.class);
-			intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+    private void startMainOrShowError() {
+        if (Objects.requireNonNull(nameEdit.getText()).toString().length() > 0) {
+            Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 
-			nameLayout.setError(null);
-			trip.setName(nameEdit.getText().toString());
+            nameLayout.setError(null);
+            trip.setName(nameEdit.getText().toString());
 
-			intent.putExtra(Const.TRIP_NAME, nameEdit.getText().toString());
-			if(trip.getImageURI() != null) {
-				intent.putExtra(Const.TRIP_IMAGE_URI, trip.getImageURI().toString());
-			}
-			addDescriptionToTripAndIntentIfSet(intent);
+            intent.putExtra(Const.TRIP_NAME, nameEdit.getText().toString());
+            if (trip.getImageURI() != null) {
+                intent.putExtra(Const.TRIP_IMAGE_URI, trip.getImageURI());
+            }
+            addDescriptionToTripAndIntentIfSet(intent);
 
-			startActivity(intent);
-		} else {
-			nameLayout.setError(getString(R.string.trip_name_error));
-		}
-	}
+            startActivity(intent);
+        } else {
+            nameLayout.setError(getString(R.string.trip_name_error));
+        }
+    }
 
 
-	private void addDescriptionToTripAndIntentIfSet(Intent intent) {
-		if (Objects.requireNonNull(descriptionEdit.getText()).toString().length() <= 0) {
-			descriptionEdit.setText("");
-		}
+    private void addDescriptionToTripAndIntentIfSet(Intent intent) {
+        if (Objects.requireNonNull(descriptionEdit.getText()).toString().length() <= 0) {
+            descriptionEdit.setText("");
+        }
 
-		trip.setDescription(descriptionEdit.getText().toString());
-		intent.putExtra(Const.TRIP_DESCRIPTION, descriptionEdit.getText().toString());
-	}
+        trip.setDescription(descriptionEdit.getText().toString());
+        intent.putExtra(Const.TRIP_DESCRIPTION, descriptionEdit.getText().toString());
+    }
 }

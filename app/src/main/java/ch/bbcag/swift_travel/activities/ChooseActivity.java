@@ -60,20 +60,7 @@ public class ChooseActivity extends UpButtonActivity implements SearchView.OnQue
         searchView.setIconified(false);
         searchView.setOnQueryTextListener(this);
         searchView.setOnCloseListener(this);
-
-        searchItem.setOnActionExpandListener(new MenuItem.OnActionExpandListener() {
-            @Override
-            public boolean onMenuItemActionExpand(MenuItem item) {
-                return true;
-            }
-
-            @Override
-            public boolean onMenuItemActionCollapse(MenuItem item) {
-                searchView.setQuery("", false);
-                filterAdapter("");
-                return true;
-            }
-        });
+        setOnActionExpandListener();
 
         return true;
     }
@@ -111,6 +98,22 @@ public class ChooseActivity extends UpButtonActivity implements SearchView.OnQue
         return false;
     }
 
+    private void setOnActionExpandListener() {
+        searchItem.setOnActionExpandListener(new MenuItem.OnActionExpandListener() {
+            @Override
+            public boolean onMenuItemActionExpand(MenuItem item) {
+                return true;
+            }
+
+            @Override
+            public boolean onMenuItemActionCollapse(MenuItem item) {
+                searchView.setQuery("", false);
+                filterAdapter("");
+                return true;
+            }
+        });
+    }
+
     private void filterAdapter(String searchText) {
         adapter.getFilter().filter(searchText);
     }
@@ -135,7 +138,7 @@ public class ChooseActivity extends UpButtonActivity implements SearchView.OnQue
             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
             Country country = (Country) ((ListView) parent).getItemAtPosition(position);
             intent.putExtra(Const.COUNTRY_NAME, country.getName());
-            intent.putExtra(Const.FLAG_URI, country.getImageURI().toString());
+            intent.putExtra(Const.FLAG_URI, country.getImageURI());
             intent.putExtra(Const.TRIP_NAME, tripName);
             startActivity(intent);
         });

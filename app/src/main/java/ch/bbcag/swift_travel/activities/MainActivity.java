@@ -67,20 +67,7 @@ public class MainActivity extends BaseActivity implements SearchView.OnQueryText
         searchView.setIconified(false);
         searchView.setOnQueryTextListener(this);
         searchView.setOnCloseListener(this);
-
-        searchItem.setOnActionExpandListener(new MenuItem.OnActionExpandListener() {
-            @Override
-            public boolean onMenuItemActionExpand(MenuItem item) {
-                return true;
-            }
-
-            @Override
-            public boolean onMenuItemActionCollapse(MenuItem item) {
-                searchView.setQuery("", false);
-                filterAdapter("");
-                return true;
-            }
-        });
+        setOnActionExpandListener();
 
         return true;
     }
@@ -119,6 +106,22 @@ public class MainActivity extends BaseActivity implements SearchView.OnQueryText
         return false;
     }
 
+    private void setOnActionExpandListener() {
+        searchItem.setOnActionExpandListener(new MenuItem.OnActionExpandListener() {
+            @Override
+            public boolean onMenuItemActionExpand(MenuItem item) {
+                return true;
+            }
+
+            @Override
+            public boolean onMenuItemActionCollapse(MenuItem item) {
+                searchView.setQuery("", false);
+                filterAdapter("");
+                return true;
+            }
+        });
+    }
+
     private void filterAdapter(String searchText) {
         adapter.getFilter().filter(searchText);
     }
@@ -134,19 +137,28 @@ public class MainActivity extends BaseActivity implements SearchView.OnQueryText
 
     private void addTripInformation(Intent intent, Trip trip) {
         if (intent.getStringExtra(Const.TRIP_NAME) != null) {
-            for (Trip existingTrip : tripDao.getAll()) {
-                if (existingTrip.getName().equals(intent.getStringExtra(Const.TRIP_NAME))) {
-                    tripExists = true;
-                    break;
-                }
+            checkIfTripExists(intent);
+            addTripIfNotExists(intent, trip);
+        }
+    }
+
+    private void checkIfTripExists(Intent intent) {
+        for (Trip existingTrip : tripDao.getAll()) {
+            if (existingTrip.getName().equals(intent.getStringExtra(Const.TRIP_NAME))) {
+                tripExists = true;
+                break;
             }
-            if (!tripExists) {
-                trip.setName(intent.getStringExtra(Const.TRIP_NAME));
-                addDescription(intent, trip);
-                addImageURI(intent, trip);
-                adapter.add(trip);
-                tripDao.insert(trip);
-            }
+        }
+
+    }
+
+    private void addTripIfNotExists(Intent intent, Trip trip) {
+        if (!tripExists) {
+            trip.setName(intent.getStringExtra(Const.TRIP_NAME));
+            addDescription(intent, trip);
+            addImageURI(intent, trip);
+            adapter.add(trip);
+            tripDao.insert(trip);
         }
     }
 

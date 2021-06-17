@@ -28,9 +28,7 @@ public class BaseActivity extends AppCompatActivity {
 		progressBar.setVisibility(View.GONE);
 		AlertDialog.Builder dialogBuilder;
 		dialogBuilder = new AlertDialog.Builder(this);
-		dialogBuilder.setPositiveButton(getString(R.string.dialog_close), (dialog, id) -> {
-			finish();
-		});
+		dialogBuilder.setPositiveButton(getString(R.string.dialog_close), (dialog, id) -> finish());
 		dialogBuilder.setMessage(message).setTitle(title);
 		AlertDialog dialog = dialogBuilder.create();
 		dialog.show();
@@ -40,12 +38,8 @@ public class BaseActivity extends AppCompatActivity {
 		progressBar.setVisibility(View.GONE);
 		AlertDialog.Builder dialogBuilder;
 		dialogBuilder = new AlertDialog.Builder(this);
-		dialogBuilder.setPositiveButton(getString(R.string.dialog_yes), (dialog, id) -> {
-			runnable.run();
-		});
-		dialogBuilder.setNegativeButton(getString(R.string.dialog_no), (dialog, id) -> {
-			dialog.cancel();
-		});
+		dialogBuilder.setPositiveButton(getString(R.string.dialog_yes), (dialog, id) -> runnable.run());
+		dialogBuilder.setNegativeButton(getString(R.string.dialog_no), (dialog, id) -> dialog.cancel());
 		dialogBuilder.setMessage(message).setTitle(title);
 		AlertDialog dialog = dialogBuilder.create();
 		dialog.show();

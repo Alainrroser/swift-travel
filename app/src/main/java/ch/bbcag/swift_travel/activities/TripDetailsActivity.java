@@ -21,8 +21,11 @@ import androidx.annotation.NonNull;
 import androidx.constraintlayout.widget.Group;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.android.material.textfield.TextInputEditText;
+import com.google.android.material.textfield.TextInputLayout;
 
 import java.util.List;
+import java.util.Objects;
 
 import ch.bbcag.swift_travel.R;
 import ch.bbcag.swift_travel.adapter.CountryAdapter;
@@ -34,269 +37,293 @@ import ch.bbcag.swift_travel.entities.Trip;
 import ch.bbcag.swift_travel.utils.Const;
 
 public class TripDetailsActivity extends UpButtonActivity implements SearchView.OnQueryTextListener, SearchView.OnCloseListener {
-    private SearchView searchView;
-    private MenuItem searchItem;
+	private SearchView searchView;
+	private MenuItem searchItem;
 
-    private FloatingActionButton floatingActionButton;
-    private CountryAdapter adapter;
+	private FloatingActionButton floatingActionButton;
+	private CountryAdapter adapter;
 
-    private ImageButton editDescriptionButton;
-    private Button submitButton;
+	private ImageButton editDescriptionButton;
+	private Button submitButton;
 
-    private String tripName;
-    private Trip selected;
+	private String tripName;
+	private Trip selected;
 
-    private TripDao tripDao;
-    private CountryDao countryDao;
+	private TripDao tripDao;
+	private CountryDao countryDao;
 
-    private boolean countryExists = false;
+	private boolean countryExists = false;
+	private boolean nameValidated = false;
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_trip_details);
+	@Override
+	protected void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+		setContentView(R.layout.activity_trip_details);
 
-        Intent intent = getIntent();
-        tripName = intent.getStringExtra(Const.TRIP_NAME);
-        setTitle(tripName);
+		Intent intent = getIntent();
+		tripName = intent.getStringExtra(Const.TRIP_NAME);
+		setTitle(tripName);
 
-        tripDao = SwiftTravelDatabase.getInstance(getApplicationContext()).getTripDao();
-        countryDao = SwiftTravelDatabase.getInstance(getApplicationContext()).getCountryDao();
+		tripDao = SwiftTravelDatabase.getInstance(getApplicationContext()).getTripDao();
+		countryDao = SwiftTravelDatabase.getInstance(getApplicationContext()).getCountryDao();
 
-        List<Trip> trips = tripDao.getAll();
-        for (Trip trip : trips) {
-            if (trip.getName().equals(tripName)) {
-                selected = trip;
-            }
-        }
+		List<Trip> trips = tripDao.getAll();
+		for (Trip trip : trips) {
+			if (trip.getName().equals(tripName)) {
+				selected = trip;
+			}
+		}
 
-        floatingActionButton = findViewById(R.id.floating_action_button_trip_details);
-        editDescriptionButton = findViewById(R.id.edit_button);
-        submitButton = findViewById(R.id.submit_button);
-    }
+		floatingActionButton = findViewById(R.id.floating_action_button_trip_details);
+		editDescriptionButton = findViewById(R.id.edit_button);
+		submitButton = findViewById(R.id.submit_button);
+	}
 
-    @Override
-    protected void onStart() {
-        super.onStart();
-        getProgressBar().setVisibility(View.GONE);
+	@Override
+	protected void onStart() {
+		super.onStart();
+		getProgressBar().setVisibility(View.GONE);
 
-        List<Country> countries = countryDao.getAllFromTrip(selected.getId());
-        adapter = new CountryAdapter(this, countries);
+		List<Country> countries = countryDao.getAllFromTrip(selected.getId());
+		adapter = new CountryAdapter(this, countries);
 
-        createCountryFromIntent();
-        addCountriesToClickableList();
+		createCountryFromIntent();
+		addCountriesToClickableList();
 
-        Group form = findViewById(R.id.trip_form);
-        form.setVisibility(View.GONE);
+		Group form = findViewById(R.id.trip_form);
+		form.setVisibility(View.GONE);
 
-        refreshContent();
+		refreshContent();
 
-        onFloatingActionButtonClick();
-        onEditDescriptionClick();
-        onSubmitButtonClick();
-    }
+		onFloatingActionButtonClick();
+		onEditDescriptionClick();
+		onSubmitButtonClick();
+	}
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.search_menu, menu);
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+		MenuInflater inflater = getMenuInflater();
+		inflater.inflate(R.menu.search_menu, menu);
 
-        searchItem = menu.findItem(R.id.search);
+		searchItem = menu.findItem(R.id.search);
 
-        searchView = (SearchView) searchItem.getActionView();
-        searchView.setQueryHint(getString(R.string.search));
-        searchView.setIconified(false);
-        searchView.setOnQueryTextListener(this);
-        searchView.setOnCloseListener(this);
+		searchView = (SearchView) searchItem.getActionView();
+		searchView.setQueryHint(getString(R.string.search));
+		searchView.setIconified(false);
+		searchView.setOnQueryTextListener(this);
+		searchView.setOnCloseListener(this);
+		setOnActionExpandListener();
 
-        searchItem.setOnActionExpandListener(new MenuItem.OnActionExpandListener() {
-            @Override
-            public boolean onMenuItemActionExpand(MenuItem item) {
-                return true;
-            }
+		return true;
+	}
 
-            @Override
-            public boolean onMenuItemActionCollapse(MenuItem item) {
-                searchView.setQuery("", false);
-                filterAdapter("");
-                return true;
-            }
-        });
+	@Override
+	public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+		int itemId = item.getItemId();
+		if (itemId == R.id.search) {
+			searchView.setIconified(false);
+			return true;
+		}
+		return super.onOptionsItemSelected(item);
+	}
 
-        return true;
-    }
+	@Override
+	public boolean onQueryTextSubmit(String searchText) {
+		filterAdapter(searchText);
+		return true;
+	}
 
-    @Override
-    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        int itemId = item.getItemId();
-        if (itemId == R.id.search) {
-            searchView.setIconified(false);
-            return true;
-        }
-        return super.onOptionsItemSelected(item);
-    }
+	@Override
+	public boolean onQueryTextChange(String searchText) {
+		filterAdapter(searchText);
+		return false;
+	}
 
-    @Override
-    public boolean onQueryTextSubmit(String searchText) {
-        filterAdapter(searchText);
-        return true;
-    }
+	@Override
+	public boolean onClose() {
+		if (!searchView.isIconified()) {
+			searchItem.collapseActionView();
+		} else {
+			searchView.setIconified(false);
+		}
 
-    @Override
-    public boolean onQueryTextChange(String searchText) {
-        filterAdapter(searchText);
-        return false;
-    }
+		return false;
+	}
 
-    @Override
-    public boolean onClose() {
-        if (!searchView.isIconified()) {
-            searchItem.collapseActionView();
-        } else {
-            searchView.setIconified(false);
-        }
+	private void setOnActionExpandListener() {
+		searchItem.setOnActionExpandListener(new MenuItem.OnActionExpandListener() {
+			@Override
+			public boolean onMenuItemActionExpand(MenuItem item) {
+				return true;
+			}
 
-        return false;
-    }
+			@Override
+			public boolean onMenuItemActionCollapse(MenuItem item) {
+				searchView.setQuery("", false);
+				filterAdapter("");
+				return true;
+			}
+		});
+	}
 
-    private void filterAdapter(String searchText) {
-        adapter.getFilter().filter(searchText);
-    }
+	private void filterAdapter(String searchText) {
+		adapter.getFilter().filter(searchText);
+	}
 
-    /**
-     * Creates a trip from the information in the intent if they aren't null.
-     */
-    private void createCountryFromIntent() {
-        Intent intent = getIntent();
-        Country country = new Country();
-        addTripInformation(intent, country);
-    }
+	/**
+	 * Creates a trip from the information in the intent if they aren't null.
+	 */
+	private void createCountryFromIntent() {
+		Intent intent = getIntent();
+		Country country = new Country();
+		addTripInformation(intent, country);
+	}
 
-    private void addTripInformation(Intent intent, Country country) {
-        if (intent.getStringExtra(Const.COUNTRY_NAME) != null) {
-            for (Country existingCountry : countryDao.getAllFromTrip(selected.getId())) {
-                if (existingCountry.getName().equals(intent.getStringExtra(Const.COUNTRY_NAME))) {
-                    countryExists = true;
-                    break;
-                }
-            }
-            if (!countryExists) {
-                country.setName(intent.getStringExtra(Const.COUNTRY_NAME));
-                country.setImageURI(intent.getStringExtra(Const.FLAG_URI));
-                country.setTripID(selected.getId());
-                adapter.add(country);
-                countryDao.insert(country);
-            }
-        }
-    }
+	private void addTripInformation(Intent intent, Country country) {
+		if (intent.getStringExtra(Const.COUNTRY_NAME) != null) {
+			checkIfCountryExists(intent);
+			addCountryIfNotExists(intent, country);
+		}
+	}
 
-    public void addCountriesToClickableList() {
-        ListView countries = findViewById(R.id.countries);
-        countries.setAdapter(adapter);
+	private void checkIfCountryExists(Intent intent) {
+		for (Country existingCountry : countryDao.getAllFromTrip(selected.getId())) {
+			if (existingCountry.getName().equals(intent.getStringExtra(Const.COUNTRY_NAME))) {
+				countryExists = true;
+				break;
+			}
+		}
+	}
 
-        getProgressBar().setVisibility(View.GONE);
+	private void addCountryIfNotExists(Intent intent, Country country) {
+		if (!countryExists) {
+			country.setName(intent.getStringExtra(Const.COUNTRY_NAME));
+			country.setImageURI(intent.getStringExtra(Const.FLAG_URI));
+			country.setTripID(selected.getId());
+			adapter.add(country);
+			countryDao.insert(country);
+		}
+	}
 
-        AdapterView.OnItemClickListener mListClickedHandler = (parent, v, position, id) -> {
-            Intent intent = new Intent(getApplicationContext(), CountryDetailsActivity.class);
-            Country selected = (Country) parent.getItemAtPosition(position);
-            intent.putExtra(Const.COUNTRY_NAME, selected.getName());
-            startActivity(intent);
-        };
+	public void addCountriesToClickableList() {
+		ListView countries = findViewById(R.id.countries);
+		countries.setAdapter(adapter);
 
-        countries.setOnItemClickListener(mListClickedHandler);
-    }
+		getProgressBar().setVisibility(View.GONE);
 
-    private void refreshContent() {
-        TextView title = findViewById(R.id.trip_title);
-        TextView description = findViewById(R.id.trip_description);
+		AdapterView.OnItemClickListener mListClickedHandler = (parent, v, position, id) -> {
+			Intent intent = new Intent(getApplicationContext(), CountryDetailsActivity.class);
+			Country selected = (Country) parent.getItemAtPosition(position);
+			intent.putExtra(Const.COUNTRY_NAME, selected.getName());
+			startActivity(intent);
+		};
 
-        EditText editTitle = findViewById(R.id.edit_title);
-        EditText editDescription = findViewById(R.id.edit_description);
+		countries.setOnItemClickListener(mListClickedHandler);
+	}
 
-        ImageView tripImage = findViewById(R.id.trip_image);
+	private void refreshContent() {
+		TextView title = findViewById(R.id.trip_title);
+		TextView description = findViewById(R.id.trip_description);
 
-        title.setText(selected.getName());
-        if (selected.getName().length() >= 20) {
-            title.setTextSize(18);
-        } else {
-            title.setTextSize(24);
-        }
-        setTitle(selected.getName());
-        editTitle.setText(selected.getName());
+		EditText editTitle = findViewById(R.id.edit_title);
+		EditText editDescription = findViewById(R.id.edit_description);
 
-        TextView duration = findViewById(R.id.trip_duration);
-        duration.setText(selected.getDuration());
+		ImageView tripImage = findViewById(R.id.trip_image);
 
-        if (selected.getDescription().equals("")) {
-            description.setText(R.string.add_description);
-        } else {
-            description.setText(selected.getDescription());
-        }
-        description.setMovementMethod(new ScrollingMovementMethod());
-        editDescription.setText(selected.getDescription());
+		title.setText(selected.getName());
+		if (selected.getName().length() >= 20) {
+			title.setTextSize(18);
+		} else {
+			title.setTextSize(24);
+		}
+		setTitle(selected.getName());
+		editTitle.setText(selected.getName());
 
-        if (selected.getImageURI() != null) {
-            tripImage.setImageURI(Uri.parse(selected.getImageURI()));
-        }
-    }
+		TextView duration = findViewById(R.id.trip_duration);
+		duration.setText(selected.getDuration());
 
-    private void toggleForm() {
-        Group form = findViewById(R.id.trip_form);
-        Group content = findViewById(R.id.trip_content);
+		if (selected.getDescription().equals("")) {
+			description.setText(R.string.add_description);
+		} else {
+			description.setText(selected.getDescription());
+		}
+		description.setMovementMethod(new ScrollingMovementMethod());
+		editDescription.setText(selected.getDescription());
 
-        if (form.getVisibility() == View.VISIBLE) {
-            form.setVisibility(View.GONE);
-            content.setVisibility(View.VISIBLE);
-        } else {
-            form.setVisibility(View.VISIBLE);
-            content.setVisibility(View.GONE);
-        }
-    }
+		if (selected.getImageURI() != null) {
+			tripImage.setImageURI(Uri.parse(selected.getImageURI()));
+		}
+	}
 
-    private void onFloatingActionButtonClick() {
-        floatingActionButton.setOnClickListener(v -> {
-            Intent intent = new Intent(getApplicationContext(), ChooseActivity.class);
-            intent.putExtra(Const.NAME, Const.COUNTRY);
-            intent.putExtra(Const.TRIP_NAME, tripName);
-            startActivity(intent);
-        });
-    }
+	private void toggleForm() {
+		Group form = findViewById(R.id.trip_form);
+		Group content = findViewById(R.id.trip_content);
 
-    private void onEditDescriptionClick() {
-        editDescriptionButton.setOnClickListener(v -> toggleForm());
-    }
+		if (form.getVisibility() == View.VISIBLE && nameValidated) {
+			form.setVisibility(View.GONE);
+			content.setVisibility(View.VISIBLE);
+		} else {
+			form.setVisibility(View.VISIBLE);
+			content.setVisibility(View.GONE);
+		}
+	}
 
-    private void onSubmitButtonClick() {
-        submitButton.setOnClickListener(v -> {
-            EditText editTitle = findViewById(R.id.edit_title);
-            EditText editDescription = findViewById(R.id.edit_description);
+	private void onFloatingActionButtonClick() {
+		floatingActionButton.setOnClickListener(v -> {
+			Intent intent = new Intent(getApplicationContext(), ChooseActivity.class);
+			intent.putExtra(Const.NAME, Const.COUNTRY);
+			intent.putExtra(Const.TRIP_NAME, tripName);
+			startActivity(intent);
+		});
+	}
 
-            if (!editTitle.getText().toString().equals("")) {
-                selected.setName(editTitle.getText().toString());
-            }
+	private void onEditDescriptionClick() {
+		editDescriptionButton.setOnClickListener(v -> toggleForm());
+	}
 
-            if (!editDescription.getText().toString().equals("")) {
-                selected.setDescription(editDescription.getText().toString());
-            }
+	private void onSubmitButtonClick() {
+		submitButton.setOnClickListener(v -> {
+			editName();
+			editDescription();
+			refreshContent();
+			toggleForm();
+		});
+	}
 
-            refreshContent();
-            toggleForm();
-        });
-    }
+	private void editName() {
+		TextInputLayout editTitleLayout = findViewById(R.id.edit_title_layout);
+		TextInputEditText editTitle = findViewById(R.id.edit_title);
+		if (Objects.requireNonNull(editTitle.getText()).toString().length() > 0 && Objects.requireNonNull(editTitle.getText()).toString().length() <= 40) {
+			nameValidated = true;
+			selected.setName(editTitle.getText().toString());
+			tripDao.setName(editTitle.getText().toString());
+		} else {
+			nameValidated = false;
+			editTitleLayout.setError(getString(R.string.trip_name_error));
+		}
+	}
 
-    public CountryAdapter getAdapter() {
-        return adapter;
-    }
+	private void editDescription() {
+		EditText editDescription = findViewById(R.id.edit_description);
+		if (!editDescription.getText().toString().equals("")) {
+			selected.setDescription(editDescription.getText().toString());
+			tripDao.setDescription(editDescription.getText().toString());
+		}
+	}
 
-    public void setAdapter(CountryAdapter adapter) {
-        this.adapter = adapter;
-    }
+	public CountryAdapter getAdapter() {
+		return adapter;
+	}
 
-    public CountryDao getCountryDao() {
-        return countryDao;
-    }
+	public void setAdapter(CountryAdapter adapter) {
+		this.adapter = adapter;
+	}
 
-    public void setCountryDao(CountryDao countryDao) {
-        this.countryDao = countryDao;
-    }
+	public CountryDao getCountryDao() {
+		return countryDao;
+	}
+
+	public void setCountryDao(CountryDao countryDao) {
+		this.countryDao = countryDao;
+	}
 }

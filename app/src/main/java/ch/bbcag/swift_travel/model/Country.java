@@ -2,6 +2,8 @@ package ch.bbcag.swift_travel.model;
 
 import android.net.Uri;
 
+import androidx.annotation.NonNull;
+
 import java.util.List;
 
 public class Country {
@@ -18,6 +20,12 @@ public class Country {
 	public Country(String name, String duration) {
 		this.name = name;
 		this.duration = duration;
+	}
+
+	@NonNull
+	@Override
+	public String toString() {
+		return name;
 	}
 
 	public String getName() {

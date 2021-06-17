@@ -112,11 +112,26 @@ public class TripDetailsActivity extends UpButtonActivity implements SearchView.
 		inflater.inflate(R.menu.search_menu, menu);
 
 		searchItem = menu.findItem(R.id.search);
+
 		searchView = (SearchView) searchItem.getActionView();
 		searchView.setQueryHint(getString(R.string.search));
 		searchView.setIconified(false);
 		searchView.setOnQueryTextListener(this);
 		searchView.setOnCloseListener(this);
+
+		searchItem.setOnActionExpandListener(new MenuItem.OnActionExpandListener() {
+			@Override
+			public boolean onMenuItemActionExpand(MenuItem item) {
+				return true;
+			}
+
+			@Override
+			public boolean onMenuItemActionCollapse(MenuItem item) {
+				searchView.setQuery("", false);
+				filterAdapter("");
+				return true;
+			}
+		});
 
 		return true;
 	}

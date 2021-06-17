@@ -2,6 +2,8 @@ package ch.bbcag.swift_travel.model;
 
 import android.net.Uri;
 
+import androidx.annotation.NonNull;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -32,6 +34,12 @@ public class Trip {
 		this.name = name;
 		this.description = description;
 		this.imageURI = imageURI;
+	}
+
+	@NonNull
+	@Override
+	public String toString() {
+		return name;
 	}
 
 	public int getId() {

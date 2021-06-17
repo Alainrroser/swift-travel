@@ -55,11 +55,26 @@ public class MainActivity extends BaseActivity implements SearchView.OnQueryText
 		inflater.inflate(R.menu.search_menu, menu);
 
 		searchItem = menu.findItem(R.id.search);
+
 		searchView = (SearchView) searchItem.getActionView();
 		searchView.setQueryHint(getString(R.string.search));
 		searchView.setIconified(false);
 		searchView.setOnQueryTextListener(this);
 		searchView.setOnCloseListener(this);
+
+		searchItem.setOnActionExpandListener(new MenuItem.OnActionExpandListener() {
+			@Override
+			public boolean onMenuItemActionExpand(MenuItem item) {
+				return true;
+			}
+
+			@Override
+			public boolean onMenuItemActionCollapse(MenuItem item) {
+				searchView.setQuery("", false);
+				filterAdapter("");
+				return true;
+			}
+		});
 
 		return true;
 	}
@@ -74,19 +89,15 @@ public class MainActivity extends BaseActivity implements SearchView.OnQueryText
 		return super.onOptionsItemSelected(item);
 	}
 
-	private void filterAdapter(String filterString) {
-		adapter.getFilter().filter(filterString);
-	}
-
 	@Override
-	public boolean onQueryTextSubmit(String s) {
-		filterAdapter(s);
+	public boolean onQueryTextSubmit(String searchText) {
+		filterAdapter(searchText);
 		return true;
 	}
 
 	@Override
-	public boolean onQueryTextChange(String s) {
-		filterAdapter(s);
+	public boolean onQueryTextChange(String searchText) {
+		filterAdapter(searchText);
 		System.out.println(searchView.getQuery());
 		return false;
 	}
@@ -100,6 +111,10 @@ public class MainActivity extends BaseActivity implements SearchView.OnQueryText
 		}
 
 		return false;
+	}
+
+	private void filterAdapter(String searchText) {
+		adapter.getFilter().filter(searchText);
 	}
 
 	/**

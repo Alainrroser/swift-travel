@@ -6,15 +6,17 @@
     <string name="trip_name">Trip name</string>
     <string name="trip_destination">Destination</string>
     <string name="trip_duration">Duration</string>
-    <string name="trip_name_hint">Name</string>
+    <string name="trip_name_hint">Trip Name</string>
     <string name="trip_name_error">You have to enter a name</string>
-    <string name="trip_description_hint">Description</string>
+    <string name="trip_description_hint">Enter Description</string>
     <string name="trip_create_button_text">Create</string>
     <string name="add_trip">Add Trip</string>
 
     <string name="search">Search</string>
     <string name="error_close">OK</string>
     <string name="place_holder_image">Placeholder image</string>
+    <string name="edit">Edit</string>
+    <string name="delete">Delete</string>
 
     <string name="countries_title">Countries</string>
     <string name="add_country">Add country</string>

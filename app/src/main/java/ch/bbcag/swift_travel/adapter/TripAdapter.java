@@ -11,36 +11,45 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import ch.bbcag.swift_travel.R;
+import ch.bbcag.swift_travel.model.Country;
 import ch.bbcag.swift_travel.model.Trip;
 
 public class TripAdapter extends ArrayAdapter<Trip> {
+	public static class TripViewHolder {
+		TextView name;
+		TextView destination;
+		TextView duration;
+		ImageView image;
+	}
 
 	public TripAdapter(Context context, List<Trip> trips) {
-		super(context, 0, trips);
+		super(context, R.layout.activity_main, trips);
 	}
 
 	@Override
 	public View getView(int position, View convertView, ViewGroup parent) {
+		final Trip trip = getItem(position);
+		final TripViewHolder viewHolder;
 
-		// Check if an existing view is being reused, otherwise inflate the view
 		if (convertView == null) {
-			convertView = LayoutInflater.from(getContext()).inflate(R.layout.three_line_list, parent, false);
+			viewHolder = new TripViewHolder();
+			LayoutInflater inflater = LayoutInflater.from(getContext());
+			convertView = inflater.inflate(R.layout.three_line_list, parent, false);
+
+			viewHolder.name = convertView.findViewById(R.id.name_three_line_list);
+			viewHolder.destination = convertView.findViewById(R.id.destination_three_line_list);
+			viewHolder.duration = convertView.findViewById(R.id.duration_three_line_list);
+			viewHolder.image = convertView.findViewById(R.id.image_three_line_list);
+
+			convertView.setTag(viewHolder);
+		} else {
+			viewHolder = (TripViewHolder) convertView.getTag();
 		}
 
-		// Get the data item for this position
-		Trip trip = getItem(position);
-
-		// Lookup view for data population
-		TextView name = convertView.findViewById(R.id.name_three_line_list);
-		TextView destination = convertView.findViewById(R.id.destination_three_line_list);
-		TextView duration = convertView.findViewById(R.id.duration_three_line_list);
-		ImageView imageURI = convertView.findViewById(R.id.image_three_line_list);
-		// Populate the data into the template view using the data object
-		name.setText(trip.getName());
-		destination.setText(trip.getDestination());
-		duration.setText(trip.getDuration());
-		imageURI.setImageURI(trip.getImageURI());
-		// Return the completed view to render on screen
+		viewHolder.name.setText(trip.getName());
+		viewHolder.destination.setText(trip.getDestination());
+		viewHolder.duration.setText(trip.getDuration());
+		viewHolder.image.setImageURI(trip.getImageURI());
 		return convertView;
 	}
 }

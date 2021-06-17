@@ -7,7 +7,7 @@ import android.view.View;
 import ch.bbcag.swift_travel.utils.Const;
 import ch.bbcag.swift_travel.R;
 
-public class CityDetailsActivity extends UpButtonActivity {
+public class CountryDetailsActivity extends UpButtonActivity {
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {

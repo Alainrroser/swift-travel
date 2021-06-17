@@ -22,20 +22,6 @@
         app:layout_constraintTop_toTopOf="parent"
         app:srcCompat="@drawable/trips_image" />
 
-    <androidx.constraintlayout.widget.Guideline
-        android:id="@+id/guideline_left_country_details"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        app:layout_constraintGuide_begin="16dp" />
-
-    <androidx.constraintlayout.widget.Guideline
-        android:id="@+id/guideline_right_country_details"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        app:layout_constraintGuide_end="16dp" />
-
     <TextView
         android:id="@+id/countries_title"
         android:layout_width="0dp"
@@ -50,7 +36,7 @@
         android:textSize="34sp"
         app:layout_constraintBottom_toTopOf="@id/countries"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/countries_image" />
+        app:layout_constraintTop_toBottomOf="@id/countries_image" />
 
     <View
         android:id="@+id/divider_country_details"
@@ -71,19 +57,20 @@
         android:descendantFocusability="afterDescendants"
         android:divider="@android:drawable/divider_horizontal_dark"
         android:dividerHeight="1dip"
-        app:layout_constraintBottom_toBottomOf="@+id/countries_title"
+        app:layout_constraintBottom_toBottomOf="@id/countries_title"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/countries_title" />
+        app:layout_constraintTop_toBottomOf="@id/countries_title" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/floating_action_button_countries"
+        android:id="@+id/floating_action_button_country_details"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="end|bottom"
+        android:layout_marginEnd="16dp"
         android:layout_marginBottom="16dp"
-        android:contentDescription="@string/add_country"
+        android:contentDescription="@string/add_trip"
         android:src="@drawable/add"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/guideline_right_country_details" />
+        app:layout_constraintEnd_toEndOf="parent" />
 </androidx.constraintlayout.widget.ConstraintLayout>

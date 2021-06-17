@@ -16,33 +16,38 @@ import ch.bbcag.swift_travel.R;
 import ch.bbcag.swift_travel.model.Country;
 
 public class CountryAdapter extends ArrayAdapter<Country> {
+	public static class CountryAdapterViewHolder {
+		TextView name;
+		TextView duration;
+		ImageView image;
+	}
 
 	public CountryAdapter(Context context, List<Country> countries) {
-		super(context, 0, countries);
+		super(context, R.layout.activity_trip_details, countries);
 	}
 
 	@Override
 	public View getView(int position, View convertView, ViewGroup parent) {
+		final Country country = getItem(position);
+		final CountryAdapterViewHolder viewHolder;
 
-		// Check if an existing view is being reused, otherwise inflate the view
 		if (convertView == null) {
-			convertView = LayoutInflater.from(getContext()).inflate(R.layout.two_line_list, parent, false);
+			viewHolder = new CountryAdapterViewHolder();
+			LayoutInflater inflater = LayoutInflater.from(getContext());
+			convertView = inflater.inflate(R.layout.two_line_list, parent, false);
+
+			viewHolder.name = convertView.findViewById(R.id.name_two_line_list);
+			viewHolder.duration = convertView.findViewById(R.id.duration_two_line_list);
+			viewHolder.image = convertView.findViewById(R.id.image_two_line_list);
+
+			convertView.setTag(viewHolder);
+		} else {
+			viewHolder = (CountryAdapterViewHolder) convertView.getTag();
 		}
 
-		// Get the data item for this position
-		Country country = getItem(position);
-
-		// Lookup view for data population
-		TextView name = convertView.findViewById(R.id.name_two_line_list);
-		TextView duration = convertView.findViewById(R.id.duration_two_line_list);
-		ImageView imageURI = convertView.findViewById(R.id.image_two_line_list);
-
-		// Populate the data into the template view using the data object
-		name.setText(country.getName());
-		duration.setText(country.getDuration());
-		GlideToVectorYou.init().with(getContext()).load(country.getImageURI(), imageURI);
-
-		// Return the completed view to render on screen
+		viewHolder.name.setText(country.getName());
+		viewHolder.duration.setText(country.getDuration());
+		GlideToVectorYou.init().with(getContext()).load(country.getImageURI(), viewHolder.image);
 		return convertView;
 	}
 }

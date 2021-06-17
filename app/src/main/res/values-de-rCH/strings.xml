@@ -7,15 +7,17 @@
     <string name="trip_name">Trip name</string>
     <string name="trip_destination">Destination</string>
     <string name="trip_duration">Duration</string>
-    <string name="trip_name_hint">Name</string>
+    <string name="trip_name_hint">Trip Name</string>
     <string name="trip_name_error">Du musst einen Namen eingeben</string>
-    <string name="trip_description_hint">Beschreibung</string>
+    <string name="trip_description_hint">Beschreibung hinzufügen</string>
     <string name="trip_create_button_text">Erstellen</string>
     <string name="add_trip">Reise hinzufügen</string>
 
     <string name="search">Suche</string>
     <string name="error_close">Ok</string>
     <string name="place_holder_image">Platzhalterbild</string>
+    <string name="edit">Bearbeiten</string>
+    <string name="delete">Löschen</string>
 
     <string name="countries_title">Länder</string>
     <string name="add_country">Land hinzufügen</string>

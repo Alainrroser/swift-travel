@@ -23,20 +23,6 @@
         app:layout_constraintTop_toTopOf="parent"
         app:srcCompat="@drawable/trips_image" />
 
-    <androidx.constraintlayout.widget.Guideline
-        android:id="@+id/guideline_left_main"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        app:layout_constraintGuide_begin="16dp" />
-
-    <androidx.constraintlayout.widget.Guideline
-        android:id="@+id/guideline_right_main"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        app:layout_constraintGuide_end="16dp" />
-
     <TextView
         android:id="@+id/countries_title"
         android:layout_width="0dp"
@@ -64,15 +50,16 @@
         app:layout_constraintStart_toStartOf="parent" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/floatingActionButtonTrips"
+        android:id="@+id/floating_action_button_main"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="end|bottom"
+        android:layout_marginEnd="16dp"
         android:layout_marginBottom="16dp"
         android:contentDescription="@string/add_trip"
         android:src="@drawable/add"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@id/guideline_right_main" />
+        app:layout_constraintEnd_toEndOf="parent" />
 
     <ListView
         android:id="@+id/trips"

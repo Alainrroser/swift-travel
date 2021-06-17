@@ -24,11 +24,11 @@ import ch.bbcag.swift_travel.dal.TripDao;
 import ch.bbcag.swift_travel.model.Trip;
 
 public class MainActivity extends BaseActivity implements SearchView.OnQueryTextListener, SearchView.OnCloseListener {
-	private FloatingActionButton floatingActionButton;
-	private TripAdapter adapter;
-
 	private SearchView searchView;
 	private MenuItem searchItem;
+
+	private FloatingActionButton floatingActionButton;
+	private TripAdapter adapter;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -36,7 +36,7 @@ public class MainActivity extends BaseActivity implements SearchView.OnQueryText
 		setContentView(R.layout.activity_main);
 		setTitle(getString(R.string.app_name));
 
-		floatingActionButton = findViewById(R.id.floatingActionButtonTrips);
+		floatingActionButton = findViewById(R.id.floating_action_button_main);
 	}
 
 	@Override
@@ -69,7 +69,6 @@ public class MainActivity extends BaseActivity implements SearchView.OnQueryText
 		int itemId = item.getItemId();
 		if (itemId == R.id.search) {
 			searchView.setIconified(false);
-
 			return true;
 		}
 		return super.onOptionsItemSelected(item);
@@ -88,6 +87,7 @@ public class MainActivity extends BaseActivity implements SearchView.OnQueryText
 	@Override
 	public boolean onQueryTextChange(String s) {
 		filterAdapter(s);
+		System.out.println(searchView.getQuery());
 		return false;
 	}
 
@@ -133,19 +133,20 @@ public class MainActivity extends BaseActivity implements SearchView.OnQueryText
 	}
 
 	public void addTripsToClickableList() {
-		ListView listView = findViewById(R.id.trips);
-		listView.setAdapter(adapter);
-
+		ListView allTrips = findViewById(R.id.trips);
+		allTrips.setAdapter(adapter);
 		getProgressBar().setVisibility(View.GONE);
+		onTripClick(allTrips);
+	}
 
+	private void onTripClick(ListView allTrips) {
 		AdapterView.OnItemClickListener mListClickedHandler = (parent, v, position, id) -> {
 			Intent intent = new Intent(getApplicationContext(), TripDetailsActivity.class);
 			Trip selected = (Trip) parent.getItemAtPosition(position);
 			intent.putExtra(Const.TRIP_NAME, selected.getName());
 			startActivity(intent);
 		};
-
-		listView.setOnItemClickListener(mListClickedHandler);
+		allTrips.setOnItemClickListener(mListClickedHandler);
 	}
 
 	private void onFloatingActionButtonClick() {

@@ -16,31 +16,35 @@ import ch.bbcag.swift_travel.R;
 import ch.bbcag.swift_travel.model.Country;
 
 public class ChooseCountryAdapter extends ArrayAdapter<Country> {
+	public static class ChooseCountryAdapterViewHolder {
+		TextView name;
+		ImageView image;
+	}
 
 	public ChooseCountryAdapter(Context context, List<Country> countries) {
-		super(context, 0, countries);
+		super(context, R.layout.activity_choose, countries);
 	}
 
 	@Override
 	public View getView(int position, View convertView, ViewGroup parent) {
+		final Country country = getItem(position);
+		final ChooseCountryAdapterViewHolder viewHolder;
 
-		// Check if an existing view is being reused, otherwise inflate the view
 		if (convertView == null) {
-			convertView = LayoutInflater.from(getContext()).inflate(R.layout.one_line_list, parent, false);
+			viewHolder = new ChooseCountryAdapterViewHolder();
+			LayoutInflater inflater = LayoutInflater.from(getContext());
+			convertView = inflater.inflate(R.layout.one_line_list, parent, false);
+
+			viewHolder.name = convertView.findViewById(R.id.name_one_line_list);
+			viewHolder.image = convertView.findViewById(R.id.image_one_line_list);
+
+			convertView.setTag(viewHolder);
+		} else {
+			viewHolder = (ChooseCountryAdapterViewHolder) convertView.getTag();
 		}
 
-		// Get the data item for this position
-		Country country = getItem(position);
-
-		// Lookup view for data population
-		TextView name = convertView.findViewById(R.id.name_one_line_list);
-		ImageView imageURI = convertView.findViewById(R.id.image_one_line_list);
-
-		// Populate the data into the template view using the data object
-		name.setText(country.getName());
-		GlideToVectorYou.init().with(getContext()).load(country.getImageURI(), imageURI);
-
-		// Return the completed view to render on screen
+		viewHolder.name.setText(country.getName());
+		GlideToVectorYou.init().with(getContext()).load(country.getImageURI(), viewHolder.image);
 		return convertView;
 	}
 }

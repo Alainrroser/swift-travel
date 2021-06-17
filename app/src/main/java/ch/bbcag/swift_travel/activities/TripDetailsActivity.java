@@ -4,13 +4,19 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.text.method.ScrollingMovementMethod;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ListView;
+import android.widget.SearchView;
 import android.widget.TextView;
+
+import androidx.annotation.NonNull;
 
 import androidx.constraintlayout.widget.Group;
 
@@ -25,11 +31,15 @@ import ch.bbcag.swift_travel.model.Country;
 import ch.bbcag.swift_travel.model.Trip;
 import ch.bbcag.swift_travel.utils.Const;
 
-public class TripDetailsActivity extends UpButtonActivity {
-    private FloatingActionButton floatingActionButton;
+public class TripDetailsActivity extends UpButtonActivity implements SearchView.OnQueryTextListener, SearchView.OnCloseListener {
+	private SearchView searchView;
+	private MenuItem searchItem;
+
+	private FloatingActionButton floatingActionButton;
+	private CountryAdapter adapter;
+
     private ImageButton editDescriptionButton;
     private Button submitButton;
-    private CountryAdapter adapter;
 
     private String tripName;
     private Trip selected;
@@ -50,7 +60,7 @@ public class TripDetailsActivity extends UpButtonActivity {
             }
         }
 
-        floatingActionButton = findViewById(R.id.floating_action_button_countries);
+        floatingActionButton = findViewById(R.id.floating_action_button_trip_details);
         editDescriptionButton = findViewById(R.id.edit_button);
         submitButton = findViewById(R.id.submit_button);
     }
@@ -71,7 +81,6 @@ public class TripDetailsActivity extends UpButtonActivity {
 
         TextView description = findViewById(R.id.trip_description);
         if (selected.getDescription() == null) {
-            //TODO
             description.setText(R.string.add_description);
         } else {
             description.setText(selected.getDescription());
@@ -81,11 +90,11 @@ public class TripDetailsActivity extends UpButtonActivity {
         TextView duration = findViewById(R.id.trip_duration);
         duration.setText(selected.getDuration());
 
-        List<Country> countries = selected.getCountries();
-        adapter = new CountryAdapter(this, countries);
+		List<Country> countries = selected.getCountries();
+		adapter = new CountryAdapter(this, countries);
 
         createCountryFromIntent();
-        addTripsToClickableList();
+	    addCountriesToClickableList();
 
         Group form = findViewById(R.id.trip_form);
         form.setVisibility(View.GONE);
@@ -97,14 +106,66 @@ public class TripDetailsActivity extends UpButtonActivity {
         onSubmitButtonClick();
     }
 
-    /**
-     * Creates a trip from the information in the intent if they aren't null.
-     */
-    private void createCountryFromIntent() {
-        Intent intent = getIntent();
-        Country country = new Country();
-        addTripInformation(intent, country);
-    }
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+		MenuInflater inflater = getMenuInflater();
+		inflater.inflate(R.menu.search_menu, menu);
+
+		searchItem = menu.findItem(R.id.search);
+		searchView = (SearchView) searchItem.getActionView();
+		searchView.setQueryHint(getString(R.string.search));
+		searchView.setIconified(false);
+		searchView.setOnQueryTextListener(this);
+		searchView.setOnCloseListener(this);
+
+		return true;
+	}
+
+	@Override
+	public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+		int itemId = item.getItemId();
+		if (itemId == R.id.search) {
+			searchView.setIconified(false);
+			return true;
+		}
+		return super.onOptionsItemSelected(item);
+	}
+
+	@Override
+	public boolean onQueryTextSubmit(String searchText) {
+		filterAdapter(searchText);
+		return true;
+	}
+
+	@Override
+	public boolean onQueryTextChange(String searchText) {
+		filterAdapter(searchText);
+		return false;
+	}
+
+	@Override
+	public boolean onClose() {
+		if (!searchView.isIconified()) {
+			searchItem.collapseActionView();
+		} else {
+			searchView.setIconified(false);
+		}
+
+		return false;
+	}
+
+	private void filterAdapter(String searchText) {
+		adapter.getFilter().filter(searchText);
+	}
+
+	/**
+	 * Creates a trip from the information in the intent if they aren't null.
+	 */
+	private void createCountryFromIntent() {
+		Intent intent = getIntent();
+		Country country = new Country();
+		addTripInformation(intent, country);
+	}
 
     private void addTripInformation(Intent intent, Country country) {
         if (intent.getStringExtra(Const.COUNTRY_NAME) != null) {
@@ -114,21 +175,21 @@ public class TripDetailsActivity extends UpButtonActivity {
         }
     }
 
-    public void addTripsToClickableList() {
-        ListView listView = findViewById(R.id.countries);
-        listView.setAdapter(adapter);
+	public void addCountriesToClickableList() {
+		ListView countries = findViewById(R.id.countries);
+		countries.setAdapter(adapter);
 
         getProgressBar().setVisibility(View.GONE);
 
         AdapterView.OnItemClickListener mListClickedHandler = (parent, v, position, id) -> {
-            Intent intent = new Intent(getApplicationContext(), CityDetailsActivity.class);
+            Intent intent = new Intent(getApplicationContext(), CountryDetailsActivity.class);
             Country selected = (Country) parent.getItemAtPosition(position);
             intent.putExtra(Const.COUNTRY_NAME, selected.getName());
             startActivity(intent);
         };
 
-        listView.setOnItemClickListener(mListClickedHandler);
-    }
+		countries.setOnItemClickListener(mListClickedHandler);
+	}
 
     private void refreshContent() {
         TextView title = findViewById(R.id.trip_title);

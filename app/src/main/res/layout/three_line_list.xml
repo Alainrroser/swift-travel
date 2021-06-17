@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:descendantFocusability="blocksDescendants"
     android:layout_width="match_parent"
     android:layout_height="88dp"
-    android:background="@color/white">
+    android:background="@color/white"
+    android:descendantFocusability="blocksDescendants">
 
     <ImageView
         android:id="@+id/image_three_line_list"
@@ -14,17 +14,19 @@
         android:layout_marginTop="16dp"
         android:contentDescription="@string/place_holder_image"
         android:src="@drawable/trip_placeholder"
-        app:layout_constraintBottom_toBottomOf="@+id/duration_three_line_list"
+        app:layout_constraintBottom_toBottomOf="@id/duration_three_line_list"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <ImageButton
-        android:id="@+id/imageButton"
+        android:id="@+id/delete_three_line_list"
         android:layout_width="36dp"
         android:layout_height="36dp"
-        android:layout_marginTop="8dp"
+        android:layout_marginTop="26dp"
+        android:layout_marginEnd="16dp"
         android:backgroundTint="#FFFFFF"
-        app:layout_constraintEnd_toStartOf="@+id/guideline_right_three_line_list"
+        android:contentDescription="@string/delete"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:srcCompat="@drawable/outline_delete_black_24" />
 
@@ -49,8 +51,8 @@
         android:text="@string/trip_destination"
         android:textColor="@color/black"
         android:textSize="14sp"
-        app:layout_constraintStart_toStartOf="@+id/name_three_line_list"
-        app:layout_constraintTop_toBottomOf="@+id/name_three_line_list" />
+        app:layout_constraintStart_toStartOf="@id/name_three_line_list"
+        app:layout_constraintTop_toBottomOf="@id/name_three_line_list" />
 
     <TextView
         android:id="@+id/duration_three_line_list"
@@ -59,8 +61,8 @@
         android:text="@string/trip_duration"
         android:textColor="@color/black"
         android:textSize="14sp"
-        app:layout_constraintStart_toStartOf="@+id/name_three_line_list"
-        app:layout_constraintTop_toBottomOf="@+id/destination_three_line_list" />
+        app:layout_constraintStart_toStartOf="@id/name_three_line_list"
+        app:layout_constraintTop_toBottomOf="@id/destination_three_line_list" />
 
     <View
         android:id="@+id/divider_three_line_list"
@@ -71,20 +73,6 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
-
-    <androidx.constraintlayout.widget.Guideline
-        android:id="@+id/guideline_left_three_line_list"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        app:layout_constraintGuide_begin="16dp" />
-
-    <androidx.constraintlayout.widget.Guideline
-        android:id="@+id/guideline_right_three_line_list"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        app:layout_constraintGuide_end="16dp" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -17,7 +17,7 @@
         <activity android:name=".activities.BaseActivity" />
         <activity android:name=".activities.UpButtonActivity" />
         <activity android:name=".activities.TripDetailsActivity" />
-        <activity android:name=".activities.CityDetailsActivity" />
+        <activity android:name=".activities.CountryDetailsActivity" />
         <activity android:name=".activities.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

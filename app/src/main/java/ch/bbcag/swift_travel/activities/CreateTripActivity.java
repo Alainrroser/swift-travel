@@ -41,10 +41,10 @@ public class CreateTripActivity extends UpButtonActivity {
 	protected void onStart() {
 		super.onStart();
 		getProgressBar().setVisibility(View.GONE);
-		nameLayout = findViewById(R.id.trip_name_layout);
-		descriptionLayout = findViewById(R.id.trip_description_layout);
-		nameEdit = findViewById(R.id.trip_name_edit);
-		descriptionEdit = findViewById(R.id.trip_description_edit);
+		nameLayout = findViewById(R.id.edit_title_layout);
+		descriptionLayout = findViewById(R.id.edit_description_layout);
+		nameEdit = findViewById(R.id.edit_title);
+		descriptionEdit = findViewById(R.id.edit_description);
 		create = findViewById(R.id.create);
 		chooseImage = findViewById(R.id.place_holder_image);
 

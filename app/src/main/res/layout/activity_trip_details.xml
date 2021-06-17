@@ -14,37 +14,23 @@
         android:id="@+id/countries_image"
         android:layout_width="147dp"
         android:layout_height="101dp"
+        android:layout_marginStart="16dp"
         android:layout_marginTop="16dp"
         android:contentDescription="@string/place_holder_image"
         android:scaleType="centerCrop"
         android:visibility="visible"
         app:layout_constraintDimensionRatio="21:9"
-        app:layout_constraintEnd_toStartOf="@+id/guideline_right_country_details"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="@+id/guideline_left_country_details"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:srcCompat="@drawable/trips_image" />
-
-    <androidx.constraintlayout.widget.Guideline
-        android:id="@+id/guideline_left_country_details"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        app:layout_constraintGuide_begin="16dp" />
-
-    <androidx.constraintlayout.widget.Guideline
-        android:id="@+id/guideline_right_country_details"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        app:layout_constraintGuide_end="16dp" />
 
     <TextView
         android:id="@+id/countries_title"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="72dp"
+        android:layout_marginStart="16dp"
         android:layout_marginTop="16dp"
+        android:layout_marginEnd="16dp"
         android:layout_marginBottom="16dp"
         android:ellipsize="end"
         android:maxLines="1"
@@ -52,7 +38,7 @@
         android:textAppearance="@style/TextAppearance.AppCompat.Title"
         android:textSize="24sp"
         app:layout_constraintBottom_toTopOf="@id/countries"
-        app:layout_constraintEnd_toStartOf="@+id/guideline_right_country_details"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/trip_description" />
 
@@ -76,20 +62,20 @@
         android:dividerHeight="1dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/countries_title" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/floating_action_button_countries"
+        android:id="@+id/floating_action_button_trip_details"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="end|bottom"
+        android:layout_marginEnd="16dp"
         android:layout_marginBottom="16dp"
         android:contentDescription="@string/add_country"
         android:src="@drawable/add"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@id/guideline_right_country_details" />
+        app:layout_constraintEnd_toEndOf="parent" />
 
     <TextView
         android:id="@+id/trip_title"
@@ -97,26 +83,29 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
         android:layout_marginTop="16dp"
+        android:layout_marginEnd="8dp"
         android:text="@string/trip_name"
         android:textColor="@color/black"
         android:textSize="24sp"
-        app:layout_constraintEnd_toStartOf="@+id/edit_button"
-        app:layout_constraintHorizontal_bias="1.0"
-        app:layout_constraintStart_toEndOf="@+id/countries_image"
-        app:layout_constraintTop_toBottomOf="@+id/edit_title"
+        app:layout_constraintEnd_toStartOf="@id/edit_button"
+        app:layout_constraintStart_toEndOf="@id/countries_image"
+        app:layout_constraintTop_toTopOf="parent"
         tools:visibility="visible" />
 
     <TextView
         android:id="@+id/trip_description"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginBottom="16dp"
         android:scrollbars="vertical"
         android:text="@string/trip_description_hint"
-        app:layout_constraintEnd_toStartOf="@+id/guideline_right_country_details"
-        app:layout_constraintStart_toStartOf="@+id/guideline_left_country_details"
-        app:layout_constraintTop_toBottomOf="@+id/countries_image"
         app:layout_constraintBottom_toTopOf="@id/countries_title"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/countries_image"
         tools:visibility="visible" />
 
     <ImageButton
@@ -124,76 +113,96 @@
         android:layout_width="36dp"
         android:layout_height="36dp"
         android:layout_marginTop="16dp"
+        android:layout_marginEnd="16dp"
         android:backgroundTint="#FFFFFF"
         android:clickable="true"
-        app:layout_constraintEnd_toStartOf="@+id/guideline_right_country_details"
+        android:contentDescription="@string/edit"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:srcCompat="@drawable/outline_edit_black_20" />
-
-    <EditText
-        android:id="@+id/edit_description"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginEnd="8dp"
-        android:ems="10"
-        android:gravity="start|top"
-        android:hint="Enter description"
-        android:inputType="textMultiLine"
-        android:textAppearance="@style/TextAppearance.AppCompat.Small"
-        app:layout_constraintBottom_toTopOf="@id/submit_button"
-        app:layout_constraintEnd_toStartOf="@id/guideline_right_country_details"
-        app:layout_constraintStart_toStartOf="@+id/guideline_left_country_details"
-        app:layout_constraintTop_toBottomOf="@+id/countries_image" />
 
     <TextView
         android:id="@+id/trip_duration"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
-        android:layout_marginTop="24dp"
+        android:layout_marginEnd="16dp"
         android:text="@string/trip_duration"
-        app:layout_constraintEnd_toStartOf="@id/guideline_right_country_details"
+        app:layout_constraintBottom_toBottomOf="@id/countries_image"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@id/countries_image"
-        app:layout_constraintTop_toBottomOf="@+id/edit_button"
         tools:visibility="visible" />
 
     <Button
         android:id="@+id/submit_button"
         android:layout_width="0dp"
-        android:layout_height="42dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginEnd="8dp"
+        android:layout_height="56dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="16dp"
         android:text="@string/submit_text"
         android:textSize="12sp"
-        app:layout_constraintBottom_toBottomOf="@+id/trip_description"
-        app:layout_constraintEnd_toStartOf="@id/guideline_right_country_details"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="@+id/guideline_left_country_details"
-        app:layout_constraintTop_toBottomOf="@id/edit_description" />
+        app:layout_constraintBottom_toBottomOf="@id/trip_description"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/edit_description_layout" />
 
-    <EditText
-        android:id="@+id/edit_title"
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/edit_title_layout"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
         android:layout_marginTop="16dp"
-        android:ems="10"
-        android:inputType="textPersonName"
-        app:layout_constraintEnd_toStartOf="@+id/edit_button"
-        app:layout_constraintHorizontal_bias="1.0"
+        android:layout_marginEnd="8dp"
+        android:importantForAutofill="no"
+        app:counterEnabled="true"
+        app:counterMaxLength="20"
+        app:errorEnabled="true"
+        app:layout_constraintEnd_toStartOf="@id/edit_button"
         app:layout_constraintStart_toEndOf="@id/countries_image"
-        app:layout_constraintTop_toTopOf="parent"
-        />
+        app:layout_constraintTop_toBottomOf="@id/trip_title"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/edit_title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/trip_name_hint"
+            android:inputType="text" />
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/edit_description_layout"
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="16dp"
+        android:gravity="start|top"
+        android:hint="@string/trip_description_hint"
+        android:importantForAutofill="no"
+        app:layout_constraintBottom_toTopOf="@id/submit_button"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/countries_image">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/edit_description"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:hint="@string/trip_description_hint"
+            android:inputType="textMultiLine"
+            android:textAppearance="@style/TextAppearance.AppCompat.Small" />
+    </com.google.android.material.textfield.TextInputLayout>
 
     <androidx.constraintlayout.widget.Group
         android:id="@+id/trip_content"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         app:constraint_referenced_ids="trip_title, trip_description"
-        app:layout_constraintEnd_toStartOf="@+id/guideline_right_country_details"
-        app:layout_constraintStart_toStartOf="@+id/guideline_left_country_details"
+        app:layout_constraintEnd_toStartOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         tools:visibility="gone" />
 
@@ -201,9 +210,9 @@
         android:id="@+id/trip_form"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:constraint_referenced_ids="submit_button, edit_description, edit_title"
-        app:layout_constraintEnd_toStartOf="@+id/guideline_right_country_details"
-        app:layout_constraintStart_toStartOf="@+id/guideline_left_country_details"
+        app:constraint_referenced_ids="submit_button,edit_description_layout,edit_title_layout"
+        app:layout_constraintEnd_toStartOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         tools:visibility="visible" />
 

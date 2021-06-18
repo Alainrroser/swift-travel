@@ -22,6 +22,8 @@ import java.util.List;
 import ch.bbcag.swift_travel.R;
 import ch.bbcag.swift_travel.adapter.ChooseCountryAdapter;
 import ch.bbcag.swift_travel.dal.ApiRepository;
+import ch.bbcag.swift_travel.dal.CountryDao;
+import ch.bbcag.swift_travel.dal.SwiftTravelDatabase;
 import ch.bbcag.swift_travel.entities.Country;
 import ch.bbcag.swift_travel.utils.Const;
 
@@ -33,6 +35,11 @@ public class ChooseActivity extends UpButtonActivity implements SearchView.OnQue
 
     private String tripName;
 
+    private List<Country> addedCountries;
+    private boolean countryWasAdded = false;
+
+    private CountryDao countryDao;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -40,12 +47,16 @@ public class ChooseActivity extends UpButtonActivity implements SearchView.OnQue
         Intent intent = getIntent();
         tripName = intent.getStringExtra(Const.TRIP_NAME);
         setTitle(Const.CHOOSE + intent.getStringExtra(Const.NAME));
+
+        countryDao = SwiftTravelDatabase.getInstance(getApplicationContext()).getCountryDao();
     }
 
     @Override
     protected void onStart() {
         super.onStart();
         addAllCountriesToClickableList();
+
+        addedCountries = countryDao.getAllFromTrip(getIntent().getIntExtra(Const.TRIP, -1));
     }
 
     @Override
@@ -143,26 +154,46 @@ public class ChooseActivity extends UpButtonActivity implements SearchView.OnQue
             intent.putExtra(Const.FLAG_URI, country.getImageURI());
             intent.putExtra(Const.TRIP_NAME, tripName);
             startActivity(intent);
+
+            adapter.remove(country);
         });
     }
 
     private void initializeAdapter(JSONArray response) {
         try {
-            List<Country> countriesList = new ArrayList<>();
-            addCountryToList(response, countriesList);
-            adapter = new ChooseCountryAdapter(getApplicationContext(), countriesList);
+            List<Country> allCountries = new ArrayList<>();
+            addCountryToList(response, allCountries);
+            adapter = new ChooseCountryAdapter(getApplicationContext(), allCountries);
         } catch (Exception e) {
             generateMessageDialog(getString(R.string.add_countries_to_list_error_title), getString(R.string.add_countries_to_list_error_text));
         }
     }
 
-    private void addCountryToList(JSONArray response, List<Country> countriesList) throws JSONException {
+    private void addCountryToList(JSONArray response, List<Country> allCountries) throws JSONException {
         for (int position = 0; position < response.length(); position++) {
             Country country = new Country();
             country.setName(response.getJSONObject(position).getString(Const.NAME));
             country.setDescription("");
             country.setImageURI(response.getJSONObject(position).getString(Const.FLAG));
-            countriesList.add(country);
+            checkIfCountryWasAdded(country);
+            addCountryIfNotAdded(allCountries, country);
+        }
+    }
+
+    private void checkIfCountryWasAdded(Country country) {
+        for(Country addedCountry : addedCountries) {
+            if (addedCountry.getName().equals(country.getName())) {
+                countryWasAdded = true;
+                break;
+            } else {
+                countryWasAdded = false;
+            }
+        }
+    }
+
+    private void addCountryIfNotAdded(List<Country> allCountries, Country country) {
+        if(!countryWasAdded) {
+            allCountries.add(country);
         }
     }
 }

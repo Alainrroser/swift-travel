@@ -52,7 +52,6 @@ public class TripDetailsActivity extends UpButtonActivity implements SearchView.
 	private TripDao tripDao;
 	private CountryDao countryDao;
 
-	private boolean countryExists = false;
 	private boolean nameValidated = false;
 
 	@Override
@@ -67,12 +66,7 @@ public class TripDetailsActivity extends UpButtonActivity implements SearchView.
 		tripDao = SwiftTravelDatabase.getInstance(getApplicationContext()).getTripDao();
 		countryDao = SwiftTravelDatabase.getInstance(getApplicationContext()).getCountryDao();
 
-		List<Trip> trips = tripDao.getAll();
-		for (Trip trip : trips) {
-			if (trip.getName().equals(tripName)) {
-				selected = trip;
-			}
-		}
+		setSelected();
 
 		floatingActionButton = findViewById(R.id.floating_action_button_trip_details);
 		editDescriptionButton = findViewById(R.id.edit_button);
@@ -170,6 +164,19 @@ public class TripDetailsActivity extends UpButtonActivity implements SearchView.
 		adapter.getFilter().filter(searchText);
 	}
 
+	private void setSelected() {
+		List<Trip> trips = tripDao.getAll();
+		for (Trip trip : trips) {
+			setSelectedIfNameEquals(trip);
+		}
+	}
+
+	private void setSelectedIfNameEquals(Trip trip) {
+		if (trip.getName().equals(tripName)) {
+			selected = trip;
+		}
+	}
+
 	/**
 	 * Creates a trip from the information in the intent if they aren't null.
 	 */
@@ -181,30 +188,12 @@ public class TripDetailsActivity extends UpButtonActivity implements SearchView.
 
 	private void addTripInformation(Intent intent, Country country) {
 		if (intent.getStringExtra(Const.COUNTRY_NAME) != null && intent.getBooleanExtra(Const.ADD_COUNTRY, false)) {
-			checkIfCountryExists(intent);
-			addCountryIfNotExists(intent, country);
-		}
-	}
-
-	private void checkIfCountryExists(Intent intent) {
-		for (Country existingCountry : countryDao.getAllFromTrip(selected.getId())) {
-			if (existingCountry.getName().equals(intent.getStringExtra(Const.COUNTRY_NAME))) {
-				countryExists = true;
-				break;
-			}
-		}
-	}
-
-	private void addCountryIfNotExists(Intent intent, Country country) {
-		if (!countryExists) {
 			intent.removeExtra(Const.ADD_COUNTRY);
 			country.setName(intent.getStringExtra(Const.COUNTRY_NAME));
 			country.setImageURI(intent.getStringExtra(Const.FLAG_URI));
 			country.setTripID(selected.getId());
 			adapter.add(country);
 			countryDao.insert(country);
-		} else {
-			generateMessageDialog(getString(R.string.entry_exists_error_title), getString(R.string.entry_exists_error_text));
 		}
 	}
 
@@ -225,14 +214,15 @@ public class TripDetailsActivity extends UpButtonActivity implements SearchView.
 	}
 
 	private void refreshContent() {
+		setTitle();
+		setDescription();
+		setDuration();
+		setImageURI();
+	}
+
+	private void setTitle() {
 		TextView title = findViewById(R.id.trip_title);
-		TextView description = findViewById(R.id.trip_description);
-
 		EditText editTitle = findViewById(R.id.edit_title);
-		EditText editDescription = findViewById(R.id.edit_description);
-
-		ImageView tripImage = findViewById(R.id.trip_image);
-
 		title.setText(selected.getName());
 		if (selected.getName().length() >= 20) {
 			title.setTextSize(18);
@@ -241,10 +231,11 @@ public class TripDetailsActivity extends UpButtonActivity implements SearchView.
 		}
 		setTitle(selected.getName());
 		editTitle.setText(selected.getName());
+	}
 
-		TextView duration = findViewById(R.id.trip_duration);
-		duration.setText(selected.getDuration());
-
+	private void setDescription() {
+		TextView description = findViewById(R.id.trip_description);
+		EditText editDescription = findViewById(R.id.edit_description);
 		if (selected.getDescription().equals("")) {
 			description.setText(R.string.add_description);
 		} else {
@@ -252,7 +243,15 @@ public class TripDetailsActivity extends UpButtonActivity implements SearchView.
 		}
 		description.setMovementMethod(new ScrollingMovementMethod());
 		editDescription.setText(selected.getDescription());
+	}
 
+	private void setDuration() {
+		TextView duration = findViewById(R.id.trip_duration);
+		duration.setText(selected.getDuration());
+	}
+
+	private void setImageURI() {
+		ImageView tripImage = findViewById(R.id.trip_image);
 		if (selected.getImageURI() != null) {
 			tripImage.setImageURI(Uri.parse(selected.getImageURI()));
 		}
@@ -275,6 +274,7 @@ public class TripDetailsActivity extends UpButtonActivity implements SearchView.
 		floatingActionButton.setOnClickListener(v -> {
 			Intent intent = new Intent(getApplicationContext(), ChooseActivity.class);
 			intent.putExtra(Const.NAME, Const.COUNTRY);
+			intent.putExtra(Const.TRIP, selected.getId());
 			intent.putExtra(Const.TRIP_NAME, tripName);
 			startActivity(intent);
 		});

@@ -4,6 +4,7 @@ public class Const {
 	public static final String NAME = "name";
 	public static final String CHOOSE = "Choose ";
 
+	public static final String TRIP = "trip";
 	public static final String TRIP_NAME = "tripName";
 	public static final String TRIP_DESCRIPTION = "tripDescription";
 	public static final String TRIP_IMAGE_URI = "tripImageURI";

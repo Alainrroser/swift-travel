@@ -36,8 +36,12 @@ public class Layout {
 	}
 
 	public static void setEditableTitleText(TextView titleTextView, EditText editTextBox, String text) {
-		setTextOnTextView(titleTextView, text);
+		setTitleText(titleTextView, text);
 		setTextOnEditText(editTextBox, text);
+	}
+
+	public static void setTitleText(TextView titleTextView, String text){
+		setTextOnTextView(titleTextView, text);
 		setTitleSize(titleTextView);
 	}
 

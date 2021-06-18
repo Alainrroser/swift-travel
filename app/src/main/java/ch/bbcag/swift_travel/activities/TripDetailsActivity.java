@@ -68,13 +68,12 @@ public class TripDetailsActivity extends UpButtonActivity implements SearchView.
 		countries = findViewById(R.id.countries);
 
 		editDescriptionButton = findViewById(R.id.edit_button);
-		submitButton = findViewById(R.id.submit_button);
+		submitButton = findViewById(R.id.trip_submit_button);
 	}
 
 	@Override
 	protected void onStart() {
 		super.onStart();
-		getProgressBar().setVisibility(View.GONE);
 
 		long id = getIntent().getLongExtra(Const.TRIP, -1);
 		if (id != -1) {
@@ -92,6 +91,8 @@ public class TripDetailsActivity extends UpButtonActivity implements SearchView.
 		form.setVisibility(View.GONE);
 
 		refreshContent();
+
+		getProgressBar().setVisibility(View.GONE);
 
 		onCountryClick();
 		onFloatingActionButtonClick();

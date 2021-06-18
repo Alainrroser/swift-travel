@@ -17,8 +17,8 @@ festhalten und später wieder betrahchten kann.
 	1. [Code](#Code)
 	2. [JavaDoc](#JavaDoc)
 9. [Fazit](#Fazit)
-	1.[Positiv](#Positiv)
-	2.[Negativ](#Negativ)
+	1. [Positiv](#Positiv)
+	2. [Negativ](#Negativ)
 	
 ## Projektmitabeiter
 * [Alain Roser](https://git.bbcag.ch/brosea) (Product Owner, Team Member)
@@ -29,13 +29,13 @@ festhalten und später wieder betrahchten kann.
 
 ## Mockups
 <div align="center">
-    <img src="docs/images/mockup1.PNG" alt="Bild Klassendiagramm">
+    <img src="docs/images/mockup1.png" alt="Bild Mockup">
 </div>
 <div align="center">
-    <img src="docs/images/mockup2.PNG" alt="Bild Klassendiagramm">
+    <img src="docs/images/mockup2.png" alt="Bild Mockup">
 </div>
 <div align="center">
-    <img src="docs/images/mockup3.PNG" alt="Bild Klassendiagramm">
+    <img src="docs/images/mockup3.png" alt="Bild Mockup">
 </div>
 
 ## Klassendiagramm

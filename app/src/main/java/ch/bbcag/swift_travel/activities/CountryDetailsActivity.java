@@ -6,9 +6,12 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.SearchView;
+
+import androidx.constraintlayout.widget.Group;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
@@ -29,10 +32,9 @@ public class CountryDetailsActivity extends UpButtonActivity {
 	private MenuItem searchItem;
 
 	private FloatingActionButton floatingActionButton;
-	private CityAdapter adapter;
-
 	private ImageButton editDescriptionButton;
 	private Button submitButton;
+	private CityAdapter adapter;
 
 	private String cityName;
 	private Country selected;
@@ -41,8 +43,6 @@ public class CountryDetailsActivity extends UpButtonActivity {
 	private CityDao cityDao;
 
 	private boolean cityExists = false;
-
-	private boolean nameValidated = false;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -56,8 +56,9 @@ public class CountryDetailsActivity extends UpButtonActivity {
 		countryDao = SwiftTravelDatabase.getInstance(getApplicationContext()).getCountryDao();
 		cityDao = SwiftTravelDatabase.getInstance(getApplicationContext()).getCityDao();
 
-		floatingActionButton = findViewById(R.id.floating_action_button_country_details);
+		submitButton = findViewById(R.id.country_submit_button);
 		editDescriptionButton = findViewById(R.id.edit_button);
+		floatingActionButton = findViewById(R.id.floating_action_button_country_details);
 	}
 
 	@Override
@@ -78,7 +79,12 @@ public class CountryDetailsActivity extends UpButtonActivity {
 
 		refreshContent();
 
+		Group form = findViewById(R.id.country_form);
+		form.setVisibility(View.GONE);
+
 		onFloatingActionButtonClick();
+		editDescriptionButton.setOnClickListener(v -> toggleForm());
+		onSubmitButtonClick();
 	}
 
 	public void addCitiesToClickableList() {
@@ -142,16 +148,44 @@ public class CountryDetailsActivity extends UpButtonActivity {
 		});
 	}
 
-	private void refreshContent() {
-		if (selected != null) {
-			Layout.setTextOnTextView(findViewById(R.id.country_title), selected.getName());
-			setTitle(selected.getName());
-			Layout.setTextOnTextView(findViewById(R.id.country_description), selected.getDescription());
-			Layout.setTextOnTextView(findViewById(R.id.country_duration), selected.getDuration());
-			if (selected.getImageURI() != null) {
-				Layout.setOnlineImageURIOnImageView(getApplicationContext(), findViewById(R.id.country_image), selected.getImageURI());
-			}
+	private void onSubmitButtonClick() {
+		submitButton.setOnClickListener(v -> {
+			editDescription();
+			refreshContent();
+			toggleForm();
+		});
+	}
+
+	private void editDescription() {
+		EditText editDescription = findViewById(R.id.edit_description);
+		if (!editDescription.getText().toString().equals("")) {
+			selected.setDescription(editDescription.getText().toString());
+			countryDao.setDescription(editDescription.getText().toString());
 		}
+	}
+
+	private void toggleForm() {
+		Group form = findViewById(R.id.country_form);
+		Group content = findViewById(R.id.country_content);
+
+		if (form.getVisibility() == View.VISIBLE) {
+			form.setVisibility(View.GONE);
+			content.setVisibility(View.VISIBLE);
+		} else {
+			form.setVisibility(View.VISIBLE);
+			content.setVisibility(View.GONE);
+		}
+	}
+
+	private void refreshContent() {
+		Layout.setTitleText(findViewById(R.id.country_title), selected.getName());
+		setTitle(selected.getName());
+		Layout.setTextOnTextView(findViewById(R.id.country_description), selected.getDescription());
+		Layout.setTextOnTextView(findViewById(R.id.country_duration), selected.getDuration());
+		if (selected.getImageURI() != null) {
+			Layout.setOnlineImageURIOnImageView(getApplicationContext(), findViewById(R.id.country_image), selected.getImageURI());
+		}
+
 	}
 
 	public CityAdapter getAdapter() {

@@ -135,7 +135,7 @@
         tools:visibility="visible" />
 
     <Button
-        android:id="@+id/submit_button"
+        android:id="@+id/country_submit_button"
         android:layout_width="0dp"
         android:layout_height="56dp"
         android:layout_marginStart="16dp"
@@ -190,7 +190,7 @@
         android:gravity="start|top"
         android:hint="@string/city_description_hint"
         android:importantForAutofill="no"
-        app:layout_constraintBottom_toTopOf="@id/submit_button"
+        app:layout_constraintBottom_toTopOf="@id/country_submit_button"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/city_image">
@@ -218,7 +218,7 @@
         android:id="@+id/city_form"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:constraint_referenced_ids="submit_button,edit_description_layout,edit_title_layout"
+        app:constraint_referenced_ids="country_submit_button,edit_description_layout,edit_title_layout"
         app:layout_constraintEnd_toStartOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"

@@ -1,16 +1,17 @@
+
 # Swift-Travel
 
 ## Testing
 
-Version 1.0.0, 10. Juni 2021 | Alain, Jan
+Version 1.0.0, 10. Juni 2021 | Alain Roser, Jan Henke
 
 ## Inhalt
 
 1. [Testkonzept](#1-testkonzept)
     1. [Testumgebung](#11-testumgebung)
-    2. [Testfälle](#12-testflle)
+    2. [Testfälle](#12-testfälle)
 2. [Testprotokolle](#2-testprotokolle)
-    1. [Testperson (Datum)](#21 Testperson (Datum))
+    1. [Testperson](#21-Name-Testperson)
 
 
 ## 1 Testkonzept
@@ -23,23 +24,23 @@ Windows 10          |   'Version'
 
 ### 1.2 Testfälle
 
-#### 1.2.1 Testname
+#### 1.2.1 Testbezeichnung
 
 Abschnitt           |   Inhalt
 --------------------|-----------------------
-ID                  |   
-Anforderungen       |   
-Vorbedingung        |   
-Ablauf              |   
-Erwartetes Resultat |
+ID                  |   'Test ID'
+Anforderungen       |   'User Story'
+Vorbedingung        |   'Test ID, User Story, Gerät an, usw.'
+Ablauf              |   'Durchführung'
+Erwartetes Resultat |	'...'
 
 ## 2 Testprotokolle
 
 ### 2.1 'Name Testperson'
 
-Datum, Zeit: 28.04.2021 09:41
+Datum, Zeit: 'Datum' 'Zeit'
 
-Eingesetzte Software: Edge 90.0.818.42, v1.0, Windows 10 Education36
+Eingesetzte Software: 'Android Version', 'Projektversion', 'Gerätename'
 
 ID      |   Erfolgreich   | Bemerkungen
 --------|-----------------|---------------------------------------------

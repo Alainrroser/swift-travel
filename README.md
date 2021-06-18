@@ -1,34 +1,67 @@
 # Documentation
 
 ## Abstract
+Swift-Travel ist ein Projekt bei dem der Benutzer seine zukünftigen Reisen planen, sowie auch seine bereits getätigten Reisen
+festhalten und später wieder betrahchten kann.
 
+## Inhalt
+
+1. [Projektmitarbeiter](#Projektmitarbeiter)
+2. [Dokumentation](#Dokumentation)
+3. [Mockups](#Mockups)
+4. [Klassendiagramm](#Klassendiagramm)
+5. [Testfälle](#Testfälle)
+6. [Daily Scrum](#Daily-Scrum)
+7. [Definition of Done](#Definition-of-Done)
+8. [Codestyle](#Codestyle)
+	1. [Code](#Code)
+	2. [JavaDoc](#JavaDoc)
+9. [Fazit](#Fazit)
+	1.[Positiv](#Positiv)
+	2.[Negativ](#Negativ)
+	
 ## Projektmitabeiter
 * [Alain Roser](https://git.bbcag.ch/brosea) (Product Owner, Team Member)
 * [Jan Henke](https://git.bbcag.ch/bhenkj) (Product Owner, Team Member)
-## Journale
-### Alain Roser
-*
-### Jan Henke
-*
-## Documentation
+
+## Dokumentation
 * [Documentation](docs/documentation/documentation.md)
-## Class Diagrams
-*
-## Testing
-*
+
+## Mockups
+<div align="center">
+    <img src="docs/images/mockup1.PNG" alt="Bild Klassendiagramm">
+</div>
+<div align="center">
+    <img src="docs/images/mockup2.PNG" alt="Bild Klassendiagramm">
+</div>
+<div align="center">
+    <img src="docs/images/mockup3.PNG" alt="Bild Klassendiagramm">
+</div>
+
+## Klassendiagramm
+<div align="center">
+    <img src="docs/images/uml.png" alt="Bild Klassendiagramm" style="width: 50vw;">
+</div>
+
+## Testfälle
+* [Testing](docs/testing.md)
+
 ## Daily Scrum
 * Das Daily Scrum wird jeweils um 08:15 gehalten.
+
 ## Definition of Done
 * Die Userstory ist angemessen dokumentiert
 * Testprotokolle vorhanden und ausgefüllt
 * Von anderen Benutzern getestet
 * Code Style wird eingehalten
 * Code ist aufgeräumt
+
 ## Codestyle
 ### Code
 * Tabs statt Spaces
 * Align when multiline
 * Align 'throws' to method start when multiline
+
 ### JavaDoc
 * Align parameter descriptions
 * Align thrown exception descriptions 
@@ -39,8 +72,10 @@
 * Keep empty lines 
 * Preserve line feeds
 * Parameter description on new line
+
 ## Fazit 
 ### Positiv 
 *
+
 ### Negativ
 *

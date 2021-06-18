@@ -15,6 +15,11 @@ public class Const {
 	public static final String COUNTRIES_URL = "https://restcountries.eu/rest/v2/all";
 	public static final String ADD_COUNTRY = "addCountry";
 
+	public static final String CITY = "city";
+	public static final String CITY_NAME = "cityName";
+	public static final String ADD_CITY = "addCity";
+	public static final String CITIES_URL = "someURL";
+
 	public static final String FLAG = "flag";
 	public static final String FLAG_URI = "flagURI";
 }

@@ -21,8 +21,8 @@ public class City {
 	private String imageURI;
 	@ColumnInfo(name = "duration")
 	private String duration;
-	@ColumnInfo(name = "countryID")
-	private int countryID;
+	@ColumnInfo(name = "countryId")
+	private int countryId;
 	@Ignore
 	List<Day> days;
 
@@ -68,12 +68,12 @@ public class City {
 		this.imageURI = imageURI;
 	}
 
-	public int getCountryID() {
-		return countryID;
+	public int getCountryId() {
+		return countryId;
 	}
 
-	public void setCountryID(int countryID) {
-		this.countryID = countryID;
+	public void setCountryId(int countryId) {
+		this.countryId = countryId;
 	}
 
 	public String getDuration() {

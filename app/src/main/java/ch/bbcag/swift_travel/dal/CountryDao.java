@@ -11,8 +11,11 @@ import ch.bbcag.swift_travel.entities.Country;
 
 @Dao
 public interface CountryDao {
-	@Query("SELECT * FROM countries WHERE tripID = :tripID")
-	List<Country> getAllFromTrip(int tripID);
+	@Query("SELECT * FROM countries WHERE tripId = :tripId")
+	List<Country> getAllFromTrip(int tripId);
+
+	@Query("SELECT * FROM countries WHERE id = :id")
+    Country getCountryById(int id);
 
 	@Query("UPDATE countries SET name = :name")
 	void setName(String name);

@@ -32,5 +32,16 @@
     <string name="add_countries_to_list_error_title">List countries</string>
     <string name="add_countries_to_list_error_text">An error occurred with listing the countries, try again later</string>
     <string name="add_description">Add description</string>
+    <string name="add_text">Add a text here on edit button click!</string>
     <string name="submit_text">Submit</string>
+    <string name="cities_title">Cities</string>
+    <string name="country_name">Country name</string>
+    <string name="country_description_hint">Country description</string>
+    <string name="country_duration">Country duration</string>
+    <string name="country_name_hint">Country name</string>
+    <string name="days_title">Days</string>
+    <string name="city_name">City title</string>
+    <string name="city_description_hint">City description</string>
+    <string name="city_duration">Duration in city</string>
+    <string name="city_name_hint">City title</string>
 </resources>

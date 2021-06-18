@@ -9,7 +9,7 @@ import ch.bbcag.swift_travel.entities.City;
 import ch.bbcag.swift_travel.entities.Country;
 import ch.bbcag.swift_travel.entities.Trip;
 
-@androidx.room.Database(entities = {Trip.class, Country.class, City.class}, version = 1)
+@androidx.room.Database(entities = {Trip.class, Country.class, City.class}, version = 2)
 public abstract class SwiftTravelDatabase extends RoomDatabase {
 	private static SwiftTravelDatabase INSTANCE;
 

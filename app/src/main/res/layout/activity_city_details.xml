@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout 
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -11,7 +12,7 @@
         android:layout_height="match_parent" />
 
     <ImageView
-        android:id="@+id/trip_image"
+        android:id="@+id/city_image"
         android:layout_width="147dp"
         android:layout_height="101dp"
         android:layout_marginStart="16dp"
@@ -25,18 +26,87 @@
         app:srcCompat="@drawable/trips_image" />
 
     <TextView
-        android:id="@+id/trip_title"
+        android:id="@+id/days_title"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginBottom="16dp"
+        android:ellipsize="end"
+        android:maxLines="1"
+        android:text="@string/days_title"
+        android:textAppearance="@style/TextAppearance.AppCompat.Title"
+        android:textSize="24sp"
+        app:layout_constraintBottom_toTopOf="@id/days"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/city_description" />
+
+    <View
+        android:id="@+id/divider_city_details"
+        android:layout_width="0dp"
+        android:layout_height="1dp"
+        android:background="?android:attr/listDivider"
+        android:visibility="visible"
+        app:layout_constraintBottom_toTopOf="@id/days"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <ListView
+        android:id="@+id/days"
+        style="@style/Widget.AppCompat.Light.ListView.DropDown"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:background="#FFFFFF"
+        android:divider="@android:drawable/divider_horizontal_dark"
+        android:dividerHeight="1dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/days_title" />
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/floating_action_button_city_details"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="end|bottom"
+        android:layout_marginEnd="16dp"
+        android:layout_marginBottom="16dp"
+        android:contentDescription="@string/add_country"
+        android:src="@drawable/add"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+    <TextView
+        android:id="@+id/city_title"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
         android:layout_marginTop="16dp"
         android:layout_marginEnd="8dp"
-        android:text="@string/trip_name"
+        android:text="@string/city_name"
         android:textColor="@color/black"
         android:textSize="24sp"
         app:layout_constraintEnd_toStartOf="@id/edit_button"
-        app:layout_constraintStart_toEndOf="@id/trip_image"
+        app:layout_constraintStart_toEndOf="@id/city_image"
         app:layout_constraintTop_toTopOf="parent"
+        tools:visibility="visible" />
+
+    <TextView
+        android:id="@+id/city_description"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginBottom="16dp"
+        android:scrollbars="vertical"
+        android:text="@string/city_description_hint"
+        app:layout_constraintBottom_toTopOf="@id/days_title"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/city_image"
         tools:visibility="visible" />
 
     <ImageButton
@@ -52,37 +122,17 @@
         app:layout_constraintTop_toTopOf="parent"
         app:srcCompat="@drawable/outline_edit_black_20" />
 
-    <androidx.constraintlayout.widget.Group
-        android:id="@+id/trip_content"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:constraint_referenced_ids="trip_title, trip_description"
-        app:layout_constraintEnd_toStartOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        tools:visibility="visible" />
-
-    <androidx.constraintlayout.widget.Group
-        android:id="@+id/trip_form"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:constraint_referenced_ids="submit_button,edit_description_layout,edit_title_layout"
-        app:layout_constraintEnd_toStartOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        tools:visibility="gone" />
-
     <TextView
-        android:id="@+id/trip_duration"
+        android:id="@+id/city_duration"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
         android:layout_marginEnd="16dp"
-        android:text="@string/trip_duration"
+        android:text="@string/city_duration"
         app:layout_constraintBottom_toTopOf="@id/duration_space"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@id/trip_image"
-        app:layout_constraintTop_toBottomOf="@+id/trip_title"
+        app:layout_constraintStart_toEndOf="@id/city_image"
+        app:layout_constraintTop_toBottomOf="@+id/city_title"
         tools:visibility="visible" />
 
     <Button
@@ -94,7 +144,7 @@
         android:layout_marginEnd="16dp"
         android:text="@string/submit_text"
         android:textSize="12sp"
-        app:layout_constraintBottom_toBottomOf="@id/trip_description"
+        app:layout_constraintBottom_toBottomOf="@id/city_description"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/edit_description_layout" />
@@ -103,8 +153,8 @@
         android:id="@+id/duration_space"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:layout_constraintBottom_toBottomOf="@id/trip_image"
-        app:layout_constraintEnd_toEndOf="@id/trip_image" />
+        app:layout_constraintBottom_toBottomOf="@id/city_image"
+        app:layout_constraintEnd_toEndOf="@id/city_image" />
 
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/edit_title_layout"
@@ -118,15 +168,15 @@
         app:counterMaxLength="40"
         app:errorEnabled="true"
         app:layout_constraintEnd_toStartOf="@id/edit_button"
-        app:layout_constraintStart_toEndOf="@id/trip_image"
-        app:layout_constraintTop_toBottomOf="@id/trip_title"
+        app:layout_constraintStart_toEndOf="@id/city_image"
+        app:layout_constraintTop_toBottomOf="@id/city_title"
         app:layout_constraintTop_toTopOf="parent">
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/edit_title"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="@string/trip_name_hint"
+            android:hint="@string/city_name_hint"
             android:inputType="text" />
     </com.google.android.material.textfield.TextInputLayout>
 
@@ -139,92 +189,40 @@
         android:layout_marginTop="8dp"
         android:layout_marginEnd="16dp"
         android:gravity="start|top"
-        android:hint="@string/trip_description_hint"
+        android:hint="@string/city_description_hint"
         android:importantForAutofill="no"
         app:layout_constraintBottom_toTopOf="@id/submit_button"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/trip_image">
+        app:layout_constraintTop_toBottomOf="@id/city_image">
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/edit_description"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:maxHeight="200dp"
-            android:hint="@string/trip_description_hint"
+            android:hint="@string/city_description_hint"
             android:inputType="textMultiLine"
             android:textAppearance="@style/TextAppearance.AppCompat.Small" />
     </com.google.android.material.textfield.TextInputLayout>
 
-
-    <TextView
-        android:id="@+id/trip_description"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:maxHeight="200dp"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="16dp"
-        android:layout_marginEnd="16dp"
-        android:layout_marginBottom="16dp"
-        android:scrollbars="vertical"
-        android:text="@string/trip_description_hint"
-        app:layout_constraintBottom_toTopOf="@id/countries_title"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/trip_image"
-        tools:visibility="visible" />
-
-    <TextView
-        android:id="@+id/countries_title"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="16dp"
-        android:layout_marginEnd="16dp"
-        android:layout_marginBottom="16dp"
-        android:ellipsize="end"
-        android:maxLines="1"
-        android:text="@string/countries_title"
-        android:textAppearance="@style/TextAppearance.AppCompat.Title"
-        android:textSize="24sp"
-        app:layout_constraintBottom_toTopOf="@id/countries"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/trip_description" />
-
-    <View
-        android:id="@+id/divider_trip_details"
-        android:layout_width="0dp"
-        android:layout_height="1dp"
-        android:background="?android:attr/listDivider"
-        android:visibility="visible"
-        app:layout_constraintBottom_toTopOf="@id/countries"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
-
-    <ListView
-        android:id="@+id/countries"
-        style="@style/Widget.AppCompat.Light.ListView.DropDown"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:background="#FFFFFF"
-        android:divider="@android:drawable/divider_horizontal_dark"
-        android:dividerHeight="1dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/countries_title" />
-
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/floating_action_button_trip_details"
+    <androidx.constraintlayout.widget.Group
+        android:id="@+id/city_content"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="end|bottom"
-        android:layout_marginEnd="16dp"
-        android:layout_marginBottom="16dp"
-        android:contentDescription="@string/add_country"
-        android:src="@drawable/add"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
+        app:constraint_referenced_ids="city_title, city_description"
+        app:layout_constraintEnd_toStartOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:visibility="visible" />
+
+    <androidx.constraintlayout.widget.Group
+        android:id="@+id/city_form"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:constraint_referenced_ids="submit_button,edit_description_layout,edit_title_layout"
+        app:layout_constraintEnd_toStartOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:visibility="gone" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

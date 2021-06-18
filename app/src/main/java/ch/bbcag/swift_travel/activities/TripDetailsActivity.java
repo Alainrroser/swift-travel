@@ -24,6 +24,8 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
 
+import org.w3c.dom.Text;
+
 import java.util.List;
 import java.util.Objects;
 
@@ -35,6 +37,7 @@ import ch.bbcag.swift_travel.dal.TripDao;
 import ch.bbcag.swift_travel.entities.Country;
 import ch.bbcag.swift_travel.entities.Trip;
 import ch.bbcag.swift_travel.utils.Const;
+import ch.bbcag.swift_travel.utils.Layout;
 
 public class TripDetailsActivity extends UpButtonActivity implements SearchView.OnQueryTextListener, SearchView.OnCloseListener {
 	private SearchView searchView;
@@ -191,7 +194,7 @@ public class TripDetailsActivity extends UpButtonActivity implements SearchView.
 			intent.removeExtra(Const.ADD_COUNTRY);
 			country.setName(intent.getStringExtra(Const.COUNTRY_NAME));
 			country.setImageURI(intent.getStringExtra(Const.FLAG_URI));
-			country.setTripID(selected.getId());
+			country.setTripId(selected.getId());
 			adapter.add(country);
 			countryDao.insert(country);
 		}
@@ -207,6 +210,7 @@ public class TripDetailsActivity extends UpButtonActivity implements SearchView.
 			Intent intent = new Intent(getApplicationContext(), CountryDetailsActivity.class);
 			Country selected = (Country) parent.getItemAtPosition(position);
 			intent.putExtra(Const.COUNTRY_NAME, selected.getName());
+			intent.putExtra(Const.COUNTRY, selected.getId());
 			startActivity(intent);
 		};
 
@@ -214,54 +218,29 @@ public class TripDetailsActivity extends UpButtonActivity implements SearchView.
 	}
 
 	private void refreshContent() {
-		setTitle();
-		setDescription();
-		setDuration();
-		setImageURI();
-	}
-
-	private void setTitle() {
-		TextView title = findViewById(R.id.trip_title);
-		EditText editTitle = findViewById(R.id.edit_title);
-		title.setText(selected.getName());
-		if (selected.getName().length() >= 20) {
-			title.setTextSize(18);
-		} else {
-			title.setTextSize(24);
-		}
+		Layout.setEditableTitleText(findViewById(R.id.trip_title),findViewById(R.id.edit_title), selected.getName());
 		setTitle(selected.getName());
-		editTitle.setText(selected.getName());
-	}
-
-	private void setDescription() {
-		TextView description = findViewById(R.id.trip_description);
-		EditText editDescription = findViewById(R.id.edit_description);
-		if (selected.getDescription().equals("")) {
-			description.setText(R.string.add_description);
-		} else {
-			description.setText(selected.getDescription());
-		}
-		description.setMovementMethod(new ScrollingMovementMethod());
-		editDescription.setText(selected.getDescription());
-	}
-
-	private void setDuration() {
-		TextView duration = findViewById(R.id.trip_duration);
-		duration.setText(selected.getDuration());
-	}
-
-	private void setImageURI() {
-		ImageView tripImage = findViewById(R.id.trip_image);
+		Layout.setEditableDescriptionText(findViewById(R.id.trip_description), findViewById(R.id.edit_description), selected.getDescription());
+		Layout.setTextOnTextView(findViewById(R.id.trip_duration), selected.getDuration());
 		if (selected.getImageURI() != null) {
-			tripImage.setImageURI(Uri.parse(selected.getImageURI()));
+			Layout.setImageURIonImageView(findViewById(R.id.trip_image), selected.getImageURI());
 		}
 	}
 
 	private void toggleForm() {
+		boolean notChanged = false;
+
 		Group form = findViewById(R.id.trip_form);
 		Group content = findViewById(R.id.trip_content);
 
-		if (form.getVisibility() == View.VISIBLE && nameValidated) {
+		EditText editTitle = findViewById(R.id.edit_title);
+		TextView title = findViewById(R.id.trip_title);
+
+		if (title.getText().equals(editTitle.getText().toString())){
+			notChanged = true;
+		}
+
+		if (form.getVisibility() == View.VISIBLE && (nameValidated || notChanged)) {
 			form.setVisibility(View.GONE);
 			content.setVisibility(View.VISIBLE);
 		} else {

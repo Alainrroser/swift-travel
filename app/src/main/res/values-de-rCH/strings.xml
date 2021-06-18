@@ -6,7 +6,7 @@
     <string name="create_trip_title">Reise erstellen</string>
     <string name="trip_name">Trip name</string>
     <string name="trip_destination">Destination</string>
-    <string name="trip_duration">Duration</string>
+    <string name="trip_duration">Aufenthaltsdauer</string>
     <string name="trip_name_hint">Trip Name</string>
     <string name="trip_name_error">Überprüfe die Eingabelänge</string>
     <string name="trip_description_hint">Beschreibung hinzufügen</string>
@@ -30,7 +30,13 @@
     <string name="add_countries_to_list_error_title">Länder auflisten</string>
     <string name="add_countries_to_list_error_text">Beim Auflisten der Länder ist ein Fehler aufgetreten, versuche es später erneut</string>
     <string name="add_description">Beschreibung hinzufügen</string>
+    <string name="add_text">Mit Klick auf den Editbutton einen Text hinzufügen!</string>
     <string name="submit_text">Bestätigen</string>
     <string name="entry_exists_error_title">Land existiert</string>
     <string name="entry_exists_error_text">Das Land, welches du hinzufügen wolltest, existiert bereits</string>
+    <string name="cities_title">Städte</string>
+    <string name="country_name">Ländername</string>
+    <string name="country_name_hint">Ländername</string>
+    <string name="country_description_hint">Landbeschreibung</string>
+    <string name="country_duration">Aufenthaltsdauer im Land</string>
 </resources>

@@ -19,8 +19,8 @@ public class Country {
 	private String description;
 	@ColumnInfo(name = "imageURI")
 	private String imageURI;
-	@ColumnInfo(name = "tripID")
-	private int tripID;
+	@ColumnInfo(name = "tripId")
+	private int tripId;
 	@Ignore
 	private String duration;
 	@Ignore
@@ -68,12 +68,12 @@ public class Country {
 		this.imageURI = imageURI;
 	}
 
-	public int getTripID() {
-		return tripID;
+	public int getTripId() {
+		return tripId;
 	}
 
-	public void setTripID(int tripID) {
-		this.tripID = tripID;
+	public void setTripId(int tripId) {
+		this.tripId = tripId;
 	}
 
 	public List<City> getCityList() {

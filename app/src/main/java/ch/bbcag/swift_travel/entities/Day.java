@@ -16,8 +16,8 @@ public class Day {
 	private String description;
 	@ColumnInfo(name = "duration")
 	private String duration;
-	@ColumnInfo(name = "cityID")
-	private int cityID;
+	@ColumnInfo(name = "cityId")
+	private int cityId;
 
 	public Day() {
 	}
@@ -52,12 +52,12 @@ public class Day {
 		this.description = description;
 	}
 
-	public int getCityID() {
-		return cityID;
+	public int getCityId() {
+		return cityId;
 	}
 
-	public void setCityID(int cityID) {
-		this.cityID = cityID;
+	public void setCityId(int cityId) {
+		this.cityId = cityId;
 	}
 
 	public String getDuration() {

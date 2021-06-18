@@ -120,7 +120,7 @@ public class ChooseActivity extends UpButtonActivity implements SearchView.OnQue
 
     private void addAllCountriesToClickableList() {
         Response.Listener<JSONArray> responseListener = this::addAllCountriesToAdapter;
-        Response.ErrorListener errorListener = error -> generateMessageDialog(getString(R.string.add_countries_to_list_error_title), getString(R.string.add_countries_to_list_error_text));
+        Response.ErrorListener errorListener = error -> generateMessageDialogAndCloseActivity(getString(R.string.add_countries_to_list_error_title), getString(R.string.add_countries_to_list_error_text));
         ApiRepository.getJsonArray(getApplicationContext(), Const.COUNTRIES_URL, responseListener, errorListener);
         getProgressBar().setVisibility(View.GONE);
     }
@@ -136,7 +136,9 @@ public class ChooseActivity extends UpButtonActivity implements SearchView.OnQue
         allCountries.setOnItemClickListener((parent, view, position, id) -> {
             Intent intent = new Intent(getApplicationContext(), TripDetailsActivity.class);
             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-            Country country = (Country) ((ListView) parent).getItemAtPosition(position);
+            intent.putExtra(Const.ADD_COUNTRY, true);
+
+            Country country = (Country) parent.getItemAtPosition(position);
             intent.putExtra(Const.COUNTRY_NAME, country.getName());
             intent.putExtra(Const.FLAG_URI, country.getImageURI());
             intent.putExtra(Const.TRIP_NAME, tripName);

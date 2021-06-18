@@ -180,7 +180,7 @@ public class TripDetailsActivity extends UpButtonActivity implements SearchView.
 	}
 
 	private void addTripInformation(Intent intent, Country country) {
-		if (intent.getStringExtra(Const.COUNTRY_NAME) != null) {
+		if (intent.getStringExtra(Const.COUNTRY_NAME) != null && intent.getBooleanExtra(Const.ADD_COUNTRY, false)) {
 			checkIfCountryExists(intent);
 			addCountryIfNotExists(intent, country);
 		}
@@ -197,11 +197,14 @@ public class TripDetailsActivity extends UpButtonActivity implements SearchView.
 
 	private void addCountryIfNotExists(Intent intent, Country country) {
 		if (!countryExists) {
+			intent.removeExtra(Const.ADD_COUNTRY);
 			country.setName(intent.getStringExtra(Const.COUNTRY_NAME));
 			country.setImageURI(intent.getStringExtra(Const.FLAG_URI));
 			country.setTripID(selected.getId());
 			adapter.add(country);
 			countryDao.insert(country);
+		} else {
+			generateMessageDialog(getString(R.string.entry_exists_error_title), getString(R.string.entry_exists_error_text));
 		}
 	}
 

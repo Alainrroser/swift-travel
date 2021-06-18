@@ -74,6 +74,7 @@ public class CreateTripActivity extends UpButtonActivity {
 		if (Objects.requireNonNull(nameEdit.getText()).toString().length() > 0 && Objects.requireNonNull(nameEdit.getText()).toString().length() <= 40) {
 			Intent intent = new Intent(getApplicationContext(), MainActivity.class);
 			intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+			intent.putExtra(Const.ADD_TRIP, true);
 
 			nameLayout.setError(null);
 			trip.setName(nameEdit.getText().toString());

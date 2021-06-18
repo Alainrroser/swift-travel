@@ -24,12 +24,22 @@ public class BaseActivity extends AppCompatActivity {
 		progressBar.setVisibility(View.VISIBLE);
 	}
 
-	public void generateMessageDialog(String title, String message) {
+	public void generateMessageDialog(String title, String text) {
+		progressBar.setVisibility(View.GONE);
+		AlertDialog.Builder dialogBuilder;
+		dialogBuilder = new AlertDialog.Builder(this);
+		dialogBuilder.setPositiveButton(getString(R.string.dialog_close), (dialog, id) -> dialog.cancel());
+		dialogBuilder.setMessage(text).setTitle(title);
+		AlertDialog dialog = dialogBuilder.create();
+		dialog.show();
+	}
+
+	public void generateMessageDialogAndCloseActivity(String title, String text) {
 		progressBar.setVisibility(View.GONE);
 		AlertDialog.Builder dialogBuilder;
 		dialogBuilder = new AlertDialog.Builder(this);
 		dialogBuilder.setPositiveButton(getString(R.string.dialog_close), (dialog, id) -> finish());
-		dialogBuilder.setMessage(message).setTitle(title);
+		dialogBuilder.setMessage(text).setTitle(title);
 		AlertDialog dialog = dialogBuilder.create();
 		dialog.show();
 	}

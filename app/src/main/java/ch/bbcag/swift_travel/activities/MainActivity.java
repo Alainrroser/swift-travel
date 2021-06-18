@@ -136,24 +136,8 @@ public class MainActivity extends BaseActivity implements SearchView.OnQueryText
     }
 
     private void addTripInformation(Intent intent, Trip trip) {
-        if (intent.getStringExtra(Const.TRIP_NAME) != null) {
-            checkIfTripExists(intent);
-            addTripIfNotExists(intent, trip);
-        }
-    }
-
-    private void checkIfTripExists(Intent intent) {
-        for (Trip existingTrip : tripDao.getAll()) {
-            if (existingTrip.getName().equals(intent.getStringExtra(Const.TRIP_NAME))) {
-                tripExists = true;
-                break;
-            }
-        }
-
-    }
-
-    private void addTripIfNotExists(Intent intent, Trip trip) {
-        if (!tripExists) {
+        if (intent.getStringExtra(Const.TRIP_NAME) != null && intent.getBooleanExtra(Const.ADD_TRIP, false)) {
+            intent.removeExtra(Const.ADD_TRIP);
             trip.setName(intent.getStringExtra(Const.TRIP_NAME));
             addDescription(intent, trip);
             addImageURI(intent, trip);
@@ -192,7 +176,10 @@ public class MainActivity extends BaseActivity implements SearchView.OnQueryText
     }
 
     private void onFloatingActionButtonClick() {
-        floatingActionButton.setOnClickListener(v -> startActivity(new Intent(getApplicationContext(), CreateTripActivity.class)));
+        floatingActionButton.setOnClickListener(v -> {
+            Intent intent = new Intent(getApplicationContext(), CreateTripActivity.class);
+            startActivity(intent);
+        });
     }
 
     public TripAdapter getAdapter() {

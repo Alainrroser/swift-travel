@@ -17,6 +17,9 @@ public interface CountryDao {
 	@Query("SELECT * FROM countries WHERE id = :id")
     Country getById(long id);
 
+	@Query("SELECT code FROM countries WHERE id = :id")
+	String getCodeById(long id);
+
 	@Query("UPDATE countries SET name = :name")
 	void setName(String name);
 

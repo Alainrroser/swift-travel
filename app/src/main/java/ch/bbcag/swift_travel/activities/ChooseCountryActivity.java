@@ -41,7 +41,7 @@ public class ChooseCountryActivity extends UpButtonActivity implements SearchVie
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_choose);
+		setContentView(R.layout.activity_choose_country);
 
 		setTitle(Const.CHOOSE + Const.COUNTRY);
 
@@ -128,7 +128,7 @@ public class ChooseCountryActivity extends UpButtonActivity implements SearchVie
 
 	private void addAllCountriesToClickableList() {
 		Response.Listener<JSONArray> responseListener = this::addAllCountriesToAdapter;
-		Response.ErrorListener errorListener = error -> generateMessageDialogAndCloseActivity(getString(R.string.add_countries_to_list_error_title), getString(R.string.add_countries_to_list_error_text));
+		Response.ErrorListener errorListener = error -> generateMessageDialogAndCloseActivity(getString(R.string.add_entry_to_list_error_title), getString(R.string.add_entries_to_list_error_text));
 		ApiRepository.getJsonArray(getApplicationContext(), Const.COUNTRIES_URL, responseListener, errorListener);
 		getProgressBar().setVisibility(View.GONE);
 	}
@@ -148,6 +148,7 @@ public class ChooseCountryActivity extends UpButtonActivity implements SearchVie
 
 			Country country = (Country) parent.getItemAtPosition(position);
 			intent.putExtra(Const.COUNTRY_NAME, country.getName());
+			intent.putExtra(Const.COUNTRY_CODE, country.getCode());
 			intent.putExtra(Const.FLAG_URI, country.getImageURI());
 			intent.putExtra(Const.TRIP, getIntent().getLongExtra(Const.TRIP, -1));
 			startActivity(intent);
@@ -162,7 +163,7 @@ public class ChooseCountryActivity extends UpButtonActivity implements SearchVie
 			addCountryToList(response, allCountries);
 			adapter = new ChooseCountryAdapter(getApplicationContext(), allCountries);
 		} catch (Exception e) {
-			generateMessageDialog(getString(R.string.add_countries_to_list_error_title), getString(R.string.add_countries_to_list_error_text));
+			generateMessageDialog(getString(R.string.add_entry_to_list_error_title), getString(R.string.add_entries_to_list_error_text));
 		}
 	}
 
@@ -170,7 +171,7 @@ public class ChooseCountryActivity extends UpButtonActivity implements SearchVie
 		for (int position = 0; position < response.length(); position++) {
 			Country country = new Country();
 			country.setName(response.getJSONObject(position).getString(Const.NAME));
-			country.setDescription("");
+			country.setCode(response.getJSONObject(position).getString(Const.CODE));
 			country.setImageURI(response.getJSONObject(position).getString(Const.FLAG));
 			checkIfCountryWasAdded(country);
 			if (!countryWasAdded) {

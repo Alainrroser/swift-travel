@@ -13,40 +13,46 @@ import androidx.annotation.NonNull;
 
 import com.android.volley.Response;
 
-import org.json.JSONArray;
-import org.json.JSONException;
+import org.geonames.Style;
+import org.geonames.Toponym;
+import org.geonames.ToponymSearchCriteria;
+import org.geonames.ToponymSearchResult;
+import org.geonames.WebService;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import ch.bbcag.swift_travel.R;
-import ch.bbcag.swift_travel.adapter.ChooseCountryAdapter;
-import ch.bbcag.swift_travel.dal.ApiRepository;
+import ch.bbcag.swift_travel.adapter.ChooseCityAdapter;
+import ch.bbcag.swift_travel.dal.CityDao;
 import ch.bbcag.swift_travel.dal.CountryDao;
 import ch.bbcag.swift_travel.dal.SwiftTravelDatabase;
-import ch.bbcag.swift_travel.entities.Country;
+import ch.bbcag.swift_travel.entities.City;
 import ch.bbcag.swift_travel.utils.Const;
 
 public class ChooseCityActivity extends UpButtonActivity implements SearchView.OnQueryTextListener, SearchView.OnCloseListener {
 	private SearchView searchView;
 	private MenuItem searchItem;
 
-	private ChooseCountryAdapter adapter;
+	private ChooseCityAdapter adapter;
+	private ListView allCities;
 
-	private String tripName;
+	private List<City> addedCities;
+	private boolean cityWasAdded = false;
 
-	private List<Country> addedCountries;
-	private boolean countryWasAdded = false;
-
+	private CityDao cityDao;
 	private CountryDao countryDao;
+
+	private long id;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_choose);
+		setContentView(R.layout.activity_choose_city);
 
 		setTitle(Const.CHOOSE + Const.CITY);
 
+		cityDao = SwiftTravelDatabase.getInstance(getApplicationContext()).getCityDao();
 		countryDao = SwiftTravelDatabase.getInstance(getApplicationContext()).getCountryDao();
 	}
 
@@ -54,8 +60,12 @@ public class ChooseCityActivity extends UpButtonActivity implements SearchView.O
 	protected void onStart() {
 		super.onStart();
 
-		addAllCountriesToClickableList();
-		addedCountries = countryDao.getAllFromTrip(getIntent().getLongExtra(Const.TRIP, -1));
+		id = getIntent().getLongExtra(Const.COUNTRY, -1);
+		addedCities = cityDao.getAllFromCountry(id);
+
+		allCities = findViewById(R.id.all_cities);
+		new Thread(this::addAllCitiesToClickableList).start();
+		onCityClick();
 	}
 
 	@Override
@@ -128,66 +138,70 @@ public class ChooseCityActivity extends UpButtonActivity implements SearchView.O
 		adapter.getFilter().filter(searchText);
 	}
 
-	private void addAllCountriesToClickableList() {
-		Response.Listener<JSONArray> responseListener = this::addAllCountriesToAdapter;
-		Response.ErrorListener errorListener = error -> generateMessageDialogAndCloseActivity(getString(R.string.add_countries_to_list_error_title), getString(R.string.add_countries_to_list_error_text));
-		ApiRepository.getJsonArray(getApplicationContext(), Const.COUNTRIES_URL, responseListener, errorListener);
-		getProgressBar().setVisibility(View.GONE);
+	private void addAllCitiesToClickableList() {
+		try {
+			ToponymSearchCriteria searchCriteria = new ToponymSearchCriteria();
+			searchCriteria.setCountryCode(countryDao.getCodeById(id));
+			searchCriteria.setFeatureCode(Const.FEATURE_CODE);
+			searchCriteria.setStyle(Style.FULL);
+			WebService.setGeoNamesServer(Const.CITIES_URL);
+			WebService.setUserName(Const.CITIES_URL_USER_NAME);
+			ToponymSearchResult searchResult = WebService.search(searchCriteria);
+			addToponymsToAdapter(searchResult);
+			runOnUiThread(() -> getProgressBar().setVisibility(View.GONE));
+		} catch (Exception e) {
+			generateMessageDialogAndCloseActivity(getString(R.string.add_entry_to_list_error_title), getString(R.string.add_entries_to_list_error_text));
+		}
 	}
 
-	private void addAllCountriesToAdapter(JSONArray response) {
-		ListView allCountries = findViewById(R.id.all_countries);
-		initializeAdapter(response);
-		allCountries.setAdapter(adapter);
-		onCountryClick(allCountries);
+	private void addToponymsToAdapter(ToponymSearchResult searchResult) {
+		for(Toponym toponym : searchResult.getToponyms()) {
+			initializeAdapter(toponym);
+		}
+		runOnUiThread(() -> allCities.setAdapter(adapter));
 	}
 
-	private void onCountryClick(ListView allCountries) {
-		allCountries.setOnItemClickListener((parent, view, position, id) -> {
-			Intent intent = new Intent(getApplicationContext(), TripDetailsActivity.class);
+	private void onCityClick() {
+		allCities.setOnItemClickListener((parent, view, position, id) -> {
+			Intent intent = new Intent(getApplicationContext(), CountryDetailsActivity.class);
 			intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-			intent.putExtra(Const.ADD_COUNTRY, true);
+			intent.putExtra(Const.ADD_CITY, true);
 
-			Country country = (Country) parent.getItemAtPosition(position);
-			intent.putExtra(Const.COUNTRY_NAME, country.getName());
-			intent.putExtra(Const.FLAG_URI, country.getImageURI());
-			intent.putExtra(Const.TRIP_NAME, tripName);
+			City city = (City) parent.getItemAtPosition(position);
+			intent.putExtra(Const.CITY_NAME, city.getName());
+			intent.putExtra(Const.COUNTRY, getIntent().getLongExtra(Const.COUNTRY, -1));
 			startActivity(intent);
 
-			adapter.remove(country);
+			adapter.remove(city);
 		});
 	}
 
-	private void initializeAdapter(JSONArray response) {
+	private void initializeAdapter(Toponym toponym) {
 		try {
-			List<Country> allCountries = new ArrayList<>();
-			addCountryToList(response, allCountries);
-			adapter = new ChooseCountryAdapter(getApplicationContext(), allCountries);
+			List<City> allCities = new ArrayList<>();
+			addCityToList(toponym, allCities);
+			adapter = new ChooseCityAdapter(getApplicationContext(), allCities);
 		} catch (Exception e) {
-			generateMessageDialog(getString(R.string.add_countries_to_list_error_title), getString(R.string.add_countries_to_list_error_text));
+			generateMessageDialog(getString(R.string.add_entry_to_list_error_title), getString(R.string.add_entries_to_list_error_text));
 		}
 	}
 
-	private void addCountryToList(JSONArray response, List<Country> allCountries) throws JSONException {
-		for (int position = 0; position < response.length(); position++) {
-			Country country = new Country();
-			country.setName(response.getJSONObject(position).getString(Const.NAME));
-			country.setDescription("");
-			country.setImageURI(response.getJSONObject(position).getString(Const.FLAG));
-			checkIfCountryWasAdded(country);
-			if (!countryWasAdded) {
-				allCountries.add(country);
-			}
+	private void addCityToList(Toponym toponym, List<City> allCities) {
+		City city = new City();
+		city.setName(toponym.getName());
+		checkIfCountryWasAdded(city);
+		if (!cityWasAdded) {
+			allCities.add(city);
 		}
 	}
 
-	private void checkIfCountryWasAdded(Country country) {
-		for (Country addedCountry : addedCountries) {
-			if (addedCountry.getName().equals(country.getName())) {
-				countryWasAdded = true;
+	private void checkIfCountryWasAdded(City city) {
+		for (City addedCity : addedCities) {
+			if (addedCity.getName().equals(city.getName())) {
+				cityWasAdded = true;
 				break;
 			} else {
-				countryWasAdded = false;
+				cityWasAdded = false;
 			}
 		}
 	}

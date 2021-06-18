@@ -177,11 +177,11 @@ public class TripDetailsActivity extends UpButtonActivity implements SearchView.
 			intent.removeExtra(Const.ADD_COUNTRY);
 
 			country.setName(intent.getStringExtra(Const.COUNTRY_NAME));
+			country.setCode(intent.getStringExtra(Const.COUNTRY_CODE));
 			country.setImageURI(intent.getStringExtra(Const.FLAG_URI));
 			country.setTripId(selected.getId());
 			long id = countryDao.insert(country);
 			country.setId(id);
-
 			adapter.add(country);
 		}
 	}

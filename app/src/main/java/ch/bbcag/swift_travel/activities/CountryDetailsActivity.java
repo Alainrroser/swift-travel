@@ -2,6 +2,8 @@ package ch.bbcag.swift_travel.activities;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
@@ -12,6 +14,8 @@ import android.widget.ListView;
 import android.widget.SearchView;
 
 import androidx.constraintlayout.widget.Group;
+
+import androidx.annotation.NonNull;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
@@ -27,7 +31,7 @@ import ch.bbcag.swift_travel.entities.Country;
 import ch.bbcag.swift_travel.utils.Const;
 import ch.bbcag.swift_travel.utils.Layout;
 
-public class CountryDetailsActivity extends UpButtonActivity {
+public class CountryDetailsActivity extends UpButtonActivity implements SearchView.OnQueryTextListener, SearchView.OnCloseListener {
 	private SearchView searchView;
 	private MenuItem searchItem;
 
@@ -87,6 +91,76 @@ public class CountryDetailsActivity extends UpButtonActivity {
 		onSubmitButtonClick();
 	}
 
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+		MenuInflater inflater = getMenuInflater();
+		inflater.inflate(R.menu.search_menu, menu);
+
+		searchItem = menu.findItem(R.id.search);
+
+		searchView = (SearchView) searchItem.getActionView();
+		searchView.setQueryHint(getString(R.string.search));
+		searchView.setIconified(false);
+		searchView.setOnQueryTextListener(this);
+		searchView.setOnCloseListener(this);
+		setOnActionExpandListener();
+
+		return true;
+	}
+
+	@Override
+	public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+		int itemId = item.getItemId();
+		if (itemId == R.id.search) {
+			searchView.setIconified(false);
+			return true;
+		}
+		return super.onOptionsItemSelected(item);
+	}
+
+	@Override
+	public boolean onQueryTextSubmit(String searchText) {
+		filterAdapter(searchText);
+		return true;
+	}
+
+	@Override
+	public boolean onQueryTextChange(String searchText) {
+		filterAdapter(searchText);
+		return false;
+	}
+
+	@Override
+	public boolean onClose() {
+		if (!searchView.isIconified()) {
+			searchItem.collapseActionView();
+		} else {
+			searchView.setIconified(false);
+		}
+
+		return false;
+	}
+
+	private void setOnActionExpandListener() {
+		searchItem.setOnActionExpandListener(new MenuItem.OnActionExpandListener() {
+			@Override
+			public boolean onMenuItemActionExpand(MenuItem item) {
+				return true;
+			}
+
+			@Override
+			public boolean onMenuItemActionCollapse(MenuItem item) {
+				searchView.setQuery("", false);
+				filterAdapter("");
+				return true;
+			}
+		});
+	}
+
+	private void filterAdapter(String searchText) {
+		adapter.getFilter().filter(searchText);
+	}
+
 	public void addCitiesToClickableList() {
 		ListView cities = findViewById(R.id.cities);
 		cities.setAdapter(adapter);
@@ -141,9 +215,8 @@ public class CountryDetailsActivity extends UpButtonActivity {
 
 	private void onFloatingActionButtonClick() {
 		floatingActionButton.setOnClickListener(v -> {
-			Intent intent = new Intent(getApplicationContext(), ChooseCountryActivity.class);
-			intent.putExtra(Const.NAME, Const.CITY);
-			intent.putExtra(Const.COUNTRY_NAME, cityName);
+			Intent intent = new Intent(getApplicationContext(), ChooseCityActivity.class);
+			intent.putExtra(Const.COUNTRY, selected.getId());
 			startActivity(intent);
 		});
 	}

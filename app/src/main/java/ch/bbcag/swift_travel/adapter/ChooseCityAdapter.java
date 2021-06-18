@@ -21,7 +21,7 @@ public class ChooseCityAdapter extends ArrayAdapter<City> {
 	}
 
 	public ChooseCityAdapter(Context context, List<City> cities) {
-		super(context, R.layout.activity_choose, cities);
+		super(context, R.layout.activity_choose_country, cities);
 	}
 
 	@Override
@@ -43,7 +43,6 @@ public class ChooseCityAdapter extends ArrayAdapter<City> {
 		}
 
 		viewHolder.name.setText(city.getName());
-		Layout.setOnlineImageURIOnImageView(getContext(), viewHolder.image, city.getImageURI());
 		return convertView;
 	}
 }

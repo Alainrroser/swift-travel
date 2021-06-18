@@ -15,6 +15,8 @@ public class Country {
 	private long id;
 	@ColumnInfo(name = "name")
 	private String name;
+	@ColumnInfo(name = "code")
+	private String code;
 	@ColumnInfo(name = "description")
 	private String description;
 	@ColumnInfo(name = "imageURI")
@@ -50,6 +52,14 @@ public class Country {
 
 	public void setName(String name) {
 		this.name = name;
+	}
+
+	public String getCode() {
+		return code;
+	}
+
+	public void setCode(String code) {
+		this.code = code;
 	}
 
 	public String getDuration() {

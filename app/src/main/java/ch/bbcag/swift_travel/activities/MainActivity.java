@@ -138,8 +138,8 @@ public class MainActivity extends BaseActivity implements SearchView.OnQueryText
 			if (intent.getStringExtra(Const.TRIP_DESCRIPTION) != null) {
 				trip.setDescription(intent.getStringExtra(Const.TRIP_DESCRIPTION));
 			}
-			if (intent.getStringExtra(Const.TRIP_IMAGE_URI) != null) {
-				trip.setImageURI(intent.getStringExtra(Const.TRIP_IMAGE_URI));
+			if (intent.getStringExtra(Const.IMAGE_URI) != null) {
+				trip.setImageURI(intent.getStringExtra(Const.IMAGE_URI));
 			}
 			long id = tripDao.insert(trip);
 			trip.setId(id);

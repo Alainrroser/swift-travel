@@ -21,14 +21,15 @@
     <string name="delete_entry_title">Eintrag löschen</string>
     <string name="delete_entry_text">Willst du diesen Eintrag wirklich löschen?</string>
 
+    <string name="add_entry_to_list_error_title">Einträge auflisten</string>
+    <string name="add_entries_to_list_error_text">Beim Auflisten der Einträge ist ein Fehler aufgetreten, versuche es später erneut</string>
+
     <string name="dialog_close">Ok</string>
     <string name="dialog_yes">Ja</string>
     <string name="dialog_no">Nein</string>
 
     <string name="countries_title">Länder</string>
     <string name="add_country">Land hinzufügen</string>
-    <string name="add_countries_to_list_error_title">Länder auflisten</string>
-    <string name="add_countries_to_list_error_text">Beim Auflisten der Länder ist ein Fehler aufgetreten, versuche es später erneut</string>
     <string name="add_description">Beschreibung hinzufügen</string>
     <string name="add_text">Mit Klick auf den Editbutton einen Text hinzufügen!</string>
     <string name="submit_text">Bestätigen</string>

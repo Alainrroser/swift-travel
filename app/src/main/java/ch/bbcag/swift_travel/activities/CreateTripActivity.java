@@ -72,7 +72,7 @@ public class CreateTripActivity extends UpButtonActivity {
 			intent.putExtra(Const.TRIP_NAME, nameEdit.getText().toString());
 
 			if (trip.getImageURI() != null) {
-				intent.putExtra(Const.TRIP_IMAGE_URI, trip.getImageURI());
+				intent.putExtra(Const.IMAGE_URI, trip.getImageURI());
 			}
 
 			if (Objects.requireNonNull(descriptionEdit.getText()).toString().length() <= 0) {

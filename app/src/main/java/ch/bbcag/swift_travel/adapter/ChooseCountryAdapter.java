@@ -21,7 +21,7 @@ public class ChooseCountryAdapter extends ArrayAdapter<Country> {
 	}
 
 	public ChooseCountryAdapter(Context context, List<Country> countries) {
-		super(context, R.layout.activity_choose, countries);
+		super(context, R.layout.activity_choose_country, countries);
 	}
 
 	@Override

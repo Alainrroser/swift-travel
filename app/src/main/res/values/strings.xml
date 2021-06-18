@@ -19,6 +19,9 @@
     <string name="entry_exists_error_title">Entry exists</string>
     <string name="entry_exists_error_text">The entry you wanted to add exists already</string>
 
+    <string name="add_entry_to_list_error_title">List entries</string>
+    <string name="add_entries_to_list_error_text">An error occurred with listing the entries, try again later</string>
+
     <string name="delete">Delete</string>
     <string name="delete_entry_title">Delete Entry</string>
     <string name="delete_entry_text">Do you really want to delete this entry?</string>
@@ -29,8 +32,6 @@
 
     <string name="countries_title">Countries</string>
     <string name="add_country">Add country</string>
-    <string name="add_countries_to_list_error_title">List countries</string>
-    <string name="add_countries_to_list_error_text">An error occurred with listing the countries, try again later</string>
     <string name="add_description">Add description</string>
     <string name="add_text">Add a text here on edit button click!</string>
     <string name="submit_text">Submit</string>

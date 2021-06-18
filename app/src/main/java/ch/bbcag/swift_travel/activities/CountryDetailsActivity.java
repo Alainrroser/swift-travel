@@ -25,7 +25,6 @@ import ch.bbcag.swift_travel.utils.Const;
 import ch.bbcag.swift_travel.utils.Layout;
 
 public class CountryDetailsActivity extends UpButtonActivity {
-
 	private SearchView searchView;
 	private MenuItem searchItem;
 
@@ -66,9 +65,9 @@ public class CountryDetailsActivity extends UpButtonActivity {
 		super.onStart();
 		getProgressBar().setVisibility(View.GONE);
 
-		int id = getIntent().getIntExtra(Const.COUNTRY, -1);
+		long id = getIntent().getLongExtra(Const.COUNTRY, -1);
 		if (id != -1) {
-			selected = countryDao.getCountryById(id);
+			selected = countryDao.getById(id);
 		}
 
 		List<City> cities = cityDao.getAllFromCountry(selected.getId());
@@ -136,7 +135,7 @@ public class CountryDetailsActivity extends UpButtonActivity {
 
 	private void onFloatingActionButtonClick() {
 		floatingActionButton.setOnClickListener(v -> {
-			Intent intent = new Intent(getApplicationContext(), ChooseActivity.class);
+			Intent intent = new Intent(getApplicationContext(), ChooseCountryActivity.class);
 			intent.putExtra(Const.NAME, Const.CITY);
 			intent.putExtra(Const.COUNTRY_NAME, cityName);
 			startActivity(intent);
@@ -144,30 +143,22 @@ public class CountryDetailsActivity extends UpButtonActivity {
 	}
 
 	private void refreshContent() {
-//		if (selected != null) {
-//			Layout.setEditableTitleText(findViewById(R.id.country_title), findViewById(R.id.edit_title), selected.getName());
-//			setTitle(selected.getName());
-//			Layout.setTextOnTextView(findViewById(R.id.country_description), selected.getDescription());
-//			Layout.setTextOnTextView(findViewById(R.id.country_duration), selected.getDuration());
-//			if (selected.getImageURI() != null) {
-//				Layout.setImageURIonImageView(findViewById(R.id.country_image), selected.getImageURI());
-//			}
-//		}
+		if (selected != null) {
+			Layout.setTextOnTextView(findViewById(R.id.country_title), selected.getName());
+			setTitle(selected.getName());
+			Layout.setTextOnTextView(findViewById(R.id.country_description), selected.getDescription());
+			Layout.setTextOnTextView(findViewById(R.id.country_duration), selected.getDuration());
+			if (selected.getImageURI() != null) {
+				Layout.setOnlineImageURIOnImageView(getApplicationContext(), findViewById(R.id.country_image), selected.getImageURI());
+			}
+		}
 	}
 
 	public CityAdapter getAdapter() {
 		return adapter;
 	}
 
-	public void setAdapter(CityAdapter adapter) {
-		this.adapter = adapter;
-	}
-
 	public CityDao getCityDao() {
 		return cityDao;
-	}
-
-	public void setCityDao(CityDao cityDao) {
-		this.cityDao = cityDao;
 	}
 }

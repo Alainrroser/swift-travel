@@ -8,12 +8,11 @@ import androidx.room.Update;
 import java.util.List;
 
 import ch.bbcag.swift_travel.entities.City;
-import ch.bbcag.swift_travel.entities.Country;
 
 @Dao
 public interface CityDao {
 	@Query("SELECT * FROM cities WHERE countryId = :countryId")
-	List<City> getAllFromCountry(int countryId);
+	List<City> getAllFromCountry(long countryId);
 
 	@Query("UPDATE cities SET name = :name")
 	void setName(String name);
@@ -28,11 +27,11 @@ public interface CityDao {
 	void setDuration(String duration);
 
 	@Insert
-	void insert(City city);
+	long insert(City city);
 
 	@Update
 	void update(City city);
 
 	@Query("DELETE FROM cities WHERE id = :id")
-	void delete(int id);
+	void delete(long id);
 }

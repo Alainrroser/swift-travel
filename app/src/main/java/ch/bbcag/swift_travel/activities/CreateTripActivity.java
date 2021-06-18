@@ -24,7 +24,6 @@ public class CreateTripActivity extends UpButtonActivity {
 	private Trip trip = new Trip();
 
 	private TextInputLayout nameLayout;
-	private TextInputLayout descriptionLayout;
 	private TextInputEditText nameEdit;
 	private TextInputEditText descriptionEdit;
 	private ImageButton chooseImage;
@@ -35,28 +34,20 @@ public class CreateTripActivity extends UpButtonActivity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_create_trip);
 		setTitle(getString(R.string.create_trip_title));
+
+		nameLayout = findViewById(R.id.add_title_layout);
+		nameEdit = findViewById(R.id.add_title);
+		descriptionEdit = findViewById(R.id.add_description);
+		create = findViewById(R.id.create);
+		chooseImage = findViewById(R.id.place_holder_image);
 	}
 
 	@Override
 	protected void onStart() {
 		super.onStart();
 		getProgressBar().setVisibility(View.GONE);
-		nameLayout = findViewById(R.id.add_title_layout);
-		descriptionLayout = findViewById(R.id.add_description_layout);
-		nameEdit = findViewById(R.id.add_title);
-		descriptionEdit = findViewById(R.id.add_description);
-		create = findViewById(R.id.create);
-		chooseImage = findViewById(R.id.place_holder_image);
 
-		onCreateClick();
-		onChooseImageClick();
-	}
-
-	private void onCreateClick() {
 		create.setOnClickListener(v -> startMainOrShowError());
-	}
-
-	private void onChooseImageClick() {
 		chooseImage.setOnClickListener(v -> ImagePicker.with(this).cropSquare().start());
 	}
 
@@ -78,30 +69,22 @@ public class CreateTripActivity extends UpButtonActivity {
 
 			nameLayout.setError(null);
 			trip.setName(nameEdit.getText().toString());
-
 			intent.putExtra(Const.TRIP_NAME, nameEdit.getText().toString());
-			setImageURIIfSet(intent);
-			setDescriptionIfSet(intent);
+
+			if (trip.getImageURI() != null) {
+				intent.putExtra(Const.TRIP_IMAGE_URI, trip.getImageURI());
+			}
+
+			if (Objects.requireNonNull(descriptionEdit.getText()).toString().length() <= 0) {
+				descriptionEdit.setText("");
+			}
+
+			trip.setDescription(descriptionEdit.getText().toString());
+			intent.putExtra(Const.TRIP_DESCRIPTION, descriptionEdit.getText().toString());
 
 			startActivity(intent);
 		} else {
 			nameLayout.setError(getString(R.string.trip_name_error));
 		}
-	}
-
-	private void setImageURIIfSet(Intent intent) {
-		if (trip.getImageURI() != null) {
-			intent.putExtra(Const.TRIP_IMAGE_URI, trip.getImageURI());
-		}
-	}
-
-
-	private void setDescriptionIfSet(Intent intent) {
-		if (Objects.requireNonNull(descriptionEdit.getText()).toString().length() <= 0) {
-			descriptionEdit.setText("");
-		}
-
-		trip.setDescription(descriptionEdit.getText().toString());
-		intent.putExtra(Const.TRIP_DESCRIPTION, descriptionEdit.getText().toString());
 	}
 }

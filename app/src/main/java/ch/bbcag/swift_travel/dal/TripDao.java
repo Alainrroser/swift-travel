@@ -14,6 +14,9 @@ public interface TripDao {
 	@Query("SELECT * FROM trips")
 	List<Trip> getAll();
 
+	@Query("SELECT * FROM trips WHERE id = :id")
+	Trip getById(long id);
+
 	@Query("UPDATE trips SET name = :name")
 	void setName(String name);
 
@@ -24,11 +27,11 @@ public interface TripDao {
 	void setDescription(String description);
 
 	@Insert
-	void insert(Trip trip);
+	long insert(Trip trip);
 
 	@Update
 	void update(Trip trip);
 
 	@Query("DELETE FROM trips WHERE id = :id")
-	void delete(int id);
+	void delete(long id);
 }

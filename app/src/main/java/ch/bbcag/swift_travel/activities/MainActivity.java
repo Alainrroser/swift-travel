@@ -24,177 +24,153 @@ import ch.bbcag.swift_travel.entities.Trip;
 import ch.bbcag.swift_travel.utils.Const;
 
 public class MainActivity extends BaseActivity implements SearchView.OnQueryTextListener, SearchView.OnCloseListener {
-    private SearchView searchView;
-    private MenuItem searchItem;
+	private SearchView searchView;
+	private MenuItem searchItem;
 
-    private FloatingActionButton floatingActionButton;
-    private TripAdapter adapter;
+	private FloatingActionButton floatingActionButton;
+	private TripAdapter adapter;
+	private ListView allTrips;
 
-    private TripDao tripDao;
+	private TripDao tripDao;
 
-    private boolean tripExists = false;
+	@Override
+	protected void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+		setContentView(R.layout.activity_main);
+		setTitle(getString(R.string.app_name));
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
-        setTitle(getString(R.string.app_name));
+		tripDao = SwiftTravelDatabase.getInstance(getApplicationContext()).getTripDao();
 
-        tripDao = SwiftTravelDatabase.getInstance(getApplicationContext()).getTripDao();
+		floatingActionButton = findViewById(R.id.floating_action_button_main);
+		allTrips = findViewById(R.id.trips);
+	}
 
-        floatingActionButton = findViewById(R.id.floating_action_button_main);
-    }
+	@Override
+	protected void onStart() {
+		super.onStart();
+		List<Trip> trips = tripDao.getAll();
+		adapter = new TripAdapter(this, trips);
+		allTrips.setAdapter(adapter);
+		getProgressBar().setVisibility(View.GONE);
+		createTripFromIntent();
+		onTripClick();
 
-    @Override
-    protected void onStart() {
-        super.onStart();
-        List<Trip> trips = tripDao.getAll();
-        adapter = new TripAdapter(this, trips);
-        addTripsToClickableList();
-        createTripFromIntent();
-        onFloatingActionButtonClick();
-    }
+		onFloatingActionButtonClick();
+	}
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.search_menu, menu);
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+		MenuInflater inflater = getMenuInflater();
+		inflater.inflate(R.menu.search_menu, menu);
 
-        searchItem = menu.findItem(R.id.search);
+		searchItem = menu.findItem(R.id.search);
 
-        searchView = (SearchView) searchItem.getActionView();
-        searchView.setQueryHint(getString(R.string.search));
-        searchView.setIconified(false);
-        searchView.setOnQueryTextListener(this);
-        searchView.setOnCloseListener(this);
-        setOnActionExpandListener();
+		searchView = (SearchView) searchItem.getActionView();
+		searchView.setQueryHint(getString(R.string.search));
+		searchView.setIconified(false);
+		searchView.setOnQueryTextListener(this);
+		searchView.setOnCloseListener(this);
+		setOnActionExpandListener();
 
-        return true;
-    }
+		return true;
+	}
 
-    @Override
-    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        int itemId = item.getItemId();
-        if (itemId == R.id.search) {
-            searchView.setIconified(false);
-            return true;
-        }
-        return super.onOptionsItemSelected(item);
-    }
+	@Override
+	public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+		int itemId = item.getItemId();
+		if (itemId == R.id.search) {
+			searchView.setIconified(false);
+			return true;
+		}
+		return super.onOptionsItemSelected(item);
+	}
 
-    @Override
-    public boolean onQueryTextSubmit(String searchText) {
-        filterAdapter(searchText);
-        return true;
-    }
+	@Override
+	public boolean onQueryTextSubmit(String searchText) {
+		filterAdapter(searchText);
+		return true;
+	}
 
-    @Override
-    public boolean onQueryTextChange(String searchText) {
-        filterAdapter(searchText);
-        System.out.println(searchView.getQuery());
-        return false;
-    }
+	@Override
+	public boolean onQueryTextChange(String searchText) {
+		filterAdapter(searchText);
+		return false;
+	}
 
-    @Override
-    public boolean onClose() {
-        if (!searchView.isIconified()) {
-            searchItem.collapseActionView();
-        } else {
-            searchView.setIconified(false);
-        }
+	@Override
+	public boolean onClose() {
+		if (!searchView.isIconified()) {
+			searchItem.collapseActionView();
+		} else {
+			searchView.setIconified(false);
+		}
 
-        return false;
-    }
+		return false;
+	}
 
-    private void setOnActionExpandListener() {
-        searchItem.setOnActionExpandListener(new MenuItem.OnActionExpandListener() {
-            @Override
-            public boolean onMenuItemActionExpand(MenuItem item) {
-                return true;
-            }
+	private void setOnActionExpandListener() {
+		searchItem.setOnActionExpandListener(new MenuItem.OnActionExpandListener() {
+			@Override
+			public boolean onMenuItemActionExpand(MenuItem item) {
+				return true;
+			}
 
-            @Override
-            public boolean onMenuItemActionCollapse(MenuItem item) {
-                searchView.setQuery("", false);
-                filterAdapter("");
-                return true;
-            }
-        });
-    }
+			@Override
+			public boolean onMenuItemActionCollapse(MenuItem item) {
+				searchView.setQuery("", false);
+				filterAdapter("");
+				return true;
+			}
+		});
+	}
 
-    private void filterAdapter(String searchText) {
-        adapter.getFilter().filter(searchText);
-    }
+	private void filterAdapter(String searchText) {
+		adapter.getFilter().filter(searchText);
+	}
 
-    /**
-     * Creates a trip from the information in the intent if they aren't null.
-     */
-    private void createTripFromIntent() {
-        Intent intent = getIntent();
-        Trip trip = new Trip();
-        addTripInformation(intent, trip);
-    }
+	private void createTripFromIntent() {
+		Intent intent = getIntent();
+		Trip trip = new Trip();
+		if (intent.getStringExtra(Const.TRIP_NAME) != null && intent.getBooleanExtra(Const.ADD_TRIP, false)) {
+			intent.removeExtra(Const.ADD_TRIP);
 
-    private void addTripInformation(Intent intent, Trip trip) {
-        if (intent.getStringExtra(Const.TRIP_NAME) != null && intent.getBooleanExtra(Const.ADD_TRIP, false)) {
-            intent.removeExtra(Const.ADD_TRIP);
-            trip.setName(intent.getStringExtra(Const.TRIP_NAME));
-            addDescription(intent, trip);
-            addImageURI(intent, trip);
-            adapter.add(trip);
-            tripDao.insert(trip);
-        }
-    }
+			trip.setName(intent.getStringExtra(Const.TRIP_NAME));
+			if (intent.getStringExtra(Const.TRIP_DESCRIPTION) != null) {
+				trip.setDescription(intent.getStringExtra(Const.TRIP_DESCRIPTION));
+			}
+			if (intent.getStringExtra(Const.TRIP_IMAGE_URI) != null) {
+				trip.setImageURI(intent.getStringExtra(Const.TRIP_IMAGE_URI));
+			}
+			long id = tripDao.insert(trip);
+			trip.setId(id);
 
-    private void addDescription(Intent intent, Trip trip) {
-        if (intent.getStringExtra(Const.TRIP_DESCRIPTION) != null) {
-            trip.setDescription(intent.getStringExtra(Const.TRIP_DESCRIPTION));
-        }
-    }
+			adapter.add(trip);
+		}
+	}
 
-    private void addImageURI(Intent intent, Trip trip) {
-        if (intent.getStringExtra(Const.TRIP_IMAGE_URI) != null) {
-            trip.setImageURI(intent.getStringExtra(Const.TRIP_IMAGE_URI));
-        }
-    }
+	private void onTripClick() {
+		AdapterView.OnItemClickListener mListClickedHandler = (parent, v, position, id) -> {
+			Intent intent = new Intent(getApplicationContext(), TripDetailsActivity.class);
+			Trip selected = (Trip) parent.getItemAtPosition(position);
+			intent.putExtra(Const.TRIP, selected.getId());
+			intent.putExtra(Const.TRIP_NAME, selected.getName());
+			startActivity(intent);
+		};
+		allTrips.setOnItemClickListener(mListClickedHandler);
+	}
 
-    public void addTripsToClickableList() {
-        ListView allTrips = findViewById(R.id.trips);
-        allTrips.setAdapter(adapter);
-        getProgressBar().setVisibility(View.GONE);
-        onTripClick(allTrips);
-    }
+	private void onFloatingActionButtonClick() {
+		floatingActionButton.setOnClickListener(v -> {
+			Intent intent = new Intent(getApplicationContext(), CreateTripActivity.class);
+			startActivity(intent);
+		});
+	}
 
-    private void onTripClick(ListView allTrips) {
-        AdapterView.OnItemClickListener mListClickedHandler = (parent, v, position, id) -> {
-            Intent intent = new Intent(getApplicationContext(), TripDetailsActivity.class);
-            Trip selected = (Trip) parent.getItemAtPosition(position);
-            intent.putExtra(Const.TRIP_NAME, selected.getName());
-            startActivity(intent);
-        };
-        allTrips.setOnItemClickListener(mListClickedHandler);
-    }
+	public TripAdapter getAdapter() {
+		return adapter;
+	}
 
-    private void onFloatingActionButtonClick() {
-        floatingActionButton.setOnClickListener(v -> {
-            Intent intent = new Intent(getApplicationContext(), CreateTripActivity.class);
-            startActivity(intent);
-        });
-    }
-
-    public TripAdapter getAdapter() {
-        return adapter;
-    }
-
-    public void setAdapter(TripAdapter adapter) {
-        this.adapter = adapter;
-    }
-
-    public TripDao getTripDao() {
-        return tripDao;
-    }
-
-    public void setTripDao(TripDao tripDao) {
-        this.tripDao = tripDao;
-    }
+	public TripDao getTripDao() {
+		return tripDao;
+	}
 }

@@ -25,6 +25,7 @@
         android:layout_marginStart="16dp"
         android:layout_marginTop="16dp"
         android:contentDescription="@string/place_holder_image"
+        android:scaleType="fitCenter"
         android:src="@drawable/trip_placeholder"
         app:layout_constraintBottom_toBottomOf="@id/duration_two_line_list"
         app:layout_constraintStart_toStartOf="parent"

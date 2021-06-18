@@ -1,7 +1,6 @@
 package ch.bbcag.swift_travel.adapter;
 
 import android.content.Context;
-import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,13 +9,12 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.github.twocoffeesoneteam.glidetovectoryou.GlideToVectorYou;
-
 import java.util.List;
 
 import ch.bbcag.swift_travel.R;
 import ch.bbcag.swift_travel.activities.CountryDetailsActivity;
 import ch.bbcag.swift_travel.entities.City;
+import ch.bbcag.swift_travel.utils.Layout;
 
 public class CityAdapter extends ArrayAdapter<City> {
 	public static class CityAdapterViewHolder {
@@ -43,7 +41,7 @@ public class CityAdapter extends ArrayAdapter<City> {
 			viewHolder.name = convertView.findViewById(R.id.name_two_line_list);
 			viewHolder.duration = convertView.findViewById(R.id.duration_two_line_list);
 			viewHolder.image = convertView.findViewById(R.id.image_two_line_list);
-			viewHolder.delete = (ImageButton) convertView.findViewById(R.id.delete_two_line_list);
+			viewHolder.delete = convertView.findViewById(R.id.delete_two_line_list);
 
 			convertView.setTag(viewHolder);
 		} else {
@@ -52,19 +50,16 @@ public class CityAdapter extends ArrayAdapter<City> {
 
 		viewHolder.delete.setOnClickListener(v -> {
 			CountryDetailsActivity countryDetailsActivity = (CountryDetailsActivity) getContext();
-			countryDetailsActivity.generateConfirmDialog(countryDetailsActivity.getString(R.string.delete_entry_title), countryDetailsActivity.getString(R.string.delete_entry_text), new Runnable() {
-				@Override
-				public void run() {
-					countryDetailsActivity.getAdapter().remove(city);
-					countryDetailsActivity.getAdapter().notifyDataSetChanged();
-					countryDetailsActivity.getCityDao().delete(city.getId());
-				}
+			countryDetailsActivity.generateConfirmDialog(countryDetailsActivity.getString(R.string.delete_entry_title), countryDetailsActivity.getString(R.string.delete_entry_text), () -> {
+				countryDetailsActivity.getAdapter().remove(city);
+				countryDetailsActivity.getAdapter().notifyDataSetChanged();
+				countryDetailsActivity.getCityDao().delete(city.getId());
 			});
 		});
 
 		viewHolder.name.setText(city.getName());
 		viewHolder.duration.setText(city.getDuration());
-		GlideToVectorYou.init().with(getContext()).load(Uri.parse(city.getImageURI()), viewHolder.image);
+		Layout.setOnlineImageURIOnImageView(getContext(), viewHolder.image, city.getImageURI());
 
 		return convertView;
 	}

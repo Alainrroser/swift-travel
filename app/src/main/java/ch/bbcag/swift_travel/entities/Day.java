@@ -9,7 +9,7 @@ import androidx.room.PrimaryKey;
 public class Day {
 	@PrimaryKey(autoGenerate = true)
 	@ColumnInfo(name = "id")
-	private int id;
+	private long id;
 	@ColumnInfo(name = "name")
 	private String name;
 	@ColumnInfo(name = "description")
@@ -17,7 +17,7 @@ public class Day {
 	@ColumnInfo(name = "duration")
 	private String duration;
 	@ColumnInfo(name = "cityId")
-	private int cityId;
+	private long cityId;
 
 	public Day() {
 	}
@@ -28,11 +28,11 @@ public class Day {
 		return name;
 	}
 
-	public int getId() {
+	public long getId() {
 		return id;
 	}
 
-	public void setId(int id) {
+	public void setId(long id) {
 		this.id = id;
 	}
 
@@ -52,11 +52,11 @@ public class Day {
 		this.description = description;
 	}
 
-	public int getCityId() {
+	public long getCityId() {
 		return cityId;
 	}
 
-	public void setCityId(int cityId) {
+	public void setCityId(long cityId) {
 		this.cityId = cityId;
 	}
 

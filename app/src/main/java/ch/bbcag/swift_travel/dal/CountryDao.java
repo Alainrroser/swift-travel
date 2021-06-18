@@ -12,10 +12,10 @@ import ch.bbcag.swift_travel.entities.Country;
 @Dao
 public interface CountryDao {
 	@Query("SELECT * FROM countries WHERE tripId = :tripId")
-	List<Country> getAllFromTrip(int tripId);
+	List<Country> getAllFromTrip(long tripId);
 
 	@Query("SELECT * FROM countries WHERE id = :id")
-    Country getCountryById(int id);
+    Country getById(long id);
 
 	@Query("UPDATE countries SET name = :name")
 	void setName(String name);
@@ -27,11 +27,11 @@ public interface CountryDao {
 	void setDescription(String description);
 
 	@Insert
-	void insert(Country country);
+	long insert(Country country);
 
 	@Update
 	void update(Country country);
 
 	@Query("DELETE FROM countries WHERE id = :id")
-	void delete(int id);
+	void delete(long id);
 }

@@ -11,26 +11,26 @@ import android.widget.TextView;
 import java.util.List;
 
 import ch.bbcag.swift_travel.R;
-import ch.bbcag.swift_travel.entities.Country;
+import ch.bbcag.swift_travel.entities.City;
 import ch.bbcag.swift_travel.utils.Layout;
 
-public class ChooseCountryAdapter extends ArrayAdapter<Country> {
-	public static class ChooseCountryAdapterViewHolder {
+public class ChooseCityAdapter extends ArrayAdapter<City> {
+	public static class ChooseCityViewHolder {
 		TextView name;
 		ImageView image;
 	}
 
-	public ChooseCountryAdapter(Context context, List<Country> countries) {
-		super(context, R.layout.activity_choose, countries);
+	public ChooseCityAdapter(Context context, List<City> cities) {
+		super(context, R.layout.activity_choose, cities);
 	}
 
 	@Override
 	public View getView(int position, View convertView, ViewGroup parent) {
-		final Country country = getItem(position);
-		final ChooseCountryAdapterViewHolder viewHolder;
+		final City city = getItem(position);
+		final ChooseCityViewHolder viewHolder;
 
 		if (convertView == null) {
-			viewHolder = new ChooseCountryAdapterViewHolder();
+			viewHolder = new ChooseCityViewHolder();
 			LayoutInflater inflater = LayoutInflater.from(getContext());
 			convertView = inflater.inflate(R.layout.one_line_list, parent, false);
 
@@ -39,11 +39,11 @@ public class ChooseCountryAdapter extends ArrayAdapter<Country> {
 
 			convertView.setTag(viewHolder);
 		} else {
-			viewHolder = (ChooseCountryAdapterViewHolder) convertView.getTag();
+			viewHolder = (ChooseCityViewHolder) convertView.getTag();
 		}
 
-		viewHolder.name.setText(country.getName());
-		Layout.setOnlineImageURIOnImageView(getContext(), viewHolder.image, country.getImageURI());
+		viewHolder.name.setText(city.getName());
+		Layout.setOnlineImageURIOnImageView(getContext(), viewHolder.image, city.getImageURI());
 		return convertView;
 	}
 }

@@ -13,7 +13,7 @@ import java.util.List;
 public class Trip {
 	@PrimaryKey(autoGenerate = true)
 	@ColumnInfo(name = "id")
-	private int id;
+	private long id;
 	@ColumnInfo(name = "name")
 	private String name;
 	@ColumnInfo(name = "description")
@@ -39,11 +39,11 @@ public class Trip {
 		return name;
 	}
 
-	public int getId() {
+	public long getId() {
 		return id;
 	}
 
-	public void setId(int id) {
+	public void setId(long id) {
 		this.id = id;
 	}
 

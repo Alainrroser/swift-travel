@@ -12,7 +12,7 @@ import java.util.List;
 public class City {
 	@PrimaryKey(autoGenerate = true)
 	@ColumnInfo(name = "id")
-	private int id;
+	private long id;
 	@ColumnInfo(name = "name")
 	private String name;
 	@ColumnInfo(name = "description")
@@ -22,7 +22,7 @@ public class City {
 	@ColumnInfo(name = "duration")
 	private String duration;
 	@ColumnInfo(name = "countryId")
-	private int countryId;
+	private long countryId;
 	@Ignore
 	List<Day> days;
 
@@ -36,11 +36,11 @@ public class City {
 		return name;
 	}
 
-	public int getId() {
+	public long getId() {
 		return id;
 	}
 
-	public void setId(int id) {
+	public void setId(long id) {
 		this.id = id;
 	}
 
@@ -68,11 +68,11 @@ public class City {
 		this.imageURI = imageURI;
 	}
 
-	public int getCountryId() {
+	public long getCountryId() {
 		return countryId;
 	}
 
-	public void setCountryId(int countryId) {
+	public void setCountryId(long countryId) {
 		this.countryId = countryId;
 	}
 

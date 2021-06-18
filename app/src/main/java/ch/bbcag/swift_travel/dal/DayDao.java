@@ -15,7 +15,7 @@ public interface DayDao {
     List<Day> getAll();
 
     @Insert
-    void insert(Day day);
+    long insert(Day day);
 
     @Update
     void update(Day day);

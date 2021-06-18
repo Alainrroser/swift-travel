@@ -50,9 +50,7 @@ public class TripAdapter extends ArrayAdapter<Trip> {
 			viewHolder = (TripViewHolder) convertView.getTag();
 		}
 
-		viewHolder.delete.setOnClickListener(v -> {
-			generateConfirmDialog(trip);
-		});
+		viewHolder.delete.setOnClickListener(v -> generateConfirmDialog(trip));
 
 
 		viewHolder.name.setText(trip.getName());

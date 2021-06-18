@@ -1,9 +1,7 @@
 package ch.bbcag.swift_travel.activities;
 
 import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
-import android.text.method.ScrollingMovementMethod;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -12,7 +10,6 @@ import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
-import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.SearchView;
 import android.widget.TextView;
@@ -23,8 +20,6 @@ import androidx.constraintlayout.widget.Group;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
-
-import org.w3c.dom.Text;
 
 import java.util.List;
 import java.util.Objects;
@@ -45,11 +40,11 @@ public class TripDetailsActivity extends UpButtonActivity implements SearchView.
 
 	private FloatingActionButton floatingActionButton;
 	private CountryAdapter adapter;
+	private ListView countries;
 
 	private ImageButton editDescriptionButton;
 	private Button submitButton;
 
-	private String tripName;
 	private Trip selected;
 
 	private TripDao tripDao;
@@ -63,15 +58,15 @@ public class TripDetailsActivity extends UpButtonActivity implements SearchView.
 		setContentView(R.layout.activity_trip_details);
 
 		Intent intent = getIntent();
-		tripName = intent.getStringExtra(Const.TRIP_NAME);
+		String tripName = intent.getStringExtra(Const.TRIP_NAME);
 		setTitle(tripName);
 
 		tripDao = SwiftTravelDatabase.getInstance(getApplicationContext()).getTripDao();
 		countryDao = SwiftTravelDatabase.getInstance(getApplicationContext()).getCountryDao();
 
-		setSelected();
-
 		floatingActionButton = findViewById(R.id.floating_action_button_trip_details);
+		countries = findViewById(R.id.countries);
+
 		editDescriptionButton = findViewById(R.id.edit_button);
 		submitButton = findViewById(R.id.submit_button);
 	}
@@ -81,19 +76,26 @@ public class TripDetailsActivity extends UpButtonActivity implements SearchView.
 		super.onStart();
 		getProgressBar().setVisibility(View.GONE);
 
-		List<Country> countries = countryDao.getAllFromTrip(selected.getId());
-		adapter = new CountryAdapter(this, countries);
+		long id = getIntent().getLongExtra(Const.TRIP, -1);
+		if (id != -1) {
+			selected = tripDao.getById(id);
+		}
 
+		List<Country> countriesList = countryDao.getAllFromTrip(selected.getId());
+		adapter = new CountryAdapter(this, countriesList);
+
+		countries.setAdapter(adapter);
+		getProgressBar().setVisibility(View.GONE);
 		createCountryFromIntent();
-		addCountriesToClickableList();
 
 		Group form = findViewById(R.id.trip_form);
 		form.setVisibility(View.GONE);
 
 		refreshContent();
 
+		onCountryClick();
 		onFloatingActionButtonClick();
-		onEditDescriptionClick();
+		editDescriptionButton.setOnClickListener(v -> toggleForm());
 		onSubmitButtonClick();
 	}
 
@@ -167,45 +169,23 @@ public class TripDetailsActivity extends UpButtonActivity implements SearchView.
 		adapter.getFilter().filter(searchText);
 	}
 
-	private void setSelected() {
-		List<Trip> trips = tripDao.getAll();
-		for (Trip trip : trips) {
-			setSelectedIfNameEquals(trip);
-		}
-	}
-
-	private void setSelectedIfNameEquals(Trip trip) {
-		if (trip.getName().equals(tripName)) {
-			selected = trip;
-		}
-	}
-
-	/**
-	 * Creates a trip from the information in the intent if they aren't null.
-	 */
 	private void createCountryFromIntent() {
 		Intent intent = getIntent();
 		Country country = new Country();
-		addTripInformation(intent, country);
-	}
-
-	private void addTripInformation(Intent intent, Country country) {
 		if (intent.getStringExtra(Const.COUNTRY_NAME) != null && intent.getBooleanExtra(Const.ADD_COUNTRY, false)) {
 			intent.removeExtra(Const.ADD_COUNTRY);
+
 			country.setName(intent.getStringExtra(Const.COUNTRY_NAME));
 			country.setImageURI(intent.getStringExtra(Const.FLAG_URI));
 			country.setTripId(selected.getId());
+			long id = countryDao.insert(country);
+			country.setId(id);
+
 			adapter.add(country);
-			countryDao.insert(country);
 		}
 	}
 
-	public void addCountriesToClickableList() {
-		ListView countries = findViewById(R.id.countries);
-		countries.setAdapter(adapter);
-
-		getProgressBar().setVisibility(View.GONE);
-
+	private void onCountryClick() {
 		AdapterView.OnItemClickListener mListClickedHandler = (parent, v, position, id) -> {
 			Intent intent = new Intent(getApplicationContext(), CountryDetailsActivity.class);
 			Country selected = (Country) parent.getItemAtPosition(position);
@@ -213,17 +193,16 @@ public class TripDetailsActivity extends UpButtonActivity implements SearchView.
 			intent.putExtra(Const.COUNTRY, selected.getId());
 			startActivity(intent);
 		};
-
 		countries.setOnItemClickListener(mListClickedHandler);
 	}
 
 	private void refreshContent() {
-		Layout.setEditableTitleText(findViewById(R.id.trip_title),findViewById(R.id.edit_title), selected.getName());
+		Layout.setEditableTitleText(findViewById(R.id.trip_title), findViewById(R.id.edit_title), selected.getName());
 		setTitle(selected.getName());
 		Layout.setEditableDescriptionText(findViewById(R.id.trip_description), findViewById(R.id.edit_description), selected.getDescription());
 		Layout.setTextOnTextView(findViewById(R.id.trip_duration), selected.getDuration());
 		if (selected.getImageURI() != null) {
-			Layout.setImageURIonImageView(findViewById(R.id.trip_image), selected.getImageURI());
+			Layout.setImageURIOnImageView(findViewById(R.id.trip_image), selected.getImageURI());
 		}
 	}
 
@@ -236,7 +215,7 @@ public class TripDetailsActivity extends UpButtonActivity implements SearchView.
 		EditText editTitle = findViewById(R.id.edit_title);
 		TextView title = findViewById(R.id.trip_title);
 
-		if (title.getText().equals(editTitle.getText().toString())){
+		if (title.getText().equals(editTitle.getText().toString())) {
 			notChanged = true;
 		}
 
@@ -251,16 +230,10 @@ public class TripDetailsActivity extends UpButtonActivity implements SearchView.
 
 	private void onFloatingActionButtonClick() {
 		floatingActionButton.setOnClickListener(v -> {
-			Intent intent = new Intent(getApplicationContext(), ChooseActivity.class);
-			intent.putExtra(Const.NAME, Const.COUNTRY);
+			Intent intent = new Intent(getApplicationContext(), ChooseCountryActivity.class);
 			intent.putExtra(Const.TRIP, selected.getId());
-			intent.putExtra(Const.TRIP_NAME, tripName);
 			startActivity(intent);
 		});
-	}
-
-	private void onEditDescriptionClick() {
-		editDescriptionButton.setOnClickListener(v -> toggleForm());
 	}
 
 	private void onSubmitButtonClick() {
@@ -297,15 +270,7 @@ public class TripDetailsActivity extends UpButtonActivity implements SearchView.
 		return adapter;
 	}
 
-	public void setAdapter(CountryAdapter adapter) {
-		this.adapter = adapter;
-	}
-
 	public CountryDao getCountryDao() {
 		return countryDao;
-	}
-
-	public void setCountryDao(CountryDao countryDao) {
-		this.countryDao = countryDao;
 	}
 }

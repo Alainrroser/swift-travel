@@ -2,8 +2,12 @@ package ch.bbcag.swift_travel.utils;
 
 public class Const {
 	public static final String NAME = "name";
-	public static final String CHOOSE = "Choose ";
 	public static final String IMAGE_URI = "imageURI";
+	public static final String START_DATE = "startDate";
+	public static final String END_DATE = "endDate";
+
+	public static final String CREATE_TITLE = "create";
+	public static final String CHOOSE_TITLE = "choose";
 
 	public static final String TRIP = "trip";
 	public static final String TRIP_NAME = "tripName";
@@ -21,6 +25,7 @@ public class Const {
 
 	public static final String CITY = "city";
 	public static final String CITY_NAME = "cityName";
+	public static final String CITY_DESCRIPTION = "cityDescription";
 	public static final String ADD_CITY = "addCity";
 	public static final String CITIES_URL = "api.geonames.org";
 	public static final String CITIES_URL_USER_NAME = "swift_travel";

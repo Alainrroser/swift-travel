@@ -15,7 +15,7 @@ public interface CountryDao {
 	List<Country> getAllFromTrip(long tripId);
 
 	@Query("SELECT * FROM countries WHERE id = :id")
-    Country getById(long id);
+	Country getById(long id);
 
 	@Query("SELECT code FROM countries WHERE id = :id")
 	String getCodeById(long id);

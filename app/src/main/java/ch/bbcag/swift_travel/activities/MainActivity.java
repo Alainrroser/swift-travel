@@ -135,12 +135,8 @@ public class MainActivity extends BaseActivity implements SearchView.OnQueryText
 			intent.removeExtra(Const.ADD_TRIP);
 
 			trip.setName(intent.getStringExtra(Const.TRIP_NAME));
-			if (intent.getStringExtra(Const.TRIP_DESCRIPTION) != null) {
-				trip.setDescription(intent.getStringExtra(Const.TRIP_DESCRIPTION));
-			}
-			if (intent.getStringExtra(Const.IMAGE_URI) != null) {
-				trip.setImageURI(intent.getStringExtra(Const.IMAGE_URI));
-			}
+			trip.setDescription(intent.getStringExtra(Const.TRIP_DESCRIPTION));
+			trip.setImageURI(intent.getStringExtra(Const.IMAGE_URI));
 			long id = tripDao.insert(trip);
 			trip.setId(id);
 
@@ -161,7 +157,9 @@ public class MainActivity extends BaseActivity implements SearchView.OnQueryText
 
 	private void onFloatingActionButtonClick() {
 		floatingActionButton.setOnClickListener(v -> {
-			Intent intent = new Intent(getApplicationContext(), CreateTripActivity.class);
+			Intent intent = new Intent(getApplicationContext(), CreateActivity.class);
+			intent.putExtra(Const.ADD_TRIP, true);
+			intent.putExtra(Const.CREATE_TITLE, getString(R.string.create_trip_title));
 			startActivity(intent);
 		});
 	}

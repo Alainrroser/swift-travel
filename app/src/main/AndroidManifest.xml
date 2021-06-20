@@ -15,8 +15,7 @@
         android:usesCleartextTraffic="true">
         <activity android:name=".activities.CityDetailsActivity" />
         <activity android:name=".activities.ChooseCountryActivity" />
-        <activity android:name=".activities.ChooseCityActivity" />
-        <activity android:name=".activities.CreateTripActivity" />
+        <activity android:name=".activities.CreateActivity" />
         <activity android:name=".activities.BaseActivity" />
         <activity android:name=".activities.UpButtonActivity" />
         <activity android:name=".activities.TripDetailsActivity" />

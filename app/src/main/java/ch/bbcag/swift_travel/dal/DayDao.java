@@ -11,12 +11,12 @@ import ch.bbcag.swift_travel.entities.Day;
 
 @Dao
 public interface DayDao {
-    @Query("SELECT * FROM days")
-    List<Day> getAll();
+	@Query("SELECT * FROM days")
+	List<Day> getAll();
 
-    @Insert
-    long insert(Day day);
+	@Insert
+	long insert(Day day);
 
-    @Update
-    void update(Day day);
+	@Update
+	void update(Day day);
 }

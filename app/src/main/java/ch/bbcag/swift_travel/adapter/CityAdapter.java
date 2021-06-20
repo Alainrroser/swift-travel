@@ -58,9 +58,11 @@ public class CityAdapter extends ArrayAdapter<City> {
 		});
 
 		viewHolder.name.setText(city.getName());
-		viewHolder.duration.setText(city.getDuration());
-		Layout.setOnlineImageURIOnImageView(getContext(), viewHolder.image, city.getImageURI());
-
+		String dateRange = city.getStartDate() + "-" + city.getEndDate();
+		viewHolder.duration.setText(dateRange);
+		if (city.getImageURI() != null) {
+			Layout.setImageURIOnImageView(viewHolder.image, city.getImageURI());
+		}
 		return convertView;
 	}
 }

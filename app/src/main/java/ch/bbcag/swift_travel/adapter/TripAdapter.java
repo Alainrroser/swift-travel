@@ -1,7 +1,6 @@
 package ch.bbcag.swift_travel.adapter;
 
 import android.content.Context;
-import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,6 +14,7 @@ import java.util.List;
 import ch.bbcag.swift_travel.R;
 import ch.bbcag.swift_travel.activities.MainActivity;
 import ch.bbcag.swift_travel.entities.Trip;
+import ch.bbcag.swift_travel.utils.Layout;
 
 public class TripAdapter extends ArrayAdapter<Trip> {
 	public static class TripViewHolder {
@@ -57,7 +57,7 @@ public class TripAdapter extends ArrayAdapter<Trip> {
 		viewHolder.destination.setText(trip.getDestination());
 		viewHolder.duration.setText(trip.getDuration());
 		if (trip.getImageURI() != null) {
-			viewHolder.image.setImageURI(Uri.parse(trip.getImageURI()));
+			Layout.setImageURIOnImageView(viewHolder.image, trip.getImageURI());
 		}
 		return convertView;
 	}

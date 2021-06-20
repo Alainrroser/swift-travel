@@ -232,6 +232,7 @@ public class TripDetailsActivity extends UpButtonActivity implements SearchView.
 	private void onFloatingActionButtonClick() {
 		floatingActionButton.setOnClickListener(v -> {
 			Intent intent = new Intent(getApplicationContext(), ChooseCountryActivity.class);
+			intent.putExtra(Const.CHOOSE_TITLE, getString(R.string.add_country));
 			intent.putExtra(Const.TRIP, selected.getId());
 			startActivity(intent);
 		});

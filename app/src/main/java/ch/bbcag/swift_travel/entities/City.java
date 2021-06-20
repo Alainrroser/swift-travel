@@ -19,8 +19,10 @@ public class City {
 	private String description;
 	@ColumnInfo(name = "imageURI")
 	private String imageURI;
-	@ColumnInfo(name = "duration")
-	private String duration;
+	@ColumnInfo(name = "startDate")
+	private String startDate;
+	@ColumnInfo(name = "endDate")
+	private String endDate;
 	@ColumnInfo(name = "countryId")
 	private long countryId;
 	@Ignore
@@ -76,12 +78,20 @@ public class City {
 		this.countryId = countryId;
 	}
 
-	public String getDuration() {
-		return duration;
+	public String getStartDate() {
+		return startDate;
 	}
 
-	public void setDuration(String duration) {
-		this.duration = duration;
+	public void setStartDate(String startDate) {
+		this.startDate = startDate;
+	}
+
+	public String getEndDate() {
+		return endDate;
+	}
+
+	public void setEndDate(String endDate) {
+		this.endDate = endDate;
 	}
 
 	public List<Day> getDays() {

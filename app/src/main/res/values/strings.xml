@@ -8,17 +8,19 @@
     <string name="trip_duration">Duration</string>
     <string name="trip_name_hint">Trip Name</string>
     <string name="trip_name_error">Check the input length</string>
-    <string name="trip_description_hint">Enter Description</string>
     <string name="trip_create_button_text">Create</string>
     <string name="add_trip">Add Trip</string>
 
+    <string name="create">Create</string>
     <string name="search">Search</string>
     <string name="place_holder_image">Placeholder image</string>
     <string name="edit">Edit</string>
 
+    <string name="name_hint">Enter Name</string>
+    <string name="description_hint">Enter Description</string>
+
     <string name="entry_exists_error_title">Entry exists</string>
     <string name="entry_exists_error_text">The entry you wanted to add exists already</string>
-
     <string name="add_entry_to_list_error_title">List entries</string>
     <string name="add_entries_to_list_error_text">An error occurred with listing the entries, try again later</string>
 
@@ -33,16 +35,26 @@
     <string name="countries_title">Countries</string>
     <string name="add_country">Add country</string>
     <string name="add_description">Add description</string>
-    <string name="add_text">Add a text here on edit button click!</string>
+    <string name="add_text">Add a text here on edit button click</string>
     <string name="submit_text">Submit</string>
     <string name="cities_title">Cities</string>
     <string name="country_name">Country name</string>
     <string name="country_description_hint">Country description</string>
     <string name="country_duration">Country duration</string>
     <string name="country_name_hint">Country name</string>
-    <string name="days_title">Days</string>
-    <string name="city_name">City title</string>
+
+    <string name="create_city_title">Create City</string>
+    <string name="city_name">City name</string>
+    <string name="city_name_hint">City name</string>
     <string name="city_description_hint">City description</string>
     <string name="city_duration">Duration in city</string>
-    <string name="city_name_hint">City title</string>
+    <string name="select_city_duration">Select duration in city</string>
+    <string name="city_duration_error">You have to select a duration</string>
+    <string name="select_city_duration_title">Select a date range</string>
+    <string name="duration_parse_error_title">Duration</string>
+    <string name="duration_parse_error_text">An error occurred with the durations, try again later</string>
+    <string name="duration_overlap_error_title">Duration Overlap</string>
+    <string name="duration_overlap_error_text">Durations are not allowed to overlap, please try another date</string>
+
+    <string name="days_title">Days</string>
 </resources>

@@ -19,7 +19,12 @@ import androidx.annotation.NonNull;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Comparator;
+import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 import ch.bbcag.swift_travel.R;
 import ch.bbcag.swift_travel.adapter.CityAdapter;
@@ -30,6 +35,9 @@ import ch.bbcag.swift_travel.entities.City;
 import ch.bbcag.swift_travel.entities.Country;
 import ch.bbcag.swift_travel.utils.Const;
 import ch.bbcag.swift_travel.utils.Layout;
+
+import static java.lang.Math.max;
+import static java.lang.Math.min;
 
 public class CountryDetailsActivity extends UpButtonActivity implements SearchView.OnQueryTextListener, SearchView.OnCloseListener {
 	private SearchView searchView;
@@ -46,7 +54,7 @@ public class CountryDetailsActivity extends UpButtonActivity implements SearchVi
 	private CountryDao countryDao;
 	private CityDao cityDao;
 
-	private boolean cityExists = false;
+	private boolean durationOverlaps = false;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -164,6 +172,7 @@ public class CountryDetailsActivity extends UpButtonActivity implements SearchVi
 	public void addCitiesToClickableList() {
 		ListView cities = findViewById(R.id.cities);
 		cities.setAdapter(adapter);
+		sortCitiesByStartDate();
 
 		getProgressBar().setVisibility(View.GONE);
 
@@ -181,41 +190,92 @@ public class CountryDetailsActivity extends UpButtonActivity implements SearchVi
 	private void createCityFromIntent() {
 		Intent intent = getIntent();
 		City city = new City();
-		addTripInformation(intent, city);
-	}
-
-	private void addTripInformation(Intent intent, City city) {
 		if (intent.getStringExtra(Const.CITY_NAME) != null && intent.getBooleanExtra(Const.ADD_CITY, false)) {
-			checkIfCityExists(intent);
+			checkIfDurationOverlaps(intent);
 			addCityIfNotExists(intent, city);
 		}
 	}
 
-	private void checkIfCityExists(Intent intent) {
-		for (City existingCity : cityDao.getAllFromCountry(selected.getId())) {
-			if (existingCity.getName().equals(intent.getStringExtra(Const.CITY_NAME))) {
-				cityExists = true;
-				break;
+	private void checkIfDurationOverlaps(Intent intent) {
+		try {
+			for (City existingCity : cityDao.getAllFromCountry(selected.getId())) {
+				long startDateExisting = parseDateToMillis(existingCity.getStartDate());
+				long startDateNew = parseDateToMillis(intent.getStringExtra(Const.START_DATE));
+				long endDateExisting = parseDateToMillis(existingCity.getEndDate());
+				long endDateNew = parseDateToMillis(intent.getStringExtra(Const.END_DATE));
+				if (startDateExisting != -1 && startDateNew != -1 && endDateExisting != -1 && endDateNew != -1) {
+					if (max(startDateNew, startDateExisting) < min(endDateNew, endDateExisting)) {
+						durationOverlaps = true;
+						break;
+					}
+				} else {
+					generateMessageDialogAndCloseActivity(getString(R.string.duration_parse_error_title), getString(R.string.duration_parse_error_text));
+				}
 			}
+		} catch (ParseException e) {
+			generateMessageDialogAndCloseActivity(getString(R.string.duration_parse_error_title), getString(R.string.duration_parse_error_text));
 		}
 	}
 
-	private void addCityIfNotExists(Intent intent, City city) {
-		if (!cityExists) {
-			intent.removeExtra(Const.ADD_CITY);
-			city.setName(intent.getStringExtra(Const.CITY_NAME));
-			city.setImageURI(intent.getStringExtra(Const.FLAG_URI));
-			city.setCountryId(selected.getId());
-			adapter.add(city);
-			cityDao.insert(city);
-		} else {
-			generateMessageDialog(getString(R.string.entry_exists_error_title), getString(R.string.entry_exists_error_text));
+	private long parseDateToMillis(String dateString) throws ParseException {
+		SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yyyy", Locale.getDefault());
+		Date date = sdf.parse(dateString);
+		if (date != null) {
+			// Subtract a day in milliseconds so you can be at two cities in one day
+			date.setTime(date.getTime() - (24 * 60 * 60 * 1000));
+
+			return date.getTime();
 		}
+		return -1;
+	}
+
+	private void addCityIfNotExists(Intent intent, City city) {
+		if (!durationOverlaps) {
+			intent.removeExtra(Const.ADD_CITY);
+
+			city.setName(intent.getStringExtra(Const.CITY_NAME));
+			city.setDescription(intent.getStringExtra(Const.CITY_DESCRIPTION));
+			city.setImageURI(intent.getStringExtra(Const.IMAGE_URI));
+			city.setStartDate(intent.getStringExtra(Const.START_DATE));
+			city.setEndDate(intent.getStringExtra(Const.END_DATE));
+			city.setCountryId(selected.getId());
+			long id = cityDao.insert(city);
+			city.setId(id);
+
+			adapter.add(city);
+			sortCitiesByStartDate();
+		} else {
+			generateMessageDialog(getString(R.string.duration_overlap_error_title), getString(R.string.duration_overlap_error_text));
+		}
+	}
+
+	private void sortCitiesByStartDate() {
+		adapter.sort((Comparator<City>) (cityOne, cityTwo) -> {
+			try {
+				return compareCityStartDates(cityOne, cityTwo);
+			} catch (ParseException e) {
+				generateMessageDialogAndCloseActivity(getString(R.string.duration_parse_error_title), getString(R.string.duration_parse_error_text));
+			}
+			return 0;
+		});
+	}
+
+	private int compareCityStartDates(City cityOne, City cityTwo) throws ParseException {
+		long cityOneStartDate = parseDateToMillis(cityOne.getStartDate());
+		long cityTwoStartDate = parseDateToMillis(cityTwo.getStartDate());
+		if (cityOneStartDate != -1 && cityTwoStartDate != -1) {
+			return Long.compare(cityOneStartDate, cityTwoStartDate);
+		} else {
+			generateMessageDialogAndCloseActivity(getString(R.string.duration_parse_error_title), getString(R.string.duration_parse_error_text));
+		}
+		return 0;
 	}
 
 	private void onFloatingActionButtonClick() {
 		floatingActionButton.setOnClickListener(v -> {
-			Intent intent = new Intent(getApplicationContext(), ChooseCityActivity.class);
+			Intent intent = new Intent(getApplicationContext(), CreateActivity.class);
+			intent.putExtra(Const.ADD_CITY, true);
+			intent.putExtra(Const.CREATE_TITLE, getString(R.string.create_city_title));
 			intent.putExtra(Const.COUNTRY, selected.getId());
 			startActivity(intent);
 		});

@@ -43,7 +43,7 @@ public class ChooseCountryActivity extends UpButtonActivity implements SearchVie
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_choose_country);
 
-		setTitle(Const.CHOOSE + Const.COUNTRY);
+		setTitle(getIntent().getStringExtra(Const.CHOOSE_TITLE));
 
 		countryDao = SwiftTravelDatabase.getInstance(getApplicationContext()).getCountryDao();
 	}

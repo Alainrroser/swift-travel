@@ -23,8 +23,11 @@ public interface CityDao {
 	@Query("UPDATE cities SET description = :description")
 	void setDescription(String description);
 
-	@Query("UPDATE cities SET duration = :duration")
-	void setDuration(String duration);
+	@Query("UPDATE cities SET startDate = :startDate")
+	void setStartDate(String startDate);
+
+	@Query("UPDATE cities SET startDate = :endDate")
+	void setEndDate(String endDate);
 
 	@Insert
 	long insert(City city);

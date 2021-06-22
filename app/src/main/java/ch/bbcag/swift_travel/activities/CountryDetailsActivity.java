@@ -20,11 +20,8 @@ import androidx.annotation.NonNull;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.Comparator;
-import java.util.Date;
 import java.util.List;
-import java.util.Locale;
 
 import ch.bbcag.swift_travel.R;
 import ch.bbcag.swift_travel.adapter.CityAdapter;
@@ -34,7 +31,8 @@ import ch.bbcag.swift_travel.dal.SwiftTravelDatabase;
 import ch.bbcag.swift_travel.entities.City;
 import ch.bbcag.swift_travel.entities.Country;
 import ch.bbcag.swift_travel.utils.Const;
-import ch.bbcag.swift_travel.utils.Layout;
+import ch.bbcag.swift_travel.utils.DateUtils;
+import ch.bbcag.swift_travel.utils.LayoutUtils;
 
 import static java.lang.Math.max;
 import static java.lang.Math.min;
@@ -199,34 +197,22 @@ public class CountryDetailsActivity extends UpButtonActivity implements SearchVi
 	private void checkIfDurationOverlaps(Intent intent) {
 		try {
 			for (City existingCity : cityDao.getAllFromCountry(selected.getId())) {
-				long startDateExisting = parseDateToMillis(existingCity.getStartDate());
-				long startDateNew = parseDateToMillis(intent.getStringExtra(Const.START_DATE));
-				long endDateExisting = parseDateToMillis(existingCity.getEndDate());
-				long endDateNew = parseDateToMillis(intent.getStringExtra(Const.END_DATE));
+				long startDateExisting = DateUtils.parseDateToMillis(existingCity.getStartDate());
+				long startDateNew = DateUtils.parseDateToMillis(intent.getStringExtra(Const.START_DATE));
+				long endDateExisting = DateUtils.parseDateToMillis(existingCity.getEndDate());
+				long endDateNew = DateUtils.parseDateToMillis(intent.getStringExtra(Const.END_DATE));
 				if (startDateExisting != -1 && startDateNew != -1 && endDateExisting != -1 && endDateNew != -1) {
 					if (max(startDateNew, startDateExisting) < min(endDateNew, endDateExisting)) {
 						durationOverlaps = true;
 						break;
 					}
 				} else {
-					generateMessageDialogAndCloseActivity(getString(R.string.duration_parse_error_title), getString(R.string.duration_parse_error_text));
+					throw new Exception();
 				}
 			}
-		} catch (ParseException e) {
+		} catch (Exception e) {
 			generateMessageDialogAndCloseActivity(getString(R.string.duration_parse_error_title), getString(R.string.duration_parse_error_text));
 		}
-	}
-
-	private long parseDateToMillis(String dateString) throws ParseException {
-		SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yyyy", Locale.getDefault());
-		Date date = sdf.parse(dateString);
-		if (date != null) {
-			// Subtract a day in milliseconds so you can be at two cities in one day
-			date.setTime(date.getTime() - (24 * 60 * 60 * 1000));
-
-			return date.getTime();
-		}
-		return -1;
 	}
 
 	private void addCityIfNotExists(Intent intent, City city) {
@@ -238,6 +224,12 @@ public class CountryDetailsActivity extends UpButtonActivity implements SearchVi
 			city.setImageURI(intent.getStringExtra(Const.IMAGE_URI));
 			city.setStartDate(intent.getStringExtra(Const.START_DATE));
 			city.setEndDate(intent.getStringExtra(Const.END_DATE));
+			if(getCityDuration(city) != -1) {
+				city.setDuration(getCityDuration(city));
+			} else {
+				generateMessageDialogAndCloseActivity(getString(R.string.duration_parse_error_title), getString(R.string.duration_parse_error_text));
+				System.out.println(getCityDuration(city));
+			}
 			city.setCountryId(selected.getId());
 			long id = cityDao.insert(city);
 			city.setId(id);
@@ -247,6 +239,21 @@ public class CountryDetailsActivity extends UpButtonActivity implements SearchVi
 		} else {
 			generateMessageDialog(getString(R.string.duration_overlap_error_title), getString(R.string.duration_overlap_error_text));
 		}
+	}
+
+	private long getCityDuration(City city) {
+		try {
+			long startDate = DateUtils.parseDateToMillis(city.getStartDate());
+			long endDate = DateUtils.parseDateToMillis(city.getEndDate());
+			if(startDate != -1 && endDate != -1) {
+				return DateUtils.getDaysCountFromTimeSpan(startDate, endDate);
+			} else {
+				throw new Exception();
+			}
+		} catch (Exception e) {
+			generateMessageDialogAndCloseActivity(getString(R.string.duration_parse_error_title), getString(R.string.duration_parse_error_text));
+		}
+		return -1;
 	}
 
 	private void sortCitiesByStartDate() {
@@ -261,8 +268,8 @@ public class CountryDetailsActivity extends UpButtonActivity implements SearchVi
 	}
 
 	private int compareCityStartDates(City cityOne, City cityTwo) throws ParseException {
-		long cityOneStartDate = parseDateToMillis(cityOne.getStartDate());
-		long cityTwoStartDate = parseDateToMillis(cityTwo.getStartDate());
+		long cityOneStartDate = DateUtils.parseDateToMillis(cityOne.getStartDate());
+		long cityTwoStartDate = DateUtils.parseDateToMillis(cityTwo.getStartDate());
 		if (cityOneStartDate != -1 && cityTwoStartDate != -1) {
 			return Long.compare(cityOneStartDate, cityTwoStartDate);
 		} else {
@@ -311,12 +318,12 @@ public class CountryDetailsActivity extends UpButtonActivity implements SearchVi
 	}
 
 	private void refreshContent() {
-		Layout.setTitleText(findViewById(R.id.country_title), selected.getName());
+		LayoutUtils.setTitleText(findViewById(R.id.country_title), selected.getName());
 		setTitle(selected.getName());
-		Layout.setTextOnTextView(findViewById(R.id.country_description), selected.getDescription());
-		Layout.setTextOnTextView(findViewById(R.id.country_duration), selected.getDuration());
+		LayoutUtils.setTextOnTextView(findViewById(R.id.country_description), selected.getDescription());
+		LayoutUtils.setTextOnTextView(findViewById(R.id.country_duration), selected.getDuration());
 		if (selected.getImageURI() != null) {
-			Layout.setOnlineImageURIOnImageView(getApplicationContext(), findViewById(R.id.country_image), selected.getImageURI());
+			LayoutUtils.setOnlineImageURIOnImageView(getApplicationContext(), findViewById(R.id.country_image), selected.getImageURI());
 		}
 
 	}

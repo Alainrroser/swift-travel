@@ -11,7 +11,7 @@ import com.github.twocoffeesoneteam.glidetovectoryou.GlideToVectorYou;
 
 import ch.bbcag.swift_travel.R;
 
-public class Layout {
+public class LayoutUtils {
 
 	public static void setTextOnTextView(TextView tv, String text) {
 		tv.setText(text);

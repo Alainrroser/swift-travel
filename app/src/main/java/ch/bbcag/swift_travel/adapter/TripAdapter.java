@@ -14,7 +14,7 @@ import java.util.List;
 import ch.bbcag.swift_travel.R;
 import ch.bbcag.swift_travel.activities.MainActivity;
 import ch.bbcag.swift_travel.entities.Trip;
-import ch.bbcag.swift_travel.utils.Layout;
+import ch.bbcag.swift_travel.utils.LayoutUtils;
 
 public class TripAdapter extends ArrayAdapter<Trip> {
 	public static class TripViewHolder {
@@ -57,7 +57,7 @@ public class TripAdapter extends ArrayAdapter<Trip> {
 		viewHolder.destination.setText(trip.getDestination());
 		viewHolder.duration.setText(trip.getDuration());
 		if (trip.getImageURI() != null) {
-			Layout.setImageURIOnImageView(viewHolder.image, trip.getImageURI());
+			LayoutUtils.setImageURIOnImageView(viewHolder.image, trip.getImageURI());
 		}
 		return convertView;
 	}

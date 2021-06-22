@@ -32,7 +32,7 @@ import ch.bbcag.swift_travel.dal.TripDao;
 import ch.bbcag.swift_travel.entities.Country;
 import ch.bbcag.swift_travel.entities.Trip;
 import ch.bbcag.swift_travel.utils.Const;
-import ch.bbcag.swift_travel.utils.Layout;
+import ch.bbcag.swift_travel.utils.LayoutUtils;
 
 public class TripDetailsActivity extends UpButtonActivity implements SearchView.OnQueryTextListener, SearchView.OnCloseListener {
 	private SearchView searchView;
@@ -198,12 +198,12 @@ public class TripDetailsActivity extends UpButtonActivity implements SearchView.
 	}
 
 	private void refreshContent() {
-		Layout.setEditableTitleText(findViewById(R.id.trip_title), findViewById(R.id.edit_title), selected.getName());
+		LayoutUtils.setEditableTitleText(findViewById(R.id.trip_title), findViewById(R.id.edit_title), selected.getName());
 		setTitle(selected.getName());
-		Layout.setEditableDescriptionText(findViewById(R.id.trip_description), findViewById(R.id.edit_description), selected.getDescription());
-		Layout.setTextOnTextView(findViewById(R.id.trip_duration), selected.getDuration());
+		LayoutUtils.setEditableDescriptionText(findViewById(R.id.trip_description), findViewById(R.id.edit_description), selected.getDescription());
+		LayoutUtils.setTextOnTextView(findViewById(R.id.trip_duration), selected.getDuration());
 		if (selected.getImageURI() != null) {
-			Layout.setImageURIOnImageView(findViewById(R.id.trip_image), selected.getImageURI());
+			LayoutUtils.setImageURIOnImageView(findViewById(R.id.trip_image), selected.getImageURI());
 		}
 	}
 

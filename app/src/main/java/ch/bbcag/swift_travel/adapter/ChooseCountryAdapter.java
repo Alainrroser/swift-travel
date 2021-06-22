@@ -12,7 +12,7 @@ import java.util.List;
 
 import ch.bbcag.swift_travel.R;
 import ch.bbcag.swift_travel.entities.Country;
-import ch.bbcag.swift_travel.utils.Layout;
+import ch.bbcag.swift_travel.utils.LayoutUtils;
 
 public class ChooseCountryAdapter extends ArrayAdapter<Country> {
 	public static class ChooseCountryAdapterViewHolder {
@@ -43,7 +43,7 @@ public class ChooseCountryAdapter extends ArrayAdapter<Country> {
 		}
 
 		viewHolder.name.setText(country.getName());
-		Layout.setOnlineImageURIOnImageView(getContext(), viewHolder.image, country.getImageURI());
+		LayoutUtils.setOnlineImageURIOnImageView(getContext(), viewHolder.image, country.getImageURI());
 		return convertView;
 	}
 }

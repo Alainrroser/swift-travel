@@ -23,6 +23,8 @@ public class City {
 	private String startDate;
 	@ColumnInfo(name = "endDate")
 	private String endDate;
+	@ColumnInfo(name = "duration")
+	private long duration;
 	@ColumnInfo(name = "countryId")
 	private long countryId;
 	@Ignore
@@ -92,6 +94,14 @@ public class City {
 
 	public void setEndDate(String endDate) {
 		this.endDate = endDate;
+	}
+
+	public long getDuration() {
+		return duration;
+	}
+
+	public void setDuration(long duration) {
+		this.duration = duration;
 	}
 
 	public List<Day> getDays() {

@@ -14,7 +14,7 @@ import java.util.List;
 import ch.bbcag.swift_travel.R;
 import ch.bbcag.swift_travel.activities.TripDetailsActivity;
 import ch.bbcag.swift_travel.entities.Country;
-import ch.bbcag.swift_travel.utils.Layout;
+import ch.bbcag.swift_travel.utils.LayoutUtils;
 
 public class CountryAdapter extends ArrayAdapter<Country> {
 	public static class CountryAdapterViewHolder {
@@ -52,7 +52,7 @@ public class CountryAdapter extends ArrayAdapter<Country> {
 
 		viewHolder.name.setText(country.getName());
 		viewHolder.duration.setText(country.getDuration());
-		Layout.setOnlineImageURIOnImageView(getContext(), viewHolder.image, country.getImageURI());
+		LayoutUtils.setOnlineImageURIOnImageView(getContext(), viewHolder.image, country.getImageURI());
 		return convertView;
 	}
 

@@ -14,7 +14,7 @@ import java.util.List;
 import ch.bbcag.swift_travel.R;
 import ch.bbcag.swift_travel.activities.CountryDetailsActivity;
 import ch.bbcag.swift_travel.entities.City;
-import ch.bbcag.swift_travel.utils.Layout;
+import ch.bbcag.swift_travel.utils.LayoutUtils;
 
 public class CityAdapter extends ArrayAdapter<City> {
 	public static class CityAdapterViewHolder {
@@ -61,7 +61,7 @@ public class CityAdapter extends ArrayAdapter<City> {
 		String dateRange = city.getStartDate() + "-" + city.getEndDate();
 		viewHolder.duration.setText(dateRange);
 		if (city.getImageURI() != null) {
-			Layout.setImageURIOnImageView(viewHolder.image, city.getImageURI());
+			LayoutUtils.setImageURIOnImageView(viewHolder.image, city.getImageURI());
 		}
 		return convertView;
 	}

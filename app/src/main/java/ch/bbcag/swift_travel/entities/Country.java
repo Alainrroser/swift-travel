@@ -6,6 +6,7 @@ import androidx.room.Entity;
 import androidx.room.Ignore;
 import androidx.room.PrimaryKey;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity(tableName = "countries")
@@ -26,7 +27,7 @@ public class Country {
 	@Ignore
 	private String duration;
 	@Ignore
-	private List<City> cityList;
+	private List<City> cityList =  new ArrayList<>();
 
 	public Country() {
 

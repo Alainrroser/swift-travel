@@ -25,9 +25,11 @@ import ch.bbcag.swift_travel.R;
 import ch.bbcag.swift_travel.adapter.CityAdapter;
 import ch.bbcag.swift_travel.dal.CityDao;
 import ch.bbcag.swift_travel.dal.CountryDao;
+import ch.bbcag.swift_travel.dal.DayDao;
 import ch.bbcag.swift_travel.dal.SwiftTravelDatabase;
 import ch.bbcag.swift_travel.entities.City;
 import ch.bbcag.swift_travel.entities.Country;
+import ch.bbcag.swift_travel.entities.Day;
 import ch.bbcag.swift_travel.utils.Const;
 import ch.bbcag.swift_travel.utils.DateUtils;
 import ch.bbcag.swift_travel.utils.LayoutUtils;
@@ -48,6 +50,7 @@ public class CountryDetailsActivity extends UpButtonActivity implements SearchVi
 
 	private CountryDao countryDao;
 	private CityDao cityDao;
+	private DayDao dayDao;
 
 	private boolean durationOverlaps = false;
 
@@ -62,6 +65,7 @@ public class CountryDetailsActivity extends UpButtonActivity implements SearchVi
 
 		countryDao = SwiftTravelDatabase.getInstance(getApplicationContext()).getCountryDao();
 		cityDao = SwiftTravelDatabase.getInstance(getApplicationContext()).getCityDao();
+		dayDao = SwiftTravelDatabase.getInstance(getApplicationContext()).getDayDao();
 
 		submitButton = findViewById(R.id.city_submit_button);
 		editDescriptionButton = findViewById(R.id.edit_button);
@@ -206,7 +210,6 @@ public class CountryDetailsActivity extends UpButtonActivity implements SearchVi
 				break;
 			}
 		}
-
 	}
 
 	private void addCityIfNotExists(Intent intent, City city) {
@@ -220,11 +223,25 @@ public class CountryDetailsActivity extends UpButtonActivity implements SearchVi
 			city.setCountryId(selected.getId());
 			long id = cityDao.insert(city);
 			city.setId(id);
-
+			addDaysToCity(city);
 			adapter.add(city);
 			adapter.sort((Comparator<City>) this::compareCityStartDates);
 		} else {
 			generateMessageDialog(getString(R.string.duration_overlap_error_title), getString(R.string.duration_overlap_error_text));
+		}
+	}
+
+	private void addDaysToCity(City city) {
+		for(int dayCount = 1; dayCount <= city.getDuration(); dayCount++) {
+			Day day = new Day();
+			day.setName(getString(R.string.day) + " " + dayCount);
+
+			day.setCityId(city.getId());
+
+			long dayID = dayDao.insert(day);
+			day.setId(dayID);
+			System.out.println(day.getName() + day.getCityId() + day.getId());
+			city.addDay(day);
 		}
 	}
 
@@ -279,14 +296,23 @@ public class CountryDetailsActivity extends UpButtonActivity implements SearchVi
 		}
 	}
 
-	private void refreshContent() {
+	public void refreshContent() {
 		LayoutUtils.setTitleText(findViewById(R.id.country_title), selected.getName());
 		setTitle(selected.getName());
-		LayoutUtils.setTextOnTextView(findViewById(R.id.country_description), selected.getDescription());
-		LayoutUtils.setTextOnTextView(findViewById(R.id.country_duration), selected.getDuration());
+		LayoutUtils.setEditableDescriptionText(findViewById(R.id.country_description), findViewById(R.id.edit_description) , selected.getDescription());
+		LayoutUtils.setTextOnTextView(findViewById(R.id.country_duration), getCountryDuration() + " " + getString(R.string.days_title));
 		if (selected.getImageURI() != null) {
 			LayoutUtils.setOnlineImageURIOnImageView(getApplicationContext(), findViewById(R.id.country_image), selected.getImageURI());
 		}
+	}
+
+	private long getCountryDuration(){
+		List<City> cities = cityDao.getAllFromCountry(selected.getId());
+		long duration = 0;
+		for (int i = 0; i < cities.size(); i++ ){
+			duration += cities.get(i).getDuration();
+		}
+		return duration;
 	}
 
 	public CityAdapter getAdapter() {

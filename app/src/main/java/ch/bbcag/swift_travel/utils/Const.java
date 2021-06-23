@@ -34,4 +34,9 @@ public class Const {
 	public static final String DAY = "day";
 	public static final String DAY_NAME = "dayName";
 	public static final String ADD_DAY = "addDay";
+
+	public static final String LOCATION = "location";
+	public static final String LOCATION_NAME = "locationName";
+	public static final String LOCATION_DESCRIPTION = "locationDescription";
+	public static final String ADD_LOCATION = "addLocation";
 }

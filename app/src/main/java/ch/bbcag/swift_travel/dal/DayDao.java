@@ -11,8 +11,11 @@ import ch.bbcag.swift_travel.entities.Day;
 
 @Dao
 public interface DayDao {
-	@Query("SELECT * FROM days WHERE id = :cityId")
+	@Query("SELECT * FROM days WHERE cityId = :cityId")
 	List<Day> getAllFromCity(long cityId);
+
+	@Query("SELECT * FROM days WHERE id = :id")
+	Day getById(long id);
 
 	@Insert
 	long insert(Day day);

@@ -61,4 +61,6 @@
 
     <string name="days_title">Days</string>
     <string name="day">Day</string>
+    <string name="locations_title">Locations</string>
+    <string name="day_date">Date of the day</string>
 </resources>

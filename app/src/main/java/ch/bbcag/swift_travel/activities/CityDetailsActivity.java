@@ -39,6 +39,7 @@ public class CityDetailsActivity extends UpButtonActivity implements SearchView.
 	private DayAdapter adapter;
 
 	private City selected;
+	private List<Day> days = new ArrayList<>();
 
 	private CityDao cityDao;
 	private DayDao dayDao;
@@ -69,10 +70,9 @@ public class CityDetailsActivity extends UpButtonActivity implements SearchView.
 			selected = cityDao.getById(id);
 		}
 
-		List<Day> days = createDaysFromCityDuration();
+		days = dayDao.getAllFromCity(selected.getId());
 		adapter = new DayAdapter(this, days);
 
-		createDaysFromCityDuration();
 		addDaysToClickableList();
 
 		refreshContent();
@@ -172,17 +172,6 @@ public class CityDetailsActivity extends UpButtonActivity implements SearchView.
 		getProgressBar().setVisibility(View.GONE);
 	}
 
-	private List<Day> createDaysFromCityDuration() {
-		List<Day> days = new ArrayList<>();
-		for (int i = 1; i <= selected.getDuration(); i++){
-			Day day = new Day();
-			day.setName(getString(R.string.day) + " " + i);
-			day.setCityId(selected.getId());
-			days.add(day);
-		}
-		return days;
-	}
-
 	private void onSubmitButtonClick() {
 		submitButton.setOnClickListener(v -> {
 			editDescription();
@@ -192,10 +181,10 @@ public class CityDetailsActivity extends UpButtonActivity implements SearchView.
 	}
 
 	private void refreshContent() {
-		LayoutUtils.setTitleText(findViewById(R.id.city_title), selected.getName());
+		LayoutUtils.setEditableTitleText(findViewById(R.id.city_title), findViewById(R.id.edit_title), selected.getName());
 		setTitle(selected.getName());
-		LayoutUtils.setTextOnTextView(findViewById(R.id.city_description), selected.getDescription());
-		LayoutUtils.setTextOnTextView(findViewById(R.id.city_duration), String.valueOf(selected.getDuration()));
+		LayoutUtils.setEditableDescriptionText(findViewById(R.id.city_description), findViewById(R.id.edit_description), selected.getDescription());
+		LayoutUtils.setTextOnTextView(findViewById(R.id.city_duration), selected.getDuration() + " " + getString(R.string.days_title));
 		if (selected.getImageURI() != null) {
 			LayoutUtils.setImageURIOnImageView(findViewById(R.id.city_image), selected.getImageURI());
 		}

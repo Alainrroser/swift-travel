@@ -14,7 +14,6 @@ import java.util.List;
 import ch.bbcag.swift_travel.R;
 import ch.bbcag.swift_travel.activities.CountryDetailsActivity;
 import ch.bbcag.swift_travel.entities.City;
-import ch.bbcag.swift_travel.entities.Day;
 import ch.bbcag.swift_travel.utils.LayoutUtils;
 
 public class CityAdapter extends ArrayAdapter<City> {
@@ -56,6 +55,7 @@ public class CityAdapter extends ArrayAdapter<City> {
 				countryDetailsActivity.getAdapter().remove(city);
 				countryDetailsActivity.getAdapter().notifyDataSetChanged();
 				countryDetailsActivity.getCityDao().delete(city.getId());
+				countryDetailsActivity.refreshContent();
 			});
 		});
 

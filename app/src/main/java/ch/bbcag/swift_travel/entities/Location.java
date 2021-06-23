@@ -6,11 +6,8 @@ import androidx.room.Entity;
 import androidx.room.Ignore;
 import androidx.room.PrimaryKey;
 
-import java.util.ArrayList;
-import java.util.List;
-
-@Entity(tableName = "days")
-public class Day {
+@Entity(tableName = "locations")
+public class Location {
 	@PrimaryKey(autoGenerate = true)
 	@ColumnInfo(name = "id")
 	private long id;
@@ -20,12 +17,12 @@ public class Day {
 	private String description;
 	@ColumnInfo(name = "imageURI")
 	private String imageURI;
-	@ColumnInfo(name = "cityId")
-	private long cityId;
+	@ColumnInfo(name = "dayId")
+	private long dayId;
 	@Ignore
-	private List<Location> locationList =  new ArrayList<>();
+	private String duration;
 
-	public Day() {
+	public Location() {
 	}
 
 	@NonNull
@@ -58,12 +55,12 @@ public class Day {
 		this.description = description;
 	}
 
-	public long getCityId() {
-		return cityId;
+	public String getDuration(){
+		return duration;
 	}
 
-	public void setCityId(long cityId) {
-		this.cityId = cityId;
+	public void setDuration(String duration){
+		this.duration = duration;
 	}
 
 	public String getImageURI() {
@@ -74,11 +71,11 @@ public class Day {
 		this.imageURI = imageURI;
 	}
 
-	public List<Location> getLocationList() {
-		return locationList;
+	public long getDayId() {
+		return dayId;
 	}
 
-	public void setLocationList(List<Location> locationList) {
-		this.locationList = locationList;
+	public void setDayId(long dayId) {
+		this.dayId = dayId;
 	}
 }

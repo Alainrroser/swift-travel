@@ -6,6 +6,8 @@ import androidx.room.Entity;
 import androidx.room.Ignore;
 import androidx.room.PrimaryKey;
 
+import java.lang.reflect.Array;
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity(tableName = "cities")
@@ -28,11 +30,10 @@ public class City {
 	@ColumnInfo(name = "countryId")
 	private long countryId;
 	@Ignore
-	List<Day> days;
+	List<Day> days = new ArrayList<>();
 
 	public City() {
 	}
-
 
 	@NonNull
 	@Override
@@ -110,5 +111,9 @@ public class City {
 
 	public void setDays(List<Day> days) {
 		this.days = days;
+	}
+
+	public void addDay(Day day) {
+		this.days.add(day);
 	}
 }

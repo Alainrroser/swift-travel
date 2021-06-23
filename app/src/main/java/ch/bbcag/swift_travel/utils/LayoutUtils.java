@@ -30,7 +30,7 @@ public class LayoutUtils {
 	}
 
 	public static void emptyMessageOnEmptyTextView(TextView textView) {
-		if (textView.getText().equals("")) {
+		if (textView.getText().toString().equals("")) {
 			textView.setText(R.string.add_text);
 		}
 	}

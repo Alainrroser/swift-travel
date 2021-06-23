@@ -20,6 +20,7 @@ import ch.bbcag.swift_travel.R;
 import ch.bbcag.swift_travel.adapter.TripAdapter;
 import ch.bbcag.swift_travel.dal.SwiftTravelDatabase;
 import ch.bbcag.swift_travel.dal.TripDao;
+import ch.bbcag.swift_travel.entities.Country;
 import ch.bbcag.swift_travel.entities.Trip;
 import ch.bbcag.swift_travel.utils.Const;
 

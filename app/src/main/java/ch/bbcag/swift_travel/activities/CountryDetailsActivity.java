@@ -17,6 +17,7 @@ import androidx.constraintlayout.widget.Group;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
+import java.time.Duration;
 import java.util.Comparator;
 import java.util.List;
 
@@ -172,7 +173,7 @@ public class CountryDetailsActivity extends UpButtonActivity implements SearchVi
 	public void addCitiesToClickableList() {
 		ListView cities = findViewById(R.id.cities);
 		cities.setAdapter(adapter);
-		adapter.sort((Comparator<City>) this::compareCityStartDates);
+		adapter.sort(this::compareCityStartDates);
 
 		getProgressBar().setVisibility(View.GONE);
 
@@ -224,7 +225,7 @@ public class CountryDetailsActivity extends UpButtonActivity implements SearchVi
 			city.setId(id);
 			addDaysToCity(city);
 			adapter.add(city);
-			adapter.sort((Comparator<City>) this::compareCityStartDates);
+			adapter.sort(this::compareCityStartDates);
 		} else {
 			generateMessageDialog(getString(R.string.duration_overlap_error_title), getString(R.string.duration_overlap_error_text));
 		}
@@ -301,7 +302,8 @@ public class CountryDetailsActivity extends UpButtonActivity implements SearchVi
 		for (int i = 0; i < cities.size(); i++) {
 			duration += cities.get(i).getDuration();
 		}
-		countryDao.setDuration(duration);
+		selected.setDuration(duration);
+		countryDao.update(selected);
 		return duration;
 	}
 }

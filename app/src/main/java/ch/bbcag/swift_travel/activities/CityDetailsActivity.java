@@ -192,7 +192,7 @@ public class CityDetailsActivity extends UpButtonActivity implements SearchView.
 		EditText editDescription = findViewById(R.id.edit_description);
 		if (!editDescription.getText().toString().equals("")) {
 			selected.setDescription(editDescription.getText().toString());
-			cityDao.setDescription(editDescription.getText().toString());
+			cityDao.update(selected);
 		}
 	}
 

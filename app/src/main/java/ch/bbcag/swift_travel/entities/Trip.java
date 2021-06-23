@@ -20,12 +20,12 @@ public class Trip {
 	private String description;
 	@ColumnInfo(name = "imageURI")
 	private String imageURI;
-	@Ignore
+	@ColumnInfo(name = "origin")
 	private String origin;
-	@Ignore
+	@ColumnInfo(name = "destination")
 	private String destination;
-	@Ignore
-	private String duration;
+	@ColumnInfo(name = "duration")
+	private long duration;
 	@Ignore
 	private List<Country> countries = new ArrayList<>();
 
@@ -63,11 +63,11 @@ public class Trip {
 		this.destination = destination;
 	}
 
-	public String getDuration() {
+	public long getDuration() {
 		return duration;
 	}
 
-	public void setDuration(String duration) {
+	public void setDuration(long duration) {
 		this.duration = duration;
 	}
 

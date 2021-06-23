@@ -3,6 +3,7 @@ package ch.bbcag.swift_travel.dal;
 import androidx.room.Dao;
 import androidx.room.Insert;
 import androidx.room.Query;
+import androidx.room.Update;
 
 import java.util.List;
 
@@ -19,8 +20,8 @@ public interface LocationDao {
 	@Insert
 	long insert(Location location);
 
-	@Query("UPDATE countries SET imageURI = :imageURI")
-	void setImageURI(String imageURI);
+	@Update
+	void update(Location location);
 
 	@Query("DELETE FROM locations WHERE id = :id")
 	void delete(long id);

@@ -57,7 +57,8 @@ public class TripAdapter extends ArrayAdapter<Trip> {
 
 		viewHolder.name.setText(trip.getName());
 		viewHolder.destination.setText(trip.getDestination());
-		viewHolder.duration.setText(trip.getDuration());
+		String duration = trip.getDuration() + " " + mainActivity.getString(R.string.days_title);
+		viewHolder.duration.setText(duration);
 		if (trip.getImageURI() != null) {
 			LayoutUtils.setImageURIOnImageView(viewHolder.image, trip.getImageURI());
 		}

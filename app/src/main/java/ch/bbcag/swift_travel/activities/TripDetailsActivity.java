@@ -26,7 +26,6 @@ import java.util.Objects;
 
 import ch.bbcag.swift_travel.R;
 import ch.bbcag.swift_travel.adapter.CountryAdapter;
-import ch.bbcag.swift_travel.dal.CityDao;
 import ch.bbcag.swift_travel.dal.CountryDao;
 import ch.bbcag.swift_travel.dal.SwiftTravelDatabase;
 import ch.bbcag.swift_travel.dal.TripDao;
@@ -64,7 +63,6 @@ public class TripDetailsActivity extends UpButtonActivity implements SearchView.
 
 		tripDao = SwiftTravelDatabase.getInstance(getApplicationContext()).getTripDao();
 		countryDao = SwiftTravelDatabase.getInstance(getApplicationContext()).getCountryDao();
-		CityDao cityDao = SwiftTravelDatabase.getInstance(getApplicationContext()).getCityDao();
 
 		floatingActionButton = findViewById(R.id.floating_action_button_trip_details);
 		countries = findViewById(R.id.countries);
@@ -255,7 +253,7 @@ public class TripDetailsActivity extends UpButtonActivity implements SearchView.
 		if (Objects.requireNonNull(editTitle.getText()).toString().length() > 0 && Objects.requireNonNull(editTitle.getText()).toString().length() <= Const.TITLE_LENGTH) {
 			nameValidated = true;
 			selected.setName(editTitle.getText().toString());
-			tripDao.setName(editTitle.getText().toString());
+			tripDao.update(selected);
 		} else {
 			nameValidated = false;
 			editTitleLayout.setError(getString(R.string.trip_name_error));
@@ -266,7 +264,7 @@ public class TripDetailsActivity extends UpButtonActivity implements SearchView.
 		EditText editDescription = findViewById(R.id.edit_description);
 		if (!editDescription.getText().toString().equals("")) {
 			selected.setDescription(editDescription.getText().toString());
-			tripDao.setDescription(editDescription.getText().toString());
+			tripDao.update(selected);
 		}
 	}
 
@@ -276,6 +274,8 @@ public class TripDetailsActivity extends UpButtonActivity implements SearchView.
 		for (int i = 0; i < countries.size(); i++) {
 			duration += countries.get(i).getDuration();
 		}
+		selected.setDuration(duration);
+		tripDao.update(selected);
 		return duration;
 	}
 }

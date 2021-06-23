@@ -1,6 +1,8 @@
 package ch.bbcag.swift_travel.utils;
 
 public class Const {
+	public static final int TITLE_LENGTH = 40;
+
 	public static final String NAME = "name";
 	public static final String IMAGE_URI = "imageURI";
 	public static final String START_DATE = "startDate";

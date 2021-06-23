@@ -15,6 +15,8 @@ import android.widget.SearchView;
 import androidx.annotation.NonNull;
 import androidx.constraintlayout.widget.Group;
 
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
+
 import java.util.List;
 
 import ch.bbcag.swift_travel.R;
@@ -33,6 +35,7 @@ public class DayDetailsActivity extends UpButtonActivity implements SearchView.O
 
 	private ImageButton editDescriptionButton;
 	private Button submitButton;
+	private FloatingActionButton floatingActionButton;
 	private LocationAdapter adapter;
 
 	private Day selected;
@@ -53,6 +56,7 @@ public class DayDetailsActivity extends UpButtonActivity implements SearchView.O
 		locationDao = SwiftTravelDatabase.getInstance(getApplicationContext()).getLocationDao();
 
 		submitButton = findViewById(R.id.day_submit_button);
+		floatingActionButton = findViewById(R.id.floating_action_button_day_details);
 		editDescriptionButton = findViewById(R.id.edit_button);
 	}
 
@@ -79,9 +83,9 @@ public class DayDetailsActivity extends UpButtonActivity implements SearchView.O
 
 		getProgressBar().setVisibility(View.GONE);
 
-//		onFloatingActionButtonClick();
+		onFloatingActionButtonClick();
 		editDescriptionButton.setOnClickListener(v -> toggleForm());
-//		onSubmitButtonClick();
+		onSubmitButtonClick();
 	}
 
 	@Override
@@ -185,6 +189,23 @@ public class DayDetailsActivity extends UpButtonActivity implements SearchView.O
 
 			adapter.add(location);
 		}
+	}
+
+	private void onFloatingActionButtonClick() {
+		floatingActionButton.setOnClickListener(v -> {
+			Intent intent = new Intent(getApplicationContext(), CreateActivity.class);
+			intent.putExtra(Const.ADD_LOCATION, true);
+			intent.putExtra(Const.CREATE_TITLE, getString(R.string.create_location_title));
+			intent.putExtra(Const.DAY, selected.getId());
+			startActivity(intent);
+		});
+	}
+
+	private void onSubmitButtonClick() {
+		submitButton.setOnClickListener(v -> {
+			refreshContent();
+			toggleForm();
+		});
 	}
 
 	public void refreshContent() {

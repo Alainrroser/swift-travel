@@ -235,12 +235,11 @@ public class CountryDetailsActivity extends UpButtonActivity implements SearchVi
 		for (int dayCount = 1; dayCount <= city.getDuration(); dayCount++) {
 			Day day = new Day();
 			day.setName(getString(R.string.day) + " " + dayCount);
-
 			day.setCityId(city.getId());
 
 			long dayID = dayDao.insert(day);
 			day.setId(dayID);
-			System.out.println(day.getName() + day.getCityId() + day.getId());
+
 			city.addDay(day);
 		}
 	}
@@ -269,18 +268,9 @@ public class CountryDetailsActivity extends UpButtonActivity implements SearchVi
 
 	private void onSubmitButtonClick() {
 		submitButton.setOnClickListener(v -> {
-			editDescription();
 			refreshContent();
 			toggleForm();
 		});
-	}
-
-	private void editDescription() {
-		EditText editDescription = findViewById(R.id.edit_description);
-		if (!editDescription.getText().toString().equals("")) {
-			selected.setDescription(editDescription.getText().toString());
-			countryDao.setDescription(editDescription.getText().toString());
-		}
 	}
 
 	private void toggleForm() {
@@ -312,6 +302,7 @@ public class CountryDetailsActivity extends UpButtonActivity implements SearchVi
 		for (int i = 0; i < cities.size(); i++) {
 			duration += cities.get(i).getDuration();
 		}
+		countryDao.setDuration(duration);
 		return duration;
 	}
 

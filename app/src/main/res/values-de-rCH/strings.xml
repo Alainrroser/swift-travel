@@ -64,4 +64,5 @@
     <string name="day">Tag</string>
     <string name="locations_title">Orte</string>
     <string name="day_date">Datum des Tages</string>
+    <string name="create_location_title">Ort erstellen</string>
 </resources>

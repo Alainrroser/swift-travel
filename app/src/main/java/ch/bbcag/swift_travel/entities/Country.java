@@ -24,8 +24,8 @@ public class Country {
 	private String imageURI;
 	@ColumnInfo(name = "tripId")
 	private long tripId;
-	@Ignore
-	private String duration;
+	@ColumnInfo(name = "duration")
+	private long duration;
 	@Ignore
 	private List<City> cityList = new ArrayList<>();
 
@@ -63,11 +63,11 @@ public class Country {
 		this.code = code;
 	}
 
-	public String getDuration() {
+	public long getDuration() {
 		return duration;
 	}
 
-	public void setDuration(String duration) {
+	public void setDuration(long duration) {
 		this.duration = duration;
 	}
 

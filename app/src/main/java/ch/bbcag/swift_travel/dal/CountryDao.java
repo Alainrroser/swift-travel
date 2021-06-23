@@ -25,6 +25,9 @@ public interface CountryDao {
 	@Query("UPDATE countries SET description = :description")
 	void setDescription(String description);
 
+	@Query("UPDATE countries SET duration = :duration")
+	void setDuration(long duration);
+
 	@Insert
 	long insert(Country country);
 

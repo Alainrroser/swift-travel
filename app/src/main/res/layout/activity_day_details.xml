@@ -61,7 +61,7 @@
         app:layout_constraintBottom_toTopOf="@id/duration_space"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@id/day_image"
-        app:layout_constraintTop_toBottomOf="@+id/day_title"
+        app:layout_constraintTop_toBottomOf="@+id/edit_button"
         tools:visibility="visible" />
 
 
@@ -69,11 +69,11 @@
         android:id="@+id/day_description"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:maxHeight="150dp"
         android:layout_marginStart="16dp"
         android:layout_marginTop="16dp"
         android:layout_marginEnd="16dp"
         android:layout_marginBottom="16dp"
-        android:maxHeight="150dp"
         android:scrollbars="vertical"
         android:text="@string/description_hint"
         app:layout_constraintBottom_toTopOf="@id/locations_title"
@@ -81,6 +81,30 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/day_image"
         tools:visibility="visible" />
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/edit_title_layout"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="8dp"
+        android:importantForAutofill="no"
+        app:counterEnabled="true"
+        app:counterMaxLength="40"
+        app:errorEnabled="true"
+        app:layout_constraintEnd_toStartOf="@id/edit_button"
+        app:layout_constraintStart_toEndOf="@id/day_image"
+        app:layout_constraintTop_toBottomOf="@id/day_title"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/edit_title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/city_name_hint"
+            android:inputType="text" />
+    </com.google.android.material.textfield.TextInputLayout>
 
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/edit_description_layout"
@@ -126,7 +150,7 @@
         android:id="@+id/day_form"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:constraint_referenced_ids="day_submit_button,edit_description_layout,edit_title_layout"
+        app:constraint_referenced_ids="day_submit_button, edit_description_layout, edit_title_layout"
         app:layout_constraintEnd_toStartOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
@@ -136,7 +160,7 @@
         android:id="@+id/day_content"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:constraint_referenced_ids="day_description"
+        app:constraint_referenced_ids="day_description, day_title"
         app:layout_constraintEnd_toStartOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"

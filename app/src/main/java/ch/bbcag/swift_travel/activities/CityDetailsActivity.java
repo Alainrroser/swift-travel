@@ -43,9 +43,6 @@ public class CityDetailsActivity extends UpButtonActivity implements SearchView.
 	private CityDao cityDao;
 	private DayDao dayDao;
 
-	private boolean durationOverlaps = false;
-
-
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -200,7 +197,7 @@ public class CityDetailsActivity extends UpButtonActivity implements SearchView.
 		LayoutUtils.setTextOnTextView(findViewById(R.id.city_description), selected.getDescription());
 		LayoutUtils.setTextOnTextView(findViewById(R.id.city_duration), String.valueOf(selected.getDuration()));
 		if (selected.getImageURI() != null) {
-			//LayoutUtils.setOnlineImageURIOnImageView(getApplicationContext(), findViewById(R.id.country_image), selected.getImageURI());
+			LayoutUtils.setImageURIOnImageView(findViewById(R.id.city_image), selected.getImageURI());
 		}
 	}
 

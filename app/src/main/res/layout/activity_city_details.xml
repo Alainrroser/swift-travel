@@ -17,7 +17,7 @@
         android:layout_marginStart="16dp"
         android:layout_marginTop="16dp"
         android:contentDescription="@string/place_holder_image"
-        android:scaleType="fitCenter"
+        android:scaleType="centerCrop"
         android:visibility="visible"
         app:layout_constraintDimensionRatio="21:9"
         app:layout_constraintStart_toStartOf="parent"

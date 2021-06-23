@@ -26,7 +26,7 @@ public class TripAdapter extends ArrayAdapter<Trip> {
 	}
 
 	public TripAdapter(Context context, List<Trip> trips) {
-		super(context, R.layout.activity_main, trips);
+		super(context, R.layout.three_line_list, trips);
 	}
 
 	@Override
@@ -51,7 +51,6 @@ public class TripAdapter extends ArrayAdapter<Trip> {
 		}
 
 		viewHolder.delete.setOnClickListener(v -> generateConfirmDialog(trip));
-
 
 		viewHolder.name.setText(trip.getName());
 		viewHolder.destination.setText(trip.getDestination());

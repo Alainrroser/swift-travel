@@ -27,7 +27,7 @@ public class CityAdapter extends ArrayAdapter<City> {
 	}
 
 	public CityAdapter(Context context, List<City> cities) {
-		super(context, R.layout.activity_country_details, cities);
+		super(context, R.layout.two_line_list, cities);
 	}
 
 	@Override

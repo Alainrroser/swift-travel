@@ -19,6 +19,9 @@
     <string name="name_hint">Enter Name</string>
     <string name="description_hint">Enter Description</string>
 
+    <string name="internet_connection_error_title">Internet connection error</string>
+    <string name="internet_connection_error_text">You have to be connected to the internet to add a country, try again later</string>
+
     <string name="entry_exists_error_title">Entry exists</string>
     <string name="entry_exists_error_text">The entry you wanted to add exists already</string>
     <string name="add_entry_to_list_error_title">List entries</string>

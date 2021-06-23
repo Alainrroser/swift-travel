@@ -23,7 +23,7 @@ public class DayAdapter extends ArrayAdapter<Day> {
 	}
 
 	public DayAdapter(Context context, List<Day> days) {
-		super(context, R.layout.activity_day_details, days);
+		super(context, R.layout.two_line_list, days);
 	}
 
 	@Override

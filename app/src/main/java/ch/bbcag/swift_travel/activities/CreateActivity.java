@@ -42,6 +42,7 @@ public class CreateActivity extends UpButtonActivity {
 
 	private MaterialDatePicker<Pair<Long, Long>> materialDatePicker;
 
+	private boolean datePickerOpened = false;
 	private boolean dateSelected = false;
 
 	private String startDate;
@@ -74,19 +75,7 @@ public class CreateActivity extends UpButtonActivity {
 		Group city_duration = findViewById(R.id.city_duration);
 		if (getIntent().getBooleanExtra(Const.ADD_CITY, false)) {
 			city_duration.setVisibility(View.VISIBLE);
-
-			MaterialDatePicker.Builder<Pair<Long, Long>> materialDateBuilder = MaterialDatePicker.Builder.dateRangePicker().setTitleText(getString(R.string.select_city_duration_title));
-			materialDatePicker = materialDateBuilder.build();
-
-			selectDuration.setOnClickListener(v -> materialDatePicker.show(getSupportFragmentManager(), materialDatePicker.toString()));
-			materialDatePicker.addOnPositiveButtonClickListener(selection -> {
-
-				startDate = Instant.ofEpochMilli(selection.first).atZone(ZoneId.systemDefault()).toLocalDate().format(DateTimeFormatter.ofPattern("dd.MM.yyyy"));
-				endDate = Instant.ofEpochMilli(selection.second).atZone(ZoneId.systemDefault()).toLocalDate().format(DateTimeFormatter.ofPattern("dd.MM.yyyy"));
-				dateRange = startDate + "-" + endDate;
-				dateSelected = true;
-				duration.setText(dateRange);
-			});
+			setDatePicker();
 		} else {
 			city_duration.setVisibility(View.GONE);
 		}
@@ -98,74 +87,116 @@ public class CreateActivity extends UpButtonActivity {
 	protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
 		super.onActivityResult(requestCode, resultCode, data);
 		if (resultCode == Activity.RESULT_OK && data != null) {
-			Uri imageURI = data.getData();
-			if (getIntent().getBooleanExtra(Const.ADD_TRIP, false)) {
-				trip.setImageURI(imageURI.toString());
-			} else if (getIntent().getBooleanExtra(Const.ADD_CITY, false)) {
-				city.setImageURI(imageURI.toString());
-			}
-
+			Uri imageURI = setImageURI(data);
 			chooseImage.setImageURI(imageURI);
+		}
+	}
+
+	private Uri setImageURI(Intent data) {
+		Uri imageURI = data.getData();
+		if (getIntent().getBooleanExtra(Const.ADD_TRIP, false)) {
+			trip.setImageURI(imageURI.toString());
+		} else if (getIntent().getBooleanExtra(Const.ADD_CITY, false)) {
+			city.setImageURI(imageURI.toString());
+		}
+		return imageURI;
+	}
+
+	private void setDatePicker(){
+		MaterialDatePicker.Builder<Pair<Long, Long>> materialDateBuilder = MaterialDatePicker.Builder.dateRangePicker().setTitleText(getString(R.string.select_city_duration_title));
+		materialDatePicker = materialDateBuilder.build();
+
+		selectDuration.setOnClickListener(v -> showDatePickerIfClosed());
+		materialDatePicker.addOnPositiveButtonClickListener(selection -> {
+			startDate = Instant.ofEpochMilli(selection.first).atZone(ZoneId.systemDefault()).toLocalDate().format(DateTimeFormatter.ofPattern("dd.MM.yyyy"));
+			endDate = Instant.ofEpochMilli(selection.second).atZone(ZoneId.systemDefault()).toLocalDate().format(DateTimeFormatter.ofPattern("dd.MM.yyyy"));
+			dateRange = startDate + "-" + endDate;
+			dateSelected = true;
+			duration.setText(dateRange);
+			datePickerOpened = false;
+		});
+		materialDatePicker.addOnCancelListener(selection -> datePickerOpened = false);
+		materialDatePicker.addOnDismissListener(selection -> datePickerOpened = false);
+		materialDatePicker.addOnNegativeButtonClickListener(selection -> datePickerOpened = false);
+	}
+
+	private void showDatePickerIfClosed() {
+		// Check if selectDuration was clicked already because you cannot open two at the same time
+		if(!datePickerOpened) {
+			materialDatePicker.show(getSupportFragmentManager(), materialDatePicker.toString());
+			datePickerOpened = true;
 		}
 	}
 
 	private void startIntentOrShowError() {
 		if (Objects.requireNonNull(nameEdit.getText()).toString().length() > 0 && Objects.requireNonNull(nameEdit.getText()).toString().length() <= 40) {
-			if (getIntent().getBooleanExtra(Const.ADD_TRIP, false)) {
-				Intent intent = new Intent(getApplicationContext(), MainActivity.class);
-				intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-				intent.putExtra(Const.ADD_TRIP, true);
-
-				nameLayout.setError(null);
-				trip.setName(nameEdit.getText().toString());
-				intent.putExtra(Const.TRIP_NAME, nameEdit.getText().toString());
-
-				if (trip.getImageURI() != null) {
-					intent.putExtra(Const.IMAGE_URI, trip.getImageURI());
-				}
-
-				if (Objects.requireNonNull(descriptionEdit.getText()).toString().length() <= 0) {
-					descriptionEdit.setText("");
-				}
-				trip.setDescription(descriptionEdit.getText().toString());
-				intent.putExtra(Const.TRIP_DESCRIPTION, trip.getDescription());
-
-				startActivity(intent);
-			} else if (getIntent().getBooleanExtra(Const.ADD_CITY, false)) {
-				if (dateSelected) {
-					Intent intent = new Intent(getApplicationContext(), CountryDetailsActivity.class);
-					intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-					intent.putExtra(Const.ADD_CITY, true);
-
-					nameLayout.setError(null);
-					city.setName(nameEdit.getText().toString());
-					intent.putExtra(Const.CITY_NAME, nameEdit.getText().toString());
-
-					if (city.getImageURI() != null) {
-						intent.putExtra(Const.IMAGE_URI, city.getImageURI());
-					}
-
-					if (Objects.requireNonNull(descriptionEdit.getText()).toString().length() <= 0) {
-						descriptionEdit.setText("");
-					}
-					city.setDescription(descriptionEdit.getText().toString());
-					intent.putExtra(Const.CITY_DESCRIPTION, city.getDescription());
-
-					if (startDate != null && endDate != null) {
-						intent.putExtra(Const.START_DATE, startDate);
-						intent.putExtra(Const.END_DATE, endDate);
-					}
-
-					intent.putExtra(Const.COUNTRY, getIntent().getLongExtra(Const.COUNTRY, -1));
-
-					startActivity(intent);
-				} else {
-					duration.requestFocus();
-					duration.setError(getString(R.string.city_duration_error));
-				}
-			}
+			startActivity();
 		} else {
 			nameLayout.setError(getString(R.string.trip_name_error));
 		}
+	}
+
+	private void startActivity() {
+		if (getIntent().getBooleanExtra(Const.ADD_TRIP, false)) {
+			startMain();
+		} else if (getIntent().getBooleanExtra(Const.ADD_CITY, false)) {
+			startCountryDetailsIfDateSelected();
+		}
+	}
+
+	private void startCountryDetailsIfDateSelected() {
+		if (dateSelected) {
+			startCountryDetails();
+		} else {
+			duration.requestFocus();
+			duration.setError(getString(R.string.city_duration_error));
+		}
+	}
+
+	private void startMain() {
+		Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+		intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+		intent.putExtra(Const.ADD_TRIP, true);
+
+		nameLayout.setError(null);
+		trip.setName(Objects.requireNonNull(nameEdit.getText()).toString());
+		intent.putExtra(Const.TRIP_NAME, nameEdit.getText().toString());
+
+		intent.putExtra(Const.IMAGE_URI, trip.getImageURI());
+
+		if (Objects.requireNonNull(descriptionEdit.getText()).toString().length() <= 0) {
+			descriptionEdit.setText("");
+		}
+		trip.setDescription(descriptionEdit.getText().toString());
+		intent.putExtra(Const.TRIP_DESCRIPTION, trip.getDescription());
+
+		startActivity(intent);
+	}
+
+	private void startCountryDetails() {
+		Intent intent = new Intent(getApplicationContext(), CountryDetailsActivity.class);
+		intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+		intent.putExtra(Const.ADD_CITY, true);
+
+		nameLayout.setError(null);
+		city.setName(Objects.requireNonNull(nameEdit.getText()).toString());
+		intent.putExtra(Const.CITY_NAME, nameEdit.getText().toString());
+
+		intent.putExtra(Const.IMAGE_URI, trip.getImageURI());
+
+		if (Objects.requireNonNull(descriptionEdit.getText()).toString().length() <= 0) {
+			descriptionEdit.setText("");
+		}
+		city.setDescription(descriptionEdit.getText().toString());
+		intent.putExtra(Const.CITY_DESCRIPTION, city.getDescription());
+
+		if (startDate != null && endDate != null) {
+			intent.putExtra(Const.START_DATE, startDate);
+			intent.putExtra(Const.END_DATE, endDate);
+		}
+
+		intent.putExtra(Const.COUNTRY, getIntent().getLongExtra(Const.COUNTRY, -1));
+
+		startActivity(intent);
 	}
 }

@@ -197,10 +197,10 @@ public class CountryDetailsActivity extends UpButtonActivity implements SearchVi
 
 	private void checkIfDurationOverlaps(Intent intent) {
 		for (City existingCity : cityDao.getAllFromCountry(selected.getId())) {
-			long startDateExisting = DateUtils.parseDateToMillis(existingCity.getStartDate());
-			long startDateNew = DateUtils.parseDateToMillis(intent.getStringExtra(Const.START_DATE));
-			long endDateExisting = DateUtils.parseDateToMillis(existingCity.getEndDate());
-			long endDateNew = DateUtils.parseDateToMillis(intent.getStringExtra(Const.END_DATE));
+			long startDateExisting = DateUtils.parseDateToMilliseconds(existingCity.getStartDate());
+			long startDateNew = DateUtils.parseDateToMilliseconds(intent.getStringExtra(Const.START_DATE));
+			long endDateExisting = DateUtils.parseDateToMilliseconds(existingCity.getEndDate());
+			long endDateNew = DateUtils.parseDateToMilliseconds(intent.getStringExtra(Const.END_DATE));
 			if (max(startDateNew, startDateExisting) < min(endDateNew, endDateExisting)) {
 				durationOverlaps = true;
 				break;
@@ -229,14 +229,14 @@ public class CountryDetailsActivity extends UpButtonActivity implements SearchVi
 	}
 
 	private long getCityDuration(City city) {
-		long startDate = DateUtils.parseDateToMillis(city.getStartDate());
-		long endDate = DateUtils.parseDateToMillis(city.getEndDate());
+		long startDate = DateUtils.parseDateToMilliseconds(city.getStartDate());
+		long endDate = DateUtils.parseDateToMilliseconds(city.getEndDate());
 		return DateUtils.getDaysCountFromTimeSpan(startDate, endDate);
 	}
 
 	private int compareCityStartDates(City cityOne, City cityTwo) {
-		long cityOneStartDate = DateUtils.parseDateToMillis(cityOne.getStartDate());
-		long cityTwoStartDate = DateUtils.parseDateToMillis(cityTwo.getStartDate());
+		long cityOneStartDate = DateUtils.parseDateToMilliseconds(cityOne.getStartDate());
+		long cityTwoStartDate = DateUtils.parseDateToMilliseconds(cityTwo.getStartDate());
 		return Long.compare(cityOneStartDate, cityTwoStartDate);
 	}
 

@@ -25,7 +25,7 @@ public class CountryAdapter extends ArrayAdapter<Country> {
 	}
 
 	public CountryAdapter(Context context, List<Country> countries) {
-		super(context, R.layout.activity_trip_details, countries);
+		super(context, R.layout.two_line_list, countries);
 	}
 
 	@Override

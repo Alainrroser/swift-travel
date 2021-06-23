@@ -145,14 +145,14 @@ public class MainActivity extends BaseActivity implements SearchView.OnQueryText
 	}
 
 	private void onTripClick() {
-		AdapterView.OnItemClickListener mListClickedHandler = (parent, v, position, id) -> {
+		AdapterView.OnItemClickListener onItemClickListener = (parent, v, position, id) -> {
 			Intent intent = new Intent(getApplicationContext(), TripDetailsActivity.class);
 			Trip selected = (Trip) parent.getItemAtPosition(position);
 			intent.putExtra(Const.TRIP, selected.getId());
 			intent.putExtra(Const.TRIP_NAME, selected.getName());
 			startActivity(intent);
 		};
-		allTrips.setOnItemClickListener(mListClickedHandler);
+		allTrips.setOnItemClickListener(onItemClickListener);
 	}
 
 	private void onFloatingActionButtonClick() {

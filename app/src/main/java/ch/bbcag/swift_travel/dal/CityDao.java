@@ -8,11 +8,15 @@ import androidx.room.Update;
 import java.util.List;
 
 import ch.bbcag.swift_travel.entities.City;
+import ch.bbcag.swift_travel.entities.Country;
 
 @Dao
 public interface CityDao {
 	@Query("SELECT * FROM cities WHERE countryId = :countryId")
 	List<City> getAllFromCountry(long countryId);
+
+	@Query("SELECT * FROM cities WHERE id = :id")
+	City getById(long id);
 
 	@Query("UPDATE cities SET name = :name")
 	void setName(String name);

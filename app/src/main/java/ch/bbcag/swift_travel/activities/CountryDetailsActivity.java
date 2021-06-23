@@ -46,7 +46,6 @@ public class CountryDetailsActivity extends UpButtonActivity implements SearchVi
 	private Button submitButton;
 	private CityAdapter adapter;
 
-	private String cityName;
 	private Country selected;
 
 	private CountryDao countryDao;
@@ -66,7 +65,7 @@ public class CountryDetailsActivity extends UpButtonActivity implements SearchVi
 		countryDao = SwiftTravelDatabase.getInstance(getApplicationContext()).getCountryDao();
 		cityDao = SwiftTravelDatabase.getInstance(getApplicationContext()).getCityDao();
 
-		submitButton = findViewById(R.id.country_submit_button);
+		submitButton = findViewById(R.id.city_submit_button);
 		editDescriptionButton = findViewById(R.id.edit_button);
 		floatingActionButton = findViewById(R.id.floating_action_button_country_details);
 	}
@@ -74,7 +73,7 @@ public class CountryDetailsActivity extends UpButtonActivity implements SearchVi
 	@Override
 	protected void onStart() {
 		super.onStart();
-		getProgressBar().setVisibility(View.GONE);
+		getProgressBar().setVisibility(View.VISIBLE);
 
 		long id = getIntent().getLongExtra(Const.COUNTRY, -1);
 		if (id != -1) {
@@ -91,6 +90,8 @@ public class CountryDetailsActivity extends UpButtonActivity implements SearchVi
 
 		Group form = findViewById(R.id.country_form);
 		form.setVisibility(View.GONE);
+
+		getProgressBar().setVisibility(View.GONE);
 
 		onFloatingActionButtonClick();
 		editDescriptionButton.setOnClickListener(v -> toggleForm());
@@ -325,7 +326,6 @@ public class CountryDetailsActivity extends UpButtonActivity implements SearchVi
 		if (selected.getImageURI() != null) {
 			LayoutUtils.setOnlineImageURIOnImageView(getApplicationContext(), findViewById(R.id.country_image), selected.getImageURI());
 		}
-
 	}
 
 	public CityAdapter getAdapter() {

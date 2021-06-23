@@ -57,4 +57,5 @@
     <string name="duration_overlap_error_text">Durations are not allowed to overlap, please try another date</string>
 
     <string name="days_title">Days</string>
+    <string name="day">Day</string>
 </resources>

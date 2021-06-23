@@ -14,8 +14,6 @@ public class Day {
 	private String name;
 	@ColumnInfo(name = "description")
 	private String description;
-	@ColumnInfo(name = "duration")
-	private String duration;
 	@ColumnInfo(name = "cityId")
 	private long cityId;
 
@@ -58,13 +56,5 @@ public class Day {
 
 	public void setCityId(long cityId) {
 		this.cityId = cityId;
-	}
-
-	public String getDuration() {
-		return duration;
-	}
-
-	public void setDuration(String duration) {
-		this.duration = duration;
 	}
 }

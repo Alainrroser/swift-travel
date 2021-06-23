@@ -44,7 +44,7 @@ festhalten und später wieder betrahchten kann.
 </div>
 
 ## Testfälle
-* [Testing](docs/documentation/documentation.md#Testing)
+* [Testing](docs/documentation/documentation.md#6-testing)
 
 ## Daily Scrum
 * Das Daily Scrum wird jeweils um 08:15 gehalten.

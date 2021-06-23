@@ -31,5 +31,7 @@ public class Const {
 	public static final String CITIES_URL_USER_NAME = "swift_travel";
 	public static final String FEATURE_CODE = "P";
 
-
+	public static final String DAY = "day";
+	public static final String DAY_NAME = "dayName";
+	public static final String ADD_DAY = "addDay";
 }

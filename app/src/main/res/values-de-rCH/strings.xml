@@ -58,4 +58,5 @@
     <string name="duration_overlap_error_text">Zeitspannen dürfen sich nicht überlappen, versuche ein anderes Datum</string>
 
     <string name="days_title">Tage</string>
+    <string name="day">Tag</string>
 </resources>

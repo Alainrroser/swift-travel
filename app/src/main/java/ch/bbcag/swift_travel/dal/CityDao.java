@@ -3,12 +3,10 @@ package ch.bbcag.swift_travel.dal;
 import androidx.room.Dao;
 import androidx.room.Insert;
 import androidx.room.Query;
-import androidx.room.Update;
 
 import java.util.List;
 
 import ch.bbcag.swift_travel.entities.City;
-import ch.bbcag.swift_travel.entities.Country;
 
 @Dao
 public interface CityDao {
@@ -35,9 +33,6 @@ public interface CityDao {
 
 	@Insert
 	long insert(City city);
-
-	@Update
-	void update(City city);
 
 	@Query("DELETE FROM cities WHERE id = :id")
 	void delete(long id);

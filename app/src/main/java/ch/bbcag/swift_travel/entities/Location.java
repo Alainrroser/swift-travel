@@ -55,11 +55,11 @@ public class Location {
 		this.description = description;
 	}
 
-	public String getDuration(){
+	public String getDuration() {
 		return duration;
 	}
 
-	public void setDuration(String duration){
+	public void setDuration(String duration) {
 		this.duration = duration;
 	}
 

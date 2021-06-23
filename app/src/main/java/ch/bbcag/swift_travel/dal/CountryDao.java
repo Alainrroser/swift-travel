@@ -3,7 +3,6 @@ package ch.bbcag.swift_travel.dal;
 import androidx.room.Dao;
 import androidx.room.Insert;
 import androidx.room.Query;
-import androidx.room.Update;
 
 import java.util.List;
 
@@ -17,9 +16,6 @@ public interface CountryDao {
 	@Query("SELECT * FROM countries WHERE id = :id")
 	Country getById(long id);
 
-	@Query("SELECT code FROM countries WHERE id = :id")
-	String getCodeById(long id);
-
 	@Query("UPDATE countries SET name = :name")
 	void setName(String name);
 
@@ -31,9 +27,6 @@ public interface CountryDao {
 
 	@Insert
 	long insert(Country country);
-
-	@Update
-	void update(Country country);
 
 	@Query("DELETE FROM countries WHERE id = :id")
 	void delete(long id);

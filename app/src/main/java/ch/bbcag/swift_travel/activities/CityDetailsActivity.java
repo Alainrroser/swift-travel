@@ -16,7 +16,6 @@ import android.widget.SearchView;
 import androidx.annotation.NonNull;
 import androidx.constraintlayout.widget.Group;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import ch.bbcag.swift_travel.R;
@@ -29,7 +28,7 @@ import ch.bbcag.swift_travel.entities.Day;
 import ch.bbcag.swift_travel.utils.Const;
 import ch.bbcag.swift_travel.utils.LayoutUtils;
 
-public class CityDetailsActivity extends UpButtonActivity implements SearchView.OnQueryTextListener, SearchView.OnCloseListener{
+public class CityDetailsActivity extends UpButtonActivity implements SearchView.OnQueryTextListener, SearchView.OnCloseListener {
 
 	private SearchView searchView;
 	private MenuItem searchItem;
@@ -39,7 +38,6 @@ public class CityDetailsActivity extends UpButtonActivity implements SearchView.
 	private DayAdapter adapter;
 
 	private City selected;
-	private List<Day> days = new ArrayList<>();
 
 	private CityDao cityDao;
 	private DayDao dayDao;
@@ -70,7 +68,7 @@ public class CityDetailsActivity extends UpButtonActivity implements SearchView.
 			selected = cityDao.getById(id);
 		}
 
-		days = dayDao.getAllFromCity(selected.getId());
+		List<Day> days = dayDao.getAllFromCity(selected.getId());
 		adapter = new DayAdapter(this, days);
 
 		addDaysToClickableList();
@@ -213,9 +211,5 @@ public class CityDetailsActivity extends UpButtonActivity implements SearchView.
 
 	public DayAdapter getAdapter() {
 		return adapter;
-	}
-
-	public DayDao getDayDao() {
-		return dayDao;
 	}
 }

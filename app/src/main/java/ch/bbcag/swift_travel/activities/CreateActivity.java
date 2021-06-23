@@ -102,7 +102,7 @@ public class CreateActivity extends UpButtonActivity {
 		return imageURI;
 	}
 
-	private void setDatePicker(){
+	private void setDatePicker() {
 		MaterialDatePicker.Builder<Pair<Long, Long>> materialDateBuilder = MaterialDatePicker.Builder.dateRangePicker().setTitleText(getString(R.string.select_city_duration_title));
 		materialDatePicker = materialDateBuilder.build();
 
@@ -122,7 +122,7 @@ public class CreateActivity extends UpButtonActivity {
 
 	private void showDatePickerIfClosed() {
 		// Check if selectDuration was clicked already because you cannot open two at the same time
-		if(!datePickerOpened) {
+		if (!datePickerOpened) {
 			materialDatePicker.show(getSupportFragmentManager(), materialDatePicker.toString());
 			datePickerOpened = true;
 		}

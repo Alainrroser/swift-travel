@@ -27,7 +27,7 @@ public class Country {
 	@Ignore
 	private String duration;
 	@Ignore
-	private List<City> cityList =  new ArrayList<>();
+	private List<City> cityList = new ArrayList<>();
 
 	public Country() {
 

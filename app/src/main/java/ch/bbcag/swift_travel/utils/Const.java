@@ -27,13 +27,9 @@ public class Const {
 	public static final String CITY_NAME = "cityName";
 	public static final String CITY_DESCRIPTION = "cityDescription";
 	public static final String ADD_CITY = "addCity";
-	public static final String CITIES_URL = "api.geonames.org";
-	public static final String CITIES_URL_USER_NAME = "swift_travel";
-	public static final String FEATURE_CODE = "P";
 
 	public static final String DAY = "day";
 	public static final String DAY_NAME = "dayName";
-	public static final String ADD_DAY = "addDay";
 
 	public static final String LOCATION = "location";
 	public static final String LOCATION_NAME = "locationName";

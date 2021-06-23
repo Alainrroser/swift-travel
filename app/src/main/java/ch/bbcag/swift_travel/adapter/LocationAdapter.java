@@ -13,8 +13,6 @@ import java.util.List;
 
 import ch.bbcag.swift_travel.R;
 import ch.bbcag.swift_travel.activities.DayDetailsActivity;
-import ch.bbcag.swift_travel.activities.TripDetailsActivity;
-import ch.bbcag.swift_travel.entities.Country;
 import ch.bbcag.swift_travel.entities.Location;
 import ch.bbcag.swift_travel.utils.LayoutUtils;
 
@@ -27,7 +25,7 @@ public class LocationAdapter extends ArrayAdapter<Location> {
 	}
 
 	public LocationAdapter(Context context, List<Location> locations) {
-		super(context, R.layout.activity_day_details, locations);
+		super(context, R.layout.three_line_list, locations);
 	}
 
 	@Override

@@ -3,7 +3,6 @@ package ch.bbcag.swift_travel.activities;
 import android.content.Context;
 import android.content.Intent;
 import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -130,11 +129,10 @@ public class ChooseCountryActivity extends UpButtonActivity implements SearchVie
 	}
 
 	private void addAllCountriesToClickableList() {
-		if(isNetworkAvailable()) {
+		if (isNetworkAvailable()) {
 			Response.Listener<JSONArray> responseListener = this::addAllCountriesToAdapter;
 			Response.ErrorListener errorListener = error -> generateMessageDialogAndCloseActivity(getString(R.string.add_entry_to_list_error_title), getString(R.string.add_entries_to_list_error_text));
 			ApiRepository.getJsonArray(getApplicationContext(), Const.COUNTRIES_URL, responseListener, errorListener);
-			getProgressBar().setVisibility(View.GONE);
 		} else {
 			generateMessageDialogAndCloseActivity(getString(R.string.internet_connection_error_title), getString(R.string.internet_connection_error_text));
 		}
@@ -145,6 +143,7 @@ public class ChooseCountryActivity extends UpButtonActivity implements SearchVie
 		initializeAdapter(response);
 		allCountries.setAdapter(adapter);
 		onCountryClick(allCountries);
+		getProgressBar().setVisibility(View.GONE);
 	}
 
 	private boolean isNetworkAvailable() {

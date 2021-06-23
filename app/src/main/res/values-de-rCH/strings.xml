@@ -62,4 +62,6 @@
 
     <string name="days_title">Tage</string>
     <string name="day">Tag</string>
+    <string name="locations_title">Orte</string>
+    <string name="day_date">Datum des Tages</string>
 </resources>

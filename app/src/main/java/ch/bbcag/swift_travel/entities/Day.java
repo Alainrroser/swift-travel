@@ -23,7 +23,7 @@ public class Day {
 	@ColumnInfo(name = "cityId")
 	private long cityId;
 	@Ignore
-	private List<Location> locationList =  new ArrayList<>();
+	private List<Location> locationList = new ArrayList<>();
 
 	public Day() {
 	}

@@ -8,7 +8,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.SearchView;
@@ -304,13 +303,5 @@ public class CountryDetailsActivity extends UpButtonActivity implements SearchVi
 		}
 		countryDao.setDuration(duration);
 		return duration;
-	}
-
-	public CityAdapter getAdapter() {
-		return adapter;
-	}
-
-	public CityDao getCityDao() {
-		return cityDao;
 	}
 }

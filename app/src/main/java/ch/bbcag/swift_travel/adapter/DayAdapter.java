@@ -1,6 +1,5 @@
 package ch.bbcag.swift_travel.adapter;
 
-import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,17 +9,20 @@ import android.widget.TextView;
 import java.util.List;
 
 import ch.bbcag.swift_travel.R;
+import ch.bbcag.swift_travel.activities.CityDetailsActivity;
 import ch.bbcag.swift_travel.entities.Day;
 
 public class DayAdapter extends ArrayAdapter<Day> {
+	private CityDetailsActivity cityDetailsActivity;
 
 	public static class DayAdapterViewHolder {
 		TextView name;
 		TextView description;
 	}
 
-	public DayAdapter(Context context, List<Day> days) {
-		super(context, R.layout.two_line_list, days);
+	public DayAdapter(CityDetailsActivity cityDetailsActivity, List<Day> days) {
+		super(cityDetailsActivity, R.layout.two_line_list, days);
+		this.cityDetailsActivity = cityDetailsActivity;
 	}
 
 	@Override
@@ -30,7 +32,7 @@ public class DayAdapter extends ArrayAdapter<Day> {
 
 		if (convertView == null) {
 			viewHolder = new DayAdapterViewHolder();
-			LayoutInflater inflater = LayoutInflater.from(getContext());
+			LayoutInflater inflater = LayoutInflater.from(cityDetailsActivity);
 			convertView = inflater.inflate(R.layout.two_line_list_no_delete_btn, parent, false);
 
 			viewHolder.name = convertView.findViewById(R.id.name_two_line_list_no_delete_btn);

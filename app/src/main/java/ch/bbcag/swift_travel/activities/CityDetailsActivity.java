@@ -208,8 +208,4 @@ public class CityDetailsActivity extends UpButtonActivity implements SearchView.
 			content.setVisibility(View.GONE);
 		}
 	}
-
-	public DayAdapter getAdapter() {
-		return adapter;
-	}
 }

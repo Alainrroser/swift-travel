@@ -231,12 +231,4 @@ public class DayDetailsActivity extends UpButtonActivity implements SearchView.O
 			content.setVisibility(View.GONE);
 		}
 	}
-
-	public LocationAdapter getAdapter() {
-		return adapter;
-	}
-
-	public LocationDao getLocationDao() {
-		return locationDao;
-	}
 }

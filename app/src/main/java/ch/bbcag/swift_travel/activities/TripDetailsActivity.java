@@ -50,7 +50,6 @@ public class TripDetailsActivity extends UpButtonActivity implements SearchView.
 
 	private TripDao tripDao;
 	private CountryDao countryDao;
-	private CityDao cityDao;
 
 	private boolean nameValidated = false;
 
@@ -65,7 +64,7 @@ public class TripDetailsActivity extends UpButtonActivity implements SearchView.
 
 		tripDao = SwiftTravelDatabase.getInstance(getApplicationContext()).getTripDao();
 		countryDao = SwiftTravelDatabase.getInstance(getApplicationContext()).getCountryDao();
-		cityDao = SwiftTravelDatabase.getInstance(getApplicationContext()).getCityDao();
+		CityDao cityDao = SwiftTravelDatabase.getInstance(getApplicationContext()).getCityDao();
 
 		floatingActionButton = findViewById(R.id.floating_action_button_trip_details);
 		countries = findViewById(R.id.countries);
@@ -278,13 +277,5 @@ public class TripDetailsActivity extends UpButtonActivity implements SearchView.
 			duration += countries.get(i).getDuration();
 		}
 		return duration;
-	}
-
-	public CountryAdapter getAdapter() {
-		return adapter;
-	}
-
-	public CountryDao getCountryDao() {
-		return countryDao;
 	}
 }

@@ -1,6 +1,5 @@
 package ch.bbcag.swift_travel.adapter;
 
-import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,10 +12,13 @@ import java.util.List;
 
 import ch.bbcag.swift_travel.R;
 import ch.bbcag.swift_travel.activities.DayDetailsActivity;
+import ch.bbcag.swift_travel.dal.SwiftTravelDatabase;
 import ch.bbcag.swift_travel.entities.Location;
 import ch.bbcag.swift_travel.utils.LayoutUtils;
 
 public class LocationAdapter extends ArrayAdapter<Location> {
+	private DayDetailsActivity dayDetailsActivity;
+
 	public static class LocationAdapterViewHolder {
 		TextView name;
 		TextView duration;
@@ -24,8 +26,9 @@ public class LocationAdapter extends ArrayAdapter<Location> {
 		ImageButton delete;
 	}
 
-	public LocationAdapter(Context context, List<Location> locations) {
-		super(context, R.layout.three_line_list, locations);
+	public LocationAdapter(DayDetailsActivity dayDetailsActivity, List<Location> locations) {
+		super(dayDetailsActivity, R.layout.three_line_list, locations);
+		this.dayDetailsActivity = dayDetailsActivity;
 	}
 
 	@Override
@@ -35,7 +38,7 @@ public class LocationAdapter extends ArrayAdapter<Location> {
 
 		if (convertView == null) {
 			viewHolder = new LocationAdapterViewHolder();
-			LayoutInflater inflater = LayoutInflater.from(getContext());
+			LayoutInflater inflater = LayoutInflater.from(dayDetailsActivity);
 			convertView = inflater.inflate(R.layout.three_line_list, parent, false);
 
 			viewHolder.name = convertView.findViewById(R.id.name_two_line_list);
@@ -57,11 +60,10 @@ public class LocationAdapter extends ArrayAdapter<Location> {
 	}
 
 	private void generateConfirmDialog(Location location) {
-		DayDetailsActivity dayDetailsActivity = (DayDetailsActivity) getContext();
 		dayDetailsActivity.generateConfirmDialog(dayDetailsActivity.getString(R.string.delete_entry_title), dayDetailsActivity.getString(R.string.delete_entry_text), () -> {
-			dayDetailsActivity.getAdapter().remove(location);
-			dayDetailsActivity.getAdapter().notifyDataSetChanged();
-			dayDetailsActivity.getLocationDao().delete(location.getId());
+			remove(location);
+			notifyDataSetChanged();
+			SwiftTravelDatabase.getInstance(dayDetailsActivity.getApplicationContext()).getLocationDao().delete(location.getId());
 		});
 	}
 }

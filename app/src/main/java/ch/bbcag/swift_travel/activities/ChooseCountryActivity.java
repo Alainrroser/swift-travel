@@ -172,7 +172,7 @@ public class ChooseCountryActivity extends UpButtonActivity implements SearchVie
 		try {
 			List<Country> allCountries = new ArrayList<>();
 			addCountryToList(response, allCountries);
-			adapter = new ChooseCountryAdapter(getApplicationContext(), allCountries);
+			adapter = new ChooseCountryAdapter(this, allCountries);
 		} catch (Exception e) {
 			generateMessageDialog(getString(R.string.add_entry_to_list_error_title), getString(R.string.add_entries_to_list_error_text));
 		}

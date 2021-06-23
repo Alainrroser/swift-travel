@@ -1,6 +1,5 @@
 package ch.bbcag.swift_travel.adapter;
 
-import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,10 +12,13 @@ import java.util.List;
 
 import ch.bbcag.swift_travel.R;
 import ch.bbcag.swift_travel.activities.TripDetailsActivity;
+import ch.bbcag.swift_travel.dal.SwiftTravelDatabase;
 import ch.bbcag.swift_travel.entities.Country;
 import ch.bbcag.swift_travel.utils.LayoutUtils;
 
 public class CountryAdapter extends ArrayAdapter<Country> {
+	private TripDetailsActivity tripDetailsActivity;
+
 	public static class CountryAdapterViewHolder {
 		TextView name;
 		TextView duration;
@@ -24,8 +26,9 @@ public class CountryAdapter extends ArrayAdapter<Country> {
 		ImageButton delete;
 	}
 
-	public CountryAdapter(Context context, List<Country> countries) {
-		super(context, R.layout.two_line_list, countries);
+	public CountryAdapter(TripDetailsActivity tripDetailsActivity, List<Country> countries) {
+		super(tripDetailsActivity, R.layout.two_line_list, countries);
+		this.tripDetailsActivity = tripDetailsActivity;
 	}
 
 	@Override
@@ -35,7 +38,7 @@ public class CountryAdapter extends ArrayAdapter<Country> {
 
 		if (convertView == null) {
 			viewHolder = new CountryAdapterViewHolder();
-			LayoutInflater inflater = LayoutInflater.from(getContext());
+			LayoutInflater inflater = LayoutInflater.from(tripDetailsActivity);
 			convertView = inflater.inflate(R.layout.two_line_list, parent, false);
 
 			viewHolder.name = convertView.findViewById(R.id.name_two_line_list);
@@ -51,17 +54,17 @@ public class CountryAdapter extends ArrayAdapter<Country> {
 		viewHolder.delete.setOnClickListener(v -> generateConfirmDialog(country));
 
 		viewHolder.name.setText(country.getName());
-		viewHolder.duration.setText(country.getDuration() + " " + getContext().getString(R.string.days_title));
+		String duration = country.getDuration() + " " + getContext().getString(R.string.days_title);
+		viewHolder.duration.setText(duration);
 		LayoutUtils.setOnlineImageURIOnImageView(getContext(), viewHolder.image, country.getImageURI());
 		return convertView;
 	}
 
 	private void generateConfirmDialog(Country country) {
-		TripDetailsActivity tripDetailsActivity = (TripDetailsActivity) getContext();
 		tripDetailsActivity.generateConfirmDialog(tripDetailsActivity.getString(R.string.delete_entry_title), tripDetailsActivity.getString(R.string.delete_entry_text), () -> {
-			tripDetailsActivity.getAdapter().remove(country);
-			tripDetailsActivity.getAdapter().notifyDataSetChanged();
-			tripDetailsActivity.getCountryDao().delete(country.getId());
+			remove(country);
+			notifyDataSetChanged();
+			SwiftTravelDatabase.getInstance(tripDetailsActivity.getApplicationContext()).getCountryDao().delete(country.getId());
 		});
 	}
 }

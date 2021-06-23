@@ -1,6 +1,5 @@
 package ch.bbcag.swift_travel.adapter;
 
-import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,10 +12,13 @@ import java.util.List;
 
 import ch.bbcag.swift_travel.R;
 import ch.bbcag.swift_travel.activities.MainActivity;
+import ch.bbcag.swift_travel.dal.SwiftTravelDatabase;
 import ch.bbcag.swift_travel.entities.Trip;
 import ch.bbcag.swift_travel.utils.LayoutUtils;
 
 public class TripAdapter extends ArrayAdapter<Trip> {
+	private MainActivity mainActivity;
+
 	public static class TripViewHolder {
 		TextView name;
 		TextView destination;
@@ -25,8 +27,9 @@ public class TripAdapter extends ArrayAdapter<Trip> {
 		ImageButton delete;
 	}
 
-	public TripAdapter(Context context, List<Trip> trips) {
-		super(context, R.layout.three_line_list, trips);
+	public TripAdapter(MainActivity mainActivity, List<Trip> trips) {
+		super(mainActivity, R.layout.three_line_list, trips);
+		this.mainActivity = mainActivity;
 	}
 
 	@Override
@@ -36,7 +39,7 @@ public class TripAdapter extends ArrayAdapter<Trip> {
 
 		if (convertView == null) {
 			viewHolder = new TripViewHolder();
-			LayoutInflater inflater = LayoutInflater.from(getContext());
+			LayoutInflater inflater = LayoutInflater.from(mainActivity);
 			convertView = inflater.inflate(R.layout.three_line_list, parent, false);
 
 			viewHolder.name = convertView.findViewById(R.id.name_three_line_list);
@@ -64,9 +67,9 @@ public class TripAdapter extends ArrayAdapter<Trip> {
 	private void generateConfirmDialog(Trip trip) {
 		MainActivity mainActivity = (MainActivity) getContext();
 		mainActivity.generateConfirmDialog(mainActivity.getString(R.string.delete_entry_title), mainActivity.getString(R.string.delete_entry_text), () -> {
-			mainActivity.getAdapter().remove(trip);
-			mainActivity.getAdapter().notifyDataSetChanged();
-			mainActivity.getTripDao().delete(trip.getId());
+			remove(trip);
+			notifyDataSetChanged();
+			SwiftTravelDatabase.getInstance(mainActivity.getApplicationContext()).getTripDao().delete(trip.getId());
 		});
 	}
 }

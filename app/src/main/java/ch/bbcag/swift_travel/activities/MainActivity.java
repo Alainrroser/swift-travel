@@ -163,12 +163,4 @@ public class MainActivity extends BaseActivity implements SearchView.OnQueryText
 			startActivity(intent);
 		});
 	}
-
-	public TripAdapter getAdapter() {
-		return adapter;
-	}
-
-	public TripDao getTripDao() {
-		return tripDao;
-	}
 }

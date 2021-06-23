@@ -13,13 +13,11 @@ import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.SearchView;
 
-import androidx.constraintlayout.widget.Group;
-
 import androidx.annotation.NonNull;
+import androidx.constraintlayout.widget.Group;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
-import java.text.ParseException;
 import java.util.Comparator;
 import java.util.List;
 
@@ -171,7 +169,7 @@ public class CountryDetailsActivity extends UpButtonActivity implements SearchVi
 	public void addCitiesToClickableList() {
 		ListView cities = findViewById(R.id.cities);
 		cities.setAdapter(adapter);
-		sortCitiesByStartDate();
+		adapter.sort((Comparator<City>) this::compareCityStartDates);
 
 		getProgressBar().setVisibility(View.GONE);
 
@@ -190,93 +188,56 @@ public class CountryDetailsActivity extends UpButtonActivity implements SearchVi
 		Intent intent = getIntent();
 		City city = new City();
 		if (intent.getStringExtra(Const.CITY_NAME) != null && intent.getBooleanExtra(Const.ADD_CITY, false)) {
+			intent.removeExtra(Const.ADD_CITY);
+
 			checkIfDurationOverlaps(intent);
 			addCityIfNotExists(intent, city);
 		}
 	}
 
 	private void checkIfDurationOverlaps(Intent intent) {
-		try {
-			for (City existingCity : cityDao.getAllFromCountry(selected.getId())) {
-				long startDateExisting = DateUtils.parseDateToMillis(existingCity.getStartDate());
-				long startDateNew = DateUtils.parseDateToMillis(intent.getStringExtra(Const.START_DATE));
-				long endDateExisting = DateUtils.parseDateToMillis(existingCity.getEndDate());
-				long endDateNew = DateUtils.parseDateToMillis(intent.getStringExtra(Const.END_DATE));
-				if (startDateExisting != -1 && startDateNew != -1 && endDateExisting != -1 && endDateNew != -1) {
-					if (max(startDateNew, startDateExisting) < min(endDateNew, endDateExisting)) {
-						durationOverlaps = true;
-						break;
-					}
-				} else {
-					throw new Exception();
-				}
+		for (City existingCity : cityDao.getAllFromCountry(selected.getId())) {
+			long startDateExisting = DateUtils.parseDateToMillis(existingCity.getStartDate());
+			long startDateNew = DateUtils.parseDateToMillis(intent.getStringExtra(Const.START_DATE));
+			long endDateExisting = DateUtils.parseDateToMillis(existingCity.getEndDate());
+			long endDateNew = DateUtils.parseDateToMillis(intent.getStringExtra(Const.END_DATE));
+			if (max(startDateNew, startDateExisting) < min(endDateNew, endDateExisting)) {
+				durationOverlaps = true;
+				break;
 			}
-		} catch (Exception e) {
-			generateMessageDialogAndCloseActivity(getString(R.string.duration_parse_error_title), getString(R.string.duration_parse_error_text));
 		}
+
 	}
 
 	private void addCityIfNotExists(Intent intent, City city) {
 		if (!durationOverlaps) {
-			intent.removeExtra(Const.ADD_CITY);
-
 			city.setName(intent.getStringExtra(Const.CITY_NAME));
 			city.setDescription(intent.getStringExtra(Const.CITY_DESCRIPTION));
 			city.setImageURI(intent.getStringExtra(Const.IMAGE_URI));
 			city.setStartDate(intent.getStringExtra(Const.START_DATE));
 			city.setEndDate(intent.getStringExtra(Const.END_DATE));
-			if(getCityDuration(city) != -1) {
-				city.setDuration(getCityDuration(city));
-			} else {
-				generateMessageDialogAndCloseActivity(getString(R.string.duration_parse_error_title), getString(R.string.duration_parse_error_text));
-				System.out.println(getCityDuration(city));
-			}
+			city.setDuration(getCityDuration(city));
 			city.setCountryId(selected.getId());
 			long id = cityDao.insert(city);
 			city.setId(id);
 
 			adapter.add(city);
-			sortCitiesByStartDate();
+			adapter.sort((Comparator<City>) this::compareCityStartDates);
 		} else {
 			generateMessageDialog(getString(R.string.duration_overlap_error_title), getString(R.string.duration_overlap_error_text));
 		}
 	}
 
 	private long getCityDuration(City city) {
-		try {
-			long startDate = DateUtils.parseDateToMillis(city.getStartDate());
-			long endDate = DateUtils.parseDateToMillis(city.getEndDate());
-			if(startDate != -1 && endDate != -1) {
-				return DateUtils.getDaysCountFromTimeSpan(startDate, endDate);
-			} else {
-				throw new Exception();
-			}
-		} catch (Exception e) {
-			generateMessageDialogAndCloseActivity(getString(R.string.duration_parse_error_title), getString(R.string.duration_parse_error_text));
-		}
-		return -1;
+		long startDate = DateUtils.parseDateToMillis(city.getStartDate());
+		long endDate = DateUtils.parseDateToMillis(city.getEndDate());
+		return DateUtils.getDaysCountFromTimeSpan(startDate, endDate);
 	}
 
-	private void sortCitiesByStartDate() {
-		adapter.sort((Comparator<City>) (cityOne, cityTwo) -> {
-			try {
-				return compareCityStartDates(cityOne, cityTwo);
-			} catch (ParseException e) {
-				generateMessageDialogAndCloseActivity(getString(R.string.duration_parse_error_title), getString(R.string.duration_parse_error_text));
-			}
-			return 0;
-		});
-	}
-
-	private int compareCityStartDates(City cityOne, City cityTwo) throws ParseException {
+	private int compareCityStartDates(City cityOne, City cityTwo) {
 		long cityOneStartDate = DateUtils.parseDateToMillis(cityOne.getStartDate());
 		long cityTwoStartDate = DateUtils.parseDateToMillis(cityTwo.getStartDate());
-		if (cityOneStartDate != -1 && cityTwoStartDate != -1) {
-			return Long.compare(cityOneStartDate, cityTwoStartDate);
-		} else {
-			generateMessageDialogAndCloseActivity(getString(R.string.duration_parse_error_title), getString(R.string.duration_parse_error_text));
-		}
-		return 0;
+		return Long.compare(cityOneStartDate, cityTwoStartDate);
 	}
 
 	private void onFloatingActionButtonClick() {

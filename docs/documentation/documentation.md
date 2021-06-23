@@ -1,97 +1,107 @@
-# ***App-/Projektname***
-> *Alles was schräg geschrieben ist und/oder mit einem > als Quote steht wird mit euren Texten ersetzt!*  
-> *Den vorhandenen Text löschen.*  
-> *Mindestens die bestehenden Überschriften müssen vorhanden sein. Es kann jedoch immer noch erwetert werden je nach Projekt.*  
-
-> *Kann auch in einzelne Files ausgelagert werden und im **[Readme](README.md)** verlinkt werden.*
+# Swift-Travel
 
 ## Inhalt
 
-* [1 Abstract (Kurzbeschreibung)](#1-abstract-kurzbeschreibung)
-* [2 Konkurrenzanalyse](#2-konkurrenzanalyse)
-* [3 User Storys](#3-user-storys)
-* [4 Mockups](#4-mockups)
-* [5 Technische Realisierung](#5-technische-realisierung)
-* [6 Testing](#6-testing)
-    * [6.1 Manuelle UI-Tests](#61-manuelle-ui-tests)
-    * [6.2 Testauswertung](#62-testauswertung)
-* [7 Fazit](#7-fazit)
+1. [Abstract (Kurzbeschreibung)](#1-abstract-kurzbeschreibung)
+2. [Konkurrenzanalyse](#2-konkurrenzanalyse)
+3. [Mockups](#4-mockups)
+4. [Technische Realisierung](#5-technische-realisierung)
+5. [Testing](#6-testing)
+    1. [Manuelle UI-Tests](#61-manuelle-ui-tests)
+    2. [Testauswertung](#62-testauswertung)
+6. [Fazit](#7-fazit)
 
-# 1 Abstract (Kurzbeschreibung)
+# Abstract (Kurzbeschreibung)
 
-> *An dieser Stelle kommt eine kurze Einführung, die in 5-10 Sätzen das Projekt beschreibt.*
+> Swift-Travel ist ein Projekt bei dem der Benutzer seine zukünftigen Reisen planen, sowie auch seine bereits getätigten Reisen festhalten und später wieder betrachten kann
+> Man hat dafür Trips, welche man hinzufügen kann, worin man Länder, welche man auf diesem Trip besucht, hinzufügen kann
+> Dort wiederum hat man die Möglichkeit Städte in den einzelnen Ländern hinzuzufügen
+> Pro Stadt hat man dann Tage (Die Anzahl entspricht der Zeitspanne, welche man in dieser Stadt verbringt) in welchen man dann festhalten kann, was man hier gemacht hat
 
-# 2 Konkurrenzanalyse
+# Konkurrenzanalyse
 
-> *Konkurrenzanalyse des Auftrages.*
+## [TripIt: Reiseplaner](https://play.google.com/store/apps/details?id=com.tripit)
+## [TripPlanner - Trips & Travel planner(no sign-in](https://play.google.com/store/apps/details?id=com.travalour.tripplanner)
+## [My Travel Planner App](https://play.google.com/store/apps/details?id=com.travefy.travelplannersapp.tripplans)	
+## [Roadtrippers - Trip Planner](https://play.google.com/store/apps/details?id=com.roadtrippers)	
+> Was machen sie gut
+	* Auflistung und Unterteilung der Reisen 
+	* Übersichtlich
+> Was machen sie schlecht 
+	* Persönliche Erinnerungen können nicht hinzugefügt werden 
+	* Beschränkt (Keine genaueren Informationen über Ausflüge)
+> Wie können wir uns abheben
+	* Persönlicher (Möglichkeit persönliche Erinnerungen hinzufügen zu können)
+	* Weniger beschränkt (Möglichkeit Informationen über Ausflüge hinzufügen zu können)
+	* Ziel ist nicht die Planung sondern die Reisen
+## [Lambus | Reiseplaner](https://play.google.com/store/apps/details?id=io.lambus.app)
+## [NextTripPlan | Trip Planner](https://play.google.com/store/apps/details?id=com.devpira.travel_plan)
+## [Itinerate](https://play.google.com/store/apps/details?id=com.blahovici.itinerate)	
+> Was machen sie gut
+	* Persönliche Erinnerungen können hinzugefügt werden 
+> Was machen sie schlecht 
+	* Unübersichtlich
+> Wie können wir uns abheben
+	* Einfacher und übersichtlicher aufgebaut
+	* Ziel ist nicht die Planung sondern die Reise
 
-# 3 User Storys
+# Design
+## 4.1 Mockups
 
-> *Als \<Rolle\> möchte ich \<Ziel/Wunsch\>, um \<Nutzen\>.*
+> ***1. Trips***  
+> [Trips](docs/images/Trips.png)
+> Dies ist die Startactivity. Man hat hier die Möglichkeit mithilfe eines Floating Action Buttons Reisen hinzuzufügen, welche dann in einer Liste angezeigt werden.
 
+> ***2.	Tripdetails***  
+> ![Tripdetails](docs/images/TripDetails.png)
+> In diese kommt man, indem man einen Eintrag der Liste der ersten Activity anklickt. Hier hat man zuerst Informationen zum Trip, welche man auch bearbeiten kann
+> Darunter ist ebenfalls eine Liste, diesmal aber mit allen Ländern, welche man in diesem Trip besucht und auch hier hat es einen Floating Action Button, mitwelchem man Länder hinzufügen kann
 
-# 4 Mockups
+> ***3. Sign In***   
+> ![ChooseCountry](docs/images/ChooseCountry.png)
+> In diese Activity kommt man durch den Klick auf den Floating Action der TripDetailsActivity klickt
+> Sie beinhaltet eine Liste mit allen Ländern, welche man auch durchsuchen kann, welche man dann zu der Liste der Länder im Trip der TripDetailsActivity hinzufügen kann
 
-![Mockup Beispiel](docs/images/mockups-doc-temp.png)
-> ***1. Startactivity***  
-> *Innerhalb der StartActivity wird dem Benutzer zentral ein Login-Formular  präsentiert. Oberhalb des Formulars wird das Logo der App platziert. Die Eingabefelder sollten möglichst in den oberen zwei Drittel des Bildschirms platziert werden damit die Tastatur diese nicht überdeckt.
-> Unter den Eingabefelder sind zwei Buttons platziert, «Login» und «Registrieren». Dabei soll der Login-Button farblich hervorgehoben werden da dieser öfters benutzt wird. Der «Registrieren»-Button wird im Normalfall einmal benutzt deshalb soll dieser neutral oder sogar weniger prominent dargestellt werden.*
+## Klassendiagramm
+![Klassendiagramm](docs/images/uml.png)
 
-> ***2.	Badi-Galerie***  
-> *In der «Badi-Galerie»-Ansicht wird dem Benutzer ein Grid mit den favorisierten Schwimmbäder angezeigt. Jedes einzelne Schwimmbad wird mit einem Bild präsentiert. In der in der unteren Ecke jedes Bildes wird die aktuelle Temperatur angezeigt. Darunter den Namen der Badi und der Ort. In der Auflistung muss auf und ab navigiert werden können da man mehr Schwimmbäder hinzufügen kann als auf dem Display Platz haben. Ein Floating-Action-Button mit einem Plus-Icon ist unten rechts am Screen platziert um neue Schwimmbäder in die eigene Liste aufzunehmen. In der Actionbar am oberen Rand wird rechts ein Kontextmenü platziert welches mit dem entsprechenden Button geöffnet werden kann. Darin sind die Punkte Einstellungen, Hilfe und Logout zu finden.*
+# Technische Realisierung
 
-> ***3. Badidetails***   
-> ...
+## Room Database
+> Alle Trips, Countries, Cities und Days werden in lokal in einer Room Datenbank gespeichert
 
-> ***4. Badiauswahl***   
-> ...
+### SwiftTravelDatabase
+> Die Datenbank mit den Gettern für die DAOs
 
-> ***5. Registration***   
-> ...
+### DAOs
+> TripDao, CountryDao, CityDao und DayDao
+> Die Data Access Objects mit den Abfragen für die Entities
 
+### Entities 
+> Trip, Country, City, Day 
+> Die Entities mit den einzelnen Columns und den Gettern und Settern dafür
 
-# 5 Technische Realisierung
+## Restcountries API
+> Bei der TripDetailsActivity soll eine Liste von den Ländern angezeigt werden, welche man in diesem Trip besucht
 
-> *Beschreibt hier, wie ihr eure komplexe Komponente technisch umgesetzt habt. Zur Darstellung der technischen Umsetzung wird ein UML-Diagramm empfohlen, welches zusätzlich in Textform beschrieben wird. Erklärt kurz die wichtigsten Klassen und Methoden und deren Zusammenspiel. Eine Fachperson, welche dieses Kapitel liest, sollte schnell nachvollziehen können, wie die externe Komponente realisiert wurde.*
+### ChooseCountryActivity
+> Man kann Countries hinzufügen mit einem Klick auf den Floating Action Button in den TripDetails hinzufügen
+> Man kommt dann in diese Activity wo man eine Liste mit den Ländernamen und Flaggen sieht
+> Diese Informationen werden von der restcountries API unter [diesem Link](https://restcountries.eu/rest/v2/all) abgerufen
 
-# 6 Testing
+# Testing
 
-> *In diesem Kapitel definiert ihr die Tests die Ihr macht. 
-Es müssen minimal 5 Unit-Tests, 3 automatische UI-Tests (Espresso) und 2 manuelle UI-Tests gemacht werden. Auf die Unit-Tests und die automatischen UI-Tests soll hier verwiesen werden, die manuellen UI-Tests hier definiert werden.*
+## Manuelle UI-Tests
+> [Testing](testing.md)
 
-|Abschnitt |Inhalt  |
-|----------|--------|
-|***ID***|*Testfallnummer (ST = Systemtest)*|
-|***Anforderungen***|*Welche Anforderungen werden durch diesen Testfall abgedeckt. (User Stories)*|
-|***Vorbedingungen***|*Was muss gegeben sein, damit dieser Test durchgeführt werden kann?*|
-|***Ablauf***|*Welche Schritte werden bei der Durchführung des Tests durchlaufen?*|
-|***Erwartetes Resultat***|*Was sollte nun passiert sein?*|
+# Fazit
 
-|Abschnitt |Inhalt  |
-|----------|--------|
-|***ID***|*ST-01*|
-|***Anforderungen***|*US-01; US-03*|
-|***Vorbedingungen***|*In der Datenbank existiert ein Benutzer, welcher gesperrt ist.*|
-|***Ablauf***|*1. Die App wird gestartet damit das Login-Formular erscheint*<br>*2. Der korrekte Benutzername sowie das korrekte Passwort werden eingegeben.*<br>*3. Der Button mit dem Label „Login“ wird geklickt.*|
-|***Erwartetes Resultat***|*Ein Toast mit dem Text «Login erfolgreich» wird angezeigt. Die App wechselt zu der Ansicht mit den favorisierten Schwimmbäder.*|
-
-## 6.1 Manuelle UI-Tests
-
-> *Zusammenfassung aller durchgeführten Tests. Nur fehlgeschlagene Tests und Tests mit Bemerkungen müssen in der folgenden Tabelle aufgelistet werden.*
-
-## 6.2 Testauswertung
-
-|ID|Erfolgreich|Bemerkung|
-|--|-----------|---------|
-|***ST-01***|*Ja*|*Der Testfall war erfolgreich, der Testperson 1 ist jedoch aufgefallen, dass es in der angezeigten Fehlermeldung noch einen Rechtschreibfehler gibt.*|
-|***...***|*...*|*...*|
-||||
-
-# 7 Fazit
-
-> *Hier kommt eure Reflexion zum Projekt*
 > * *Was lief gut/schlecht?*
 > * *Wie seid ihr mit dem Ergebniss zufrieden?*
 > * *Was habt ihr gelernt?*
 > * *War alles vorhanden oder was fehlte noch?*
-> * *Usw.*
+
+## Positives 
+>
+## Negatives
+>

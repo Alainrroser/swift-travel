@@ -72,8 +72,6 @@ public class CityDetailsActivity extends UpButtonActivity implements SearchView.
 			selected = cityDao.getById(id);
 		}
 
-		selected.setDuration(selected.getDuration() * -1);
-
 		List<Day> days = createDaysFromCityDuration();
 		adapter = new DayAdapter(this, days);
 
@@ -179,7 +177,7 @@ public class CityDetailsActivity extends UpButtonActivity implements SearchView.
 
 	private List<Day> createDaysFromCityDuration() {
 		List<Day> days = new ArrayList<>();
-		for (int i = 0; i < selected.getDuration(); i++){
+		for (int i = 1; i <= selected.getDuration(); i++){
 			Day day = new Day();
 			day.setName(getString(R.string.day) + " " + i);
 			day.setCityId(selected.getId());
@@ -202,7 +200,7 @@ public class CityDetailsActivity extends UpButtonActivity implements SearchView.
 		LayoutUtils.setTextOnTextView(findViewById(R.id.city_description), selected.getDescription());
 		LayoutUtils.setTextOnTextView(findViewById(R.id.city_duration), String.valueOf(selected.getDuration()));
 		if (selected.getImageURI() != null) {
-			LayoutUtils.setOnlineImageURIOnImageView(getApplicationContext(), findViewById(R.id.country_image), selected.getImageURI());
+			//LayoutUtils.setOnlineImageURIOnImageView(getApplicationContext(), findViewById(R.id.country_image), selected.getImageURI());
 		}
 	}
 

@@ -1,24 +1,14 @@
 # Documentation
 
-## Abstract
-Swift-Travel ist ein Projekt bei dem der Benutzer seine zukünftigen Reisen planen, sowie auch seine bereits getätigten Reisen
-festhalten und später wieder betrahchten kann.
-
 ## Inhalt
 
 1. [Projektmitarbeiter](#Projektmitarbeiter)
 2. [Dokumentation](#Dokumentation)
-3. [Mockups](#Mockups)
-4. [Klassendiagramm](#Klassendiagramm)
-5. [Testfälle](#Testfälle)
-6. [Daily Scrum](#Daily-Scrum)
-7. [Definition of Done](#Definition-of-Done)
-8. [Codestyle](#Codestyle)
+3. [Daily Scrum](#Daily-Scrum)
+4. [Definition of Done](#Definition-of-Done)
+5. [Codestyle](#Codestyle)
 	1. [Code](#Code)
 	2. [JavaDoc](#JavaDoc)
-9. [Fazit](#Fazit)
-	1. [Positiv](#Positiv)
-	2. [Negativ](#Negativ)
 	
 ## Projektmitabeiter
 * [Alain Roser](https://git.bbcag.ch/brosea) (Product Owner, Team Member)
@@ -72,10 +62,3 @@ festhalten und später wieder betrahchten kann.
 * Keep empty lines 
 * Preserve line feeds
 * Parameter description on new line
-
-## Fazit 
-### Positiv 
-*
-
-### Negativ
-*

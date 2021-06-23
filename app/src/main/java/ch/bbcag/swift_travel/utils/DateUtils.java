@@ -1,23 +1,17 @@
 package ch.bbcag.swift_travel.utils;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Locale;
+import java.time.LocalDate;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
 
 public class DateUtils {
-	public static long parseDateToMillis(String dateString) throws ParseException {
-		SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yyyy", Locale.getDefault());
-		java.util.Date date = sdf.parse(dateString);
-		if (date != null) {
-			// Subtract a day in milliseconds so you can be at two locations in one day
-			date.setTime(date.getTime() - (24 * 60 * 60 * 1000));
-
-			return date.getTime();
-		}
-		return -1;
+	public static long parseDateToMillis(String dateString) {
+		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy");
+		return LocalDate.parse(dateString, formatter).atStartOfDay().atZone(ZoneId.systemDefault()).toInstant().toEpochMilli();
 	}
 
 	public static long getDaysCountFromTimeSpan(long startDate, long endDate) {
-		return (startDate - endDate) / (1000 * 60 * 60 * 24);
+		// Add a day because otherwise the last day would be missing
+		return ((endDate + 86400000) - startDate) / (1000 * 60 * 60 * 24);
 	}
 }

@@ -74,4 +74,6 @@
     <string name="location_name_hint">Location name</string>
     <string name="location_duration">Location duration</string>
     <string name="location_name">Location name</string>
+    <string name="error_default">An error occured. Please contact the developer of the app.</string>
+    <string name="error">Error!</string>
 </resources>

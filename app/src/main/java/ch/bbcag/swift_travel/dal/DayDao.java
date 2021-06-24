@@ -1,6 +1,7 @@
 package ch.bbcag.swift_travel.dal;
 
 import androidx.room.Dao;
+import androidx.room.Delete;
 import androidx.room.Insert;
 import androidx.room.Query;
 import androidx.room.Update;
@@ -24,5 +25,5 @@ public interface DayDao {
 	void update(Day day);
 
 	@Query("DELETE FROM days WHERE id = :id")
-	void delete(long id);
+	void deleteById(long id);
 }

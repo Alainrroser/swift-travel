@@ -24,5 +24,5 @@ public interface CountryDao {
 	void update(Country country);
 
 	@Query("DELETE FROM countries WHERE id = :id")
-	void delete(long id);
+	void deleteById(long id);
 }

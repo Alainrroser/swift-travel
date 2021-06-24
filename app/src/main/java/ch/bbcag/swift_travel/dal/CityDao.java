@@ -24,5 +24,5 @@ public interface CityDao {
 	void update(City city);
 
 	@Query("DELETE FROM cities WHERE id = :id")
-	void delete(long id);
+	void deleteById(long id);
 }

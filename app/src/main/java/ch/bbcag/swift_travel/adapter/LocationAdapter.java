@@ -67,7 +67,7 @@ public class LocationAdapter extends ArrayAdapter<Location> {
 		dayDetailsActivity.generateConfirmDialog(dayDetailsActivity.getString(R.string.delete_entry_title), dayDetailsActivity.getString(R.string.delete_entry_text), () -> {
 			remove(location);
 			notifyDataSetChanged();
-			SwiftTravelDatabase.getInstance(dayDetailsActivity.getApplicationContext()).getLocationDao().delete(location.getId());
+			SwiftTravelDatabase.getInstance(dayDetailsActivity.getApplicationContext()).getLocationDao().deleteById(location.getId());
 		});
 	}
 }

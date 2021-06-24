@@ -157,7 +157,7 @@ public class CreateActivity extends UpButtonActivity {
 		}
 		minutes -= timeRange.getStartMinute();
 		hours -= timeRange.getStartHour();
-		return hours + "h:" + minutes + "min";
+		return hours + ":" + minutes + "h";
 	}
 
 	private void onPositiveMaterialDatePickerClick(Pair<Long, Long> selection) {

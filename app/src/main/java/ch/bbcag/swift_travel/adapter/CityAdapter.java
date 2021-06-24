@@ -14,6 +14,8 @@ import ch.bbcag.swift_travel.R;
 import ch.bbcag.swift_travel.activities.CountryDetailsActivity;
 import ch.bbcag.swift_travel.dal.SwiftTravelDatabase;
 import ch.bbcag.swift_travel.entities.City;
+import ch.bbcag.swift_travel.entities.Day;
+import ch.bbcag.swift_travel.entities.Location;
 import ch.bbcag.swift_travel.utils.LayoutUtils;
 
 public class CityAdapter extends ArrayAdapter<City> {
@@ -68,7 +70,15 @@ public class CityAdapter extends ArrayAdapter<City> {
 		countryDetailsActivity.generateConfirmDialog(countryDetailsActivity.getString(R.string.delete_entry_title), countryDetailsActivity.getString(R.string.delete_entry_text), () -> {
 			remove(city);
 			notifyDataSetChanged();
-			SwiftTravelDatabase.getInstance(countryDetailsActivity.getApplicationContext()).getCityDao().delete(city.getId());
+			List<Day> days = SwiftTravelDatabase.getInstance(countryDetailsActivity.getApplicationContext()).getDayDao().getAllFromCity(city.getId());
+			for(Day day : days) {
+				List<Location> locations = SwiftTravelDatabase.getInstance(countryDetailsActivity.getApplicationContext()).getLocationDao().getAllFromDay(day.getId());
+				for(Location location : locations) {
+					SwiftTravelDatabase.getInstance(countryDetailsActivity.getApplicationContext()).getLocationDao().deleteById(location.getId());
+				}
+				SwiftTravelDatabase.getInstance(countryDetailsActivity.getApplicationContext()).getDayDao().deleteById(day.getId());
+			}
+			SwiftTravelDatabase.getInstance(countryDetailsActivity.getApplicationContext()).getCityDao().deleteById(city.getId());
 			countryDetailsActivity.refreshContent();
 		});
 	}

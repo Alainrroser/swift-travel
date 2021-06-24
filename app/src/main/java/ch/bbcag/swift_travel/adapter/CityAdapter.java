@@ -70,16 +70,24 @@ public class CityAdapter extends ArrayAdapter<City> {
 		countryDetailsActivity.generateConfirmDialog(countryDetailsActivity.getString(R.string.delete_entry_title), countryDetailsActivity.getString(R.string.delete_entry_text), () -> {
 			remove(city);
 			notifyDataSetChanged();
-			List<Day> days = SwiftTravelDatabase.getInstance(countryDetailsActivity.getApplicationContext()).getDayDao().getAllFromCity(city.getId());
-			for(Day day : days) {
-				List<Location> locations = SwiftTravelDatabase.getInstance(countryDetailsActivity.getApplicationContext()).getLocationDao().getAllFromDay(day.getId());
-				for(Location location : locations) {
-					SwiftTravelDatabase.getInstance(countryDetailsActivity.getApplicationContext()).getLocationDao().deleteById(location.getId());
-				}
-				SwiftTravelDatabase.getInstance(countryDetailsActivity.getApplicationContext()).getDayDao().deleteById(day.getId());
-			}
+			deleteDays(city);
 			SwiftTravelDatabase.getInstance(countryDetailsActivity.getApplicationContext()).getCityDao().deleteById(city.getId());
 			countryDetailsActivity.refreshContent();
 		});
+	}
+
+	private void deleteDays(City city){
+		List<Day> days = SwiftTravelDatabase.getInstance(countryDetailsActivity.getApplicationContext()).getDayDao().getAllFromCity(city.getId());
+		for(Day day : days) {
+			deleteLocations(day);
+			SwiftTravelDatabase.getInstance(countryDetailsActivity.getApplicationContext()).getDayDao().deleteById(day.getId());
+		}
+	}
+
+	private void deleteLocations(Day day) {
+		List<Location> locations = SwiftTravelDatabase.getInstance(countryDetailsActivity.getApplicationContext()).getLocationDao().getAllFromDay(day.getId());
+		for(Location location : locations) {
+			SwiftTravelDatabase.getInstance(countryDetailsActivity.getApplicationContext()).getLocationDao().deleteById(location.getId());
+		}
 	}
 }

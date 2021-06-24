@@ -67,7 +67,7 @@ public class LocationDetailsActivity extends UpButtonActivity {
 		long id = getIntent().getLongExtra(Const.LOCATION, -1);
 		if (id != -1) {
 			selected = locationDao.getById(id);
-			throw new RuntimeException("Runtime Exception test");
+//			throw new RuntimeException("Runtime Exception test");
 		}
 
 		editTitle.setText(selected.getName());

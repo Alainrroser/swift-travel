@@ -16,10 +16,9 @@ public class BaseActivity extends AppCompatActivity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
-		Thread.setDefaultUncaughtExceptionHandler((t, e) -> {
+//		Thread.setDefaultUncaughtExceptionHandler((t, e) -> {
 //			generateMessageDialogAndCloseApp(getString(R.string.error), getString(R.string.error_default));
-			System.out.println("hello");
-		});
+//		});
 	}
 
 	@Override

@@ -54,8 +54,8 @@ public class CountryAdapter extends ArrayAdapter<Country> {
 		viewHolder.delete.setOnClickListener(v -> generateConfirmDialog(country));
 
 		viewHolder.name.setText(country.getName());
-		String duration = "";
-		if(country.getDuration() == 1) {
+		String duration;
+		if (country.getDuration() == 1) {
 			duration = country.getDuration() + " " + tripDetailsActivity.getString(R.string.day);
 		} else {
 			duration = country.getDuration() + " " + tripDetailsActivity.getString(R.string.days_title);

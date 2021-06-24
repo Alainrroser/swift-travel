@@ -58,8 +58,8 @@ public class TripAdapter extends ArrayAdapter<Trip> {
 		viewHolder.name.setText(trip.getName());
 		viewHolder.destination.setText(trip.getDestination());
 
-		String duration = "";
-		if(trip.getDuration() == 1) {
+		String duration;
+		if (trip.getDuration() == 1) {
 			duration = trip.getDuration() + " " + mainActivity.getString(R.string.day);
 		} else {
 			duration = trip.getDuration() + " " + mainActivity.getString(R.string.days_title);

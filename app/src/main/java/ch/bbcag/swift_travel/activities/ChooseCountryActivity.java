@@ -37,6 +37,7 @@ public class ChooseCountryActivity extends UpButtonActivity implements SearchVie
 
 	private List<Country> addedCountries;
 	private boolean countryWasAdded = false;
+	private boolean countriesLoaded = false;
 
 	private CountryDao countryDao;
 
@@ -112,7 +113,7 @@ public class ChooseCountryActivity extends UpButtonActivity implements SearchVie
 		searchItem.setOnActionExpandListener(new MenuItem.OnActionExpandListener() {
 			@Override
 			public boolean onMenuItemActionExpand(MenuItem item) {
-				return true;
+				return countriesLoaded;
 			}
 
 			@Override
@@ -144,6 +145,7 @@ public class ChooseCountryActivity extends UpButtonActivity implements SearchVie
 		allCountries.setAdapter(adapter);
 		onCountryClick(allCountries);
 		getProgressBar().setVisibility(View.GONE);
+		countriesLoaded = true;
 	}
 
 	private boolean isNetworkAvailable() {

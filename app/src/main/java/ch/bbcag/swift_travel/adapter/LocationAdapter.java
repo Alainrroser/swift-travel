@@ -54,8 +54,8 @@ public class LocationAdapter extends ArrayAdapter<Location> {
 		viewHolder.delete.setOnClickListener(v -> generateConfirmDialog(location));
 
 		viewHolder.name.setText(location.getName());
-		String duration = "";
-		if(location.getDuration() == 1) {
+		String duration;
+		if (location.getDuration() == 1) {
 			duration = location.getDuration() + " " + dayDetailsActivity.getString(R.string.hour);
 		} else {
 			duration = location.getDuration() + " " + dayDetailsActivity.getString(R.string.hours);

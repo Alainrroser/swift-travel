@@ -28,7 +28,6 @@ import ch.bbcag.swift_travel.entities.City;
 import ch.bbcag.swift_travel.entities.Location;
 import ch.bbcag.swift_travel.entities.Trip;
 import ch.bbcag.swift_travel.utils.Const;
-import zion830.com.range_picker_dialog.TimeRange;
 import zion830.com.range_picker_dialog.TimeRangePickerDialog;
 
 public class CreateActivity extends UpButtonActivity {
@@ -90,7 +89,7 @@ public class CreateActivity extends UpButtonActivity {
 			cityDuration.setVisibility(View.VISIBLE);
 			locationDuration.setVisibility(View.GONE);
 			setDatePicker();
-		} else if(getIntent().getBooleanExtra(Const.ADD_LOCATION, false)) {
+		} else if (getIntent().getBooleanExtra(Const.ADD_LOCATION, false)) {
 			cityDuration.setVisibility(View.GONE);
 			locationDuration.setVisibility(View.VISIBLE);
 			setTimePicker();
@@ -147,21 +146,21 @@ public class CreateActivity extends UpButtonActivity {
 	}
 
 	private String addZeroToHour(int hour) {
-		if(hour < 10) {
+		if (hour < 10) {
 			return "0" + hour;
 		}
 		return String.valueOf(hour);
 	}
 
 	private String addZeroToMinute(int minute) {
-		if(minute == 0) {
+		if (minute == 0) {
 			return "00";
 		}
 		return String.valueOf(minute);
 	}
 
 	private int getHourForAmPm(int hour) {
-		if(hour > 12) {
+		if (hour > 12) {
 			return hour + 12;
 		}
 		return hour;
@@ -212,7 +211,7 @@ public class CreateActivity extends UpButtonActivity {
 	}
 
 	private void startDayDetailsIfTimeSelected() {
-		if(timeSelected) {
+		if (timeSelected) {
 			startDayDetails();
 		} else {
 			durationTime.requestFocus();

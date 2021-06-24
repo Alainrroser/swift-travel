@@ -18,6 +18,7 @@
         android:layout_height="120dp"
         android:layout_marginStart="16dp"
         android:layout_marginTop="16dp"
+        android:background="@android:color/transparent"
         android:contentDescription="@string/place_holder_image"
         android:scaleType="fitCenter"
         android:src="@drawable/placeholder_flag"

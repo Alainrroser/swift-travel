@@ -39,6 +39,7 @@ dependencies {
     implementation 'com.caverock:androidsvg-aar:1.4'
     implementation 'androidx.room:room-runtime:2.3.0'
     implementation 'org.geonames:geonames:1.0'
+    implementation 'com.github.zion830:RangeTimePickerDialog:1.2'
 
     testImplementation 'junit:junit:4.13.2'
 

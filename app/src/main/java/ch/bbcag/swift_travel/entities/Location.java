@@ -5,6 +5,7 @@ import androidx.room.ColumnInfo;
 import androidx.room.Entity;
 import androidx.room.Ignore;
 import androidx.room.PrimaryKey;
+import androidx.room.RewriteQueriesToDropUnusedColumns;
 
 @Entity(tableName = "locations")
 public class Location {
@@ -17,10 +18,14 @@ public class Location {
 	private String description;
 	@ColumnInfo(name = "imageURI")
 	private String imageURI;
+	@ColumnInfo(name = "startTime")
+	private String startTime;
+	@ColumnInfo(name = "endTime")
+	private String endTime;
+	@ColumnInfo(name = "duration")
+	private long duration;
 	@ColumnInfo(name = "dayId")
 	private long dayId;
-	@Ignore
-	private String duration;
 
 	public Location() {
 	}
@@ -55,11 +60,27 @@ public class Location {
 		this.description = description;
 	}
 
-	public String getDuration() {
+	public String getStartTime() {
+		return startTime;
+	}
+
+	public void setStartTime(String startTime) {
+		this.startTime = startTime;
+	}
+
+	public String getEndTime() {
+		return endTime;
+	}
+
+	public void setEndTime(String endTime) {
+		this.endTime = endTime;
+	}
+
+	public long getDuration() {
 		return duration;
 	}
 
-	public void setDuration(String duration) {
+	public void setDuration(long duration) {
 		this.duration = duration;
 	}
 

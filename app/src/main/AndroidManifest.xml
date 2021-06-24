@@ -12,6 +12,7 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.SwiftTravel"
         android:usesCleartextTraffic="true">
+        <activity android:name=".activities.LocationDetailsActivity"></activity>
         <activity android:name=".activities.DayDetailsActivity" />
         <activity android:name=".activities.CityDetailsActivity" />
         <activity android:name=".activities.ChooseCountryActivity" />

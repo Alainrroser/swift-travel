@@ -7,6 +7,9 @@ public class Const {
 	public static final String IMAGE_URI = "imageURI";
 	public static final String START_DATE = "startDate";
 	public static final String END_DATE = "endDate";
+	public static final String START_TIME = "startTime";
+	public static final String END_TIME = "endTime";
+	public static final String TIME_DURATION = "timeDuration";
 
 	public static final String CREATE_TITLE = "create";
 	public static final String CHOOSE_TITLE = "choose";

@@ -163,7 +163,7 @@ public class DayDetailsActivity extends UpButtonActivity implements SearchView.O
 		locations.setAdapter(adapter);
 
 		AdapterView.OnItemClickListener mListClickedHandler = (parent, v, position, id) -> {
-			Intent intent = new Intent(getApplicationContext(), CityDetailsActivity.class);
+			Intent intent = new Intent(getApplicationContext(), LocationDetailsActivity.class);
 			Location selected = (Location) parent.getItemAtPosition(position);
 			intent.putExtra(Const.LOCATION_NAME, selected.getName());
 			intent.putExtra(Const.LOCATION, selected.getId());
@@ -180,9 +180,13 @@ public class DayDetailsActivity extends UpButtonActivity implements SearchView.O
 		Location location = new Location();
 		if (intent.getStringExtra(Const.LOCATION_NAME) != null && intent.getBooleanExtra(Const.ADD_LOCATION, false)) {
 			intent.removeExtra(Const.ADD_LOCATION);
+
 			location.setName(intent.getStringExtra(Const.LOCATION_NAME));
 			location.setDescription(intent.getStringExtra(Const.LOCATION_DESCRIPTION));
 			location.setImageURI(intent.getStringExtra(Const.IMAGE_URI));
+			location.setStartTime(intent.getStringExtra(Const.START_TIME));
+			location.setEndTime(intent.getStringExtra(Const.END_TIME));
+			location.setDuration(intent.getLongExtra(Const.TIME_DURATION, -1));
 			location.setDayId(selected.getId());
 			long id = locationDao.insert(location);
 			location.setId(id);

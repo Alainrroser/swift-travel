@@ -23,6 +23,11 @@
     <string name="internet_connection_error_title">Internetverbindungsfehler</string>
     <string name="internet_connection_error_text">Du musst mit dem Internet verbunden sein um ein Land hinzuzufügen, versuche es später erneut</string>
 
+    <string name="duration_error">Du musst eine Aufenthaltszeitspanne wählen</string>
+
+    <string name="hour">Hour</string>
+    <string name="hours">Hours</string>
+
     <string name="delete">Löschen</string>
     <string name="delete_entry_title">Eintrag löschen</string>
     <string name="delete_entry_text">Willst du diesen Eintrag wirklich löschen?</string>
@@ -53,7 +58,6 @@
     <string name="city_description_hint">Beschreibung der Stadt</string>
     <string name="city_duration">Länge des Aufenthaltes</string>
     <string name="select_city_duration">Länge des Aufenthaltes in dieser Stadt wählen</string>
-    <string name="city_duration_error">Du musst eine Aufenthaltszeitspanne wählen</string>
     <string name="select_city_duration_title">Wählen sie die Zeitspanne des Aufenthaltes</string>
     <string name="duration_parse_error_title">Zeitspanne</string>
     <string name="duration_parse_error_text">Bei den Zeitspannen ist ein Fehler aufgetreten, versuche es später erneut</string>

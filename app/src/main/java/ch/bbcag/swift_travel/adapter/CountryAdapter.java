@@ -54,7 +54,12 @@ public class CountryAdapter extends ArrayAdapter<Country> {
 		viewHolder.delete.setOnClickListener(v -> generateConfirmDialog(country));
 
 		viewHolder.name.setText(country.getName());
-		String duration = country.getDuration() + " " + getContext().getString(R.string.days_title);
+		String duration = "";
+		if(country.getDuration() == 1) {
+			duration = country.getDuration() + " " + tripDetailsActivity.getString(R.string.day);
+		} else {
+			duration = country.getDuration() + " " + tripDetailsActivity.getString(R.string.days_title);
+		}
 		viewHolder.duration.setText(duration);
 		LayoutUtils.setOnlineImageURIOnImageView(getContext(), viewHolder.image, country.getImageURI());
 		return convertView;

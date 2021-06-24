@@ -58,6 +58,8 @@ public class CityAdapter extends ArrayAdapter<City> {
 		viewHolder.duration.setText(dateRange);
 		if (city.getImageURI() != null) {
 			LayoutUtils.setImageURIOnImageView(viewHolder.image, city.getImageURI());
+		} else {
+			viewHolder.image.setImageResource(R.drawable.trip_placeholder);
 		}
 		return convertView;
 	}

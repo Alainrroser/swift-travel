@@ -22,6 +22,11 @@
     <string name="internet_connection_error_title">Internet connection error</string>
     <string name="internet_connection_error_text">You have to be connected to the internet to add a country, try again later</string>
 
+    <string name="duration_error">You have to select a duration</string>
+
+    <string name="hour">Hour</string>
+    <string name="hours">Hours</string>
+
     <string name="entry_exists_error_title">Entry exists</string>
     <string name="entry_exists_error_text">The entry you wanted to add exists already</string>
     <string name="add_entry_to_list_error_title">List entries</string>
@@ -52,7 +57,6 @@
     <string name="city_description_hint">City description</string>
     <string name="city_duration">Duration in city</string>
     <string name="select_city_duration">Select duration in city</string>
-    <string name="city_duration_error">You have to select a duration</string>
     <string name="select_city_duration_title">Select a date range</string>
     <string name="duration_parse_error_title">Duration</string>
     <string name="duration_parse_error_text">An error occurred with the durations, try again later</string>
@@ -65,5 +69,5 @@
     <string name="day_date">Date of the day</string>
 
     <string name="create_location_title">Create Location</string>
-    $<string name="select_location_duration">Select duration in Location</string>
+    <string name="select_location_duration">Select duration in Location</string>
 </resources>

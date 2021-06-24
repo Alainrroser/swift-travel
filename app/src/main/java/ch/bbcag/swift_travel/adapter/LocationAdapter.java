@@ -27,7 +27,7 @@ public class LocationAdapter extends ArrayAdapter<Location> {
 	}
 
 	public LocationAdapter(DayDetailsActivity dayDetailsActivity, List<Location> locations) {
-		super(dayDetailsActivity, R.layout.three_line_list, locations);
+		super(dayDetailsActivity, R.layout.two_line_list, locations);
 		this.dayDetailsActivity = dayDetailsActivity;
 	}
 
@@ -39,7 +39,7 @@ public class LocationAdapter extends ArrayAdapter<Location> {
 		if (convertView == null) {
 			viewHolder = new LocationAdapterViewHolder();
 			LayoutInflater inflater = LayoutInflater.from(dayDetailsActivity);
-			convertView = inflater.inflate(R.layout.three_line_list, parent, false);
+			convertView = inflater.inflate(R.layout.two_line_list, parent, false);
 
 			viewHolder.name = convertView.findViewById(R.id.name_two_line_list);
 			viewHolder.duration = convertView.findViewById(R.id.duration_two_line_list);
@@ -54,8 +54,18 @@ public class LocationAdapter extends ArrayAdapter<Location> {
 		viewHolder.delete.setOnClickListener(v -> generateConfirmDialog(location));
 
 		viewHolder.name.setText(location.getName());
-		viewHolder.duration.setText(location.getDuration());
-		LayoutUtils.setOnlineImageURIOnImageView(getContext(), viewHolder.image, location.getImageURI());
+		String duration = "";
+		if(location.getDuration() == 1) {
+			duration = location.getDuration() + " " + dayDetailsActivity.getString(R.string.hour);
+		} else {
+			duration = location.getDuration() + " " + dayDetailsActivity.getString(R.string.hours);
+		}
+		viewHolder.duration.setText(duration);
+		if (location.getImageURI() != null) {
+			LayoutUtils.setImageURIOnImageView(viewHolder.image, location.getImageURI());
+		} else {
+			viewHolder.image.setImageResource(R.drawable.trip_placeholder);
+		}
 		return convertView;
 	}
 

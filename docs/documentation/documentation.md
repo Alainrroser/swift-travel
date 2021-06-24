@@ -95,21 +95,21 @@
 ## Mockups
 
 > ***1. Trips***  
-> [Trips](../docs/images/Trips.png)
+> ![Trips](../designs/images/Trips.png)  
 > Dies ist die Startactivity. Man hat hier die Möglichkeit mithilfe eines Floating Action Buttons Reisen hinzuzufügen, welche dann in einer Liste angezeigt werden.
 
 > ***2.	Tripdetails***  
-> ![Tripdetails](../docs/images/TripDetails.png)
+> ![Tripdetails](../designs/images/TripDetails.png)  
 > In diese kommt man, indem man einen Eintrag der Liste der ersten Activity anklickt. Hier hat man zuerst Informationen zum Trip, welche man auch bearbeiten kann
 > Darunter ist ebenfalls eine Liste, diesmal aber mit allen Ländern, welche man in diesem Trip besucht und auch hier hat es einen Floating Action Button, mitwelchem man Länder hinzufügen kann
 
 > ***3. Sign In***   
-> ![ChooseCountry](../docs/images/ChooseCountry.png)
+> ![ChooseCountry](../designs/images/ChooseCountry.png)  
 > In diese Activity kommt man durch den Klick auf den Floating Action der TripDetailsActivity klickt
 > Sie beinhaltet eine Liste mit allen Ländern, welche man auch durchsuchen kann, welche man dann zu der Liste der Länder im Trip der TripDetailsActivity hinzufügen kann
 
 ## Klassendiagramm
-![Klassendiagramm](../docs/images/uml.png)
+![Klassendiagramm](../designs/images/Klassendiagramm.png)
 
 # Technische Realisierung
 
@@ -137,11 +137,7 @@
 
 # Testing
 
-## Manuelle UI-Tests
 > [Testing](testing.md)
-
-## Testauswertung
->
 
 # Fazit
 

@@ -46,7 +46,7 @@ public class LayoutUtils {
 	}
 
 	public static void setEditableDescriptionText(TextView descriptionTextView, EditText editTextBox, String text) {
-		setTextOnTextView(descriptionTextView, text);
+		setTextOnTextView(descriptionTextView, editTextBox.getText().toString());
 		emptyMessageOnEmptyTextView(descriptionTextView);
 		descriptionTextView.setMovementMethod(new ScrollingMovementMethod());
 		setTextOnEditText(editTextBox, text);

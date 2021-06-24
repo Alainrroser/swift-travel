@@ -8,17 +8,18 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.SearchView;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.constraintlayout.widget.Group;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
-import java.time.Duration;
-import java.util.Comparator;
 import java.util.List;
 
 import ch.bbcag.swift_travel.R;
@@ -44,6 +45,13 @@ public class CountryDetailsActivity extends UpButtonActivity implements SearchVi
 	private FloatingActionButton floatingActionButton;
 	private ImageButton editDescriptionButton;
 	private Button submitButton;
+
+	private TextView titleText;
+	private TextView durationText;
+	private TextView descriptionText;
+	private EditText editDescription;
+	private ImageView countryImage;
+
 	private CityAdapter adapter;
 
 	private Country selected;
@@ -67,6 +75,12 @@ public class CountryDetailsActivity extends UpButtonActivity implements SearchVi
 		cityDao = SwiftTravelDatabase.getInstance(getApplicationContext()).getCityDao();
 		dayDao = SwiftTravelDatabase.getInstance(getApplicationContext()).getDayDao();
 
+		titleText = findViewById(R.id.country_title);
+		durationText = findViewById(R.id.country_duration);
+		descriptionText = findViewById(R.id.country_description);
+		editDescription = findViewById(R.id.edit_description);
+		countryImage = findViewById(R.id.country_image);
+
 		submitButton = findViewById(R.id.city_submit_button);
 		editDescriptionButton = findViewById(R.id.edit_button);
 		floatingActionButton = findViewById(R.id.floating_action_button_country_details);
@@ -75,7 +89,6 @@ public class CountryDetailsActivity extends UpButtonActivity implements SearchVi
 	@Override
 	protected void onStart() {
 		super.onStart();
-		getProgressBar().setVisibility(View.VISIBLE);
 
 		long id = getIntent().getLongExtra(Const.COUNTRY, -1);
 		if (id != -1) {
@@ -87,6 +100,8 @@ public class CountryDetailsActivity extends UpButtonActivity implements SearchVi
 
 		createCityFromIntent();
 		addCitiesToClickableList();
+
+		editDescription.setText(selected.getDescription());
 
 		refreshContent();
 
@@ -287,13 +302,15 @@ public class CountryDetailsActivity extends UpButtonActivity implements SearchVi
 	}
 
 	public void refreshContent() {
-		LayoutUtils.setTitleText(findViewById(R.id.country_title), selected.getName());
-		setTitle(selected.getName());
-		LayoutUtils.setEditableDescriptionText(findViewById(R.id.country_description), findViewById(R.id.edit_description), selected.getDescription());
-		LayoutUtils.setTextOnTextView(findViewById(R.id.country_duration), getCountryDuration() + " " + getString(R.string.days_title));
+		LayoutUtils.setTitleText(titleText, selected.getName());
+		LayoutUtils.setEditableDescriptionText(descriptionText, editDescription, selected.getDescription());
+		LayoutUtils.setTextOnTextView(durationText, getCountryDuration() + " " + getString(R.string.days_title));
 		if (selected.getImageURI() != null && !selected.getImageURI().isEmpty()) {
-			LayoutUtils.setOnlineImageURIOnImageView(getApplicationContext(), findViewById(R.id.country_image), selected.getImageURI());
+			LayoutUtils.setOnlineImageURIOnImageView(getApplicationContext(), countryImage, selected.getImageURI());
 		}
+
+		selected.setDescription(descriptionText.getText().toString());
+		countryDao.update(selected);
 	}
 
 	private long getCountryDuration() {

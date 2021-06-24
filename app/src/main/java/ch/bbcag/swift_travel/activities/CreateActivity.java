@@ -133,6 +133,7 @@ public class CreateActivity extends UpButtonActivity {
 		materialDatePicker.addOnNegativeButtonClickListener(selection -> datePickerOpened = false);
 	}
 
+
 	private void setTimePicker() {
 		selectDurationTime.setOnClickListener(v -> timeRangePickerDialog.show(getSupportFragmentManager(), timeRangePickerDialog.toString()));
 		timeRangePickerDialog.setOnTimeRangeSelectedListener(timeRange -> {

@@ -10,8 +10,10 @@ import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.SearchView;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.constraintlayout.widget.Group;
@@ -37,6 +39,13 @@ public class CityDetailsActivity extends UpButtonActivity implements SearchView.
 	private Button submitButton;
 	private DayAdapter adapter;
 
+	private TextView titleText;
+	private TextView durationText;
+	private TextView descriptionText;
+	private EditText editTitle;
+	private EditText editDescription;
+	private ImageView cityImage;
+
 	private City selected;
 
 	private CityDao cityDao;
@@ -54,6 +63,13 @@ public class CityDetailsActivity extends UpButtonActivity implements SearchView.
 		cityDao = SwiftTravelDatabase.getInstance(getApplicationContext()).getCityDao();
 		dayDao = SwiftTravelDatabase.getInstance(getApplicationContext()).getDayDao();
 
+		titleText = findViewById(R.id.city_title);
+		durationText = findViewById(R.id.city_duration);
+		descriptionText = findViewById(R.id.city_description);
+		editTitle = findViewById(R.id.edit_title);
+		editDescription = findViewById(R.id.edit_description);
+		cityImage = findViewById(R.id.city_image);
+
 		submitButton = findViewById(R.id.city_submit_button);
 		editDescriptionButton = findViewById(R.id.edit_button);
 	}
@@ -61,7 +77,6 @@ public class CityDetailsActivity extends UpButtonActivity implements SearchView.
 	@Override
 	protected void onStart() {
 		super.onStart();
-		getProgressBar().setVisibility(View.VISIBLE);
 
 		long id = getIntent().getLongExtra(Const.CITY, -1);
 		if (id != -1) {
@@ -72,6 +87,9 @@ public class CityDetailsActivity extends UpButtonActivity implements SearchView.
 		adapter = new DayAdapter(this, days);
 
 		addDaysToClickableList();
+
+		editTitle.setText(selected.getName());
+		editDescription.setText(selected.getDescription());
 
 		refreshContent();
 
@@ -179,17 +197,22 @@ public class CityDetailsActivity extends UpButtonActivity implements SearchView.
 	}
 
 	private void refreshContent() {
-		LayoutUtils.setEditableTitleText(findViewById(R.id.city_title), findViewById(R.id.edit_title), selected.getName());
-		setTitle(selected.getName());
-		LayoutUtils.setEditableDescriptionText(findViewById(R.id.city_description), findViewById(R.id.edit_description), selected.getDescription());
-		LayoutUtils.setTextOnTextView(findViewById(R.id.city_duration), selected.getDuration() + " " + getString(R.string.days_title));
+		LayoutUtils.setEditableTitleText(titleText, editTitle, selected.getName());
+		LayoutUtils.setEditableDescriptionText(descriptionText, editDescription, selected.getDescription());
+		LayoutUtils.setTextOnTextView(durationText, selected.getDuration() + " " + getString(R.string.days_title));
 		if (selected.getImageURI() != null && !selected.getImageURI().isEmpty()) {
-			LayoutUtils.setImageURIOnImageView(findViewById(R.id.city_image), selected.getImageURI());
+			LayoutUtils.setImageURIOnImageView(cityImage, selected.getImageURI());
 		}
+
+		selected.setDescription(descriptionText.getText().toString());
+		selected.setName(titleText.getText().toString());
+
+		setTitle(selected.getName());
+
+		cityDao.update(selected);
 	}
 
 	private void editDescription() {
-		EditText editDescription = findViewById(R.id.edit_description);
 		if (editDescription.getText() != null && !editDescription.getText().toString().isEmpty()) {
 			selected.setDescription(editDescription.getText().toString());
 			cityDao.update(selected);

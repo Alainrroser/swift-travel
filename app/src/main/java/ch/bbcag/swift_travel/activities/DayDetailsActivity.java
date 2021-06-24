@@ -8,9 +8,12 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.SearchView;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.constraintlayout.widget.Group;
@@ -38,6 +41,13 @@ public class DayDetailsActivity extends UpButtonActivity implements SearchView.O
 	private FloatingActionButton floatingActionButton;
 	private LocationAdapter adapter;
 
+	private TextView titleText;
+	private TextView dateText;
+	private TextView descriptionText;
+	private EditText editTitle;
+	private EditText editDescription;
+	private ImageView dayImage;
+
 	private Day selected;
 
 	private DayDao dayDao;
@@ -55,6 +65,13 @@ public class DayDetailsActivity extends UpButtonActivity implements SearchView.O
 		dayDao = SwiftTravelDatabase.getInstance(getApplicationContext()).getDayDao();
 		locationDao = SwiftTravelDatabase.getInstance(getApplicationContext()).getLocationDao();
 
+		titleText = findViewById(R.id.day_title);
+		dateText = findViewById(R.id.day_duration);
+		descriptionText = findViewById(R.id.day_description);
+		editTitle = findViewById(R.id.edit_title);
+		editDescription = findViewById(R.id.edit_description);
+		dayImage = findViewById(R.id.day_image);
+
 		submitButton = findViewById(R.id.day_submit_button);
 		floatingActionButton = findViewById(R.id.floating_action_button_day_details);
 		editDescriptionButton = findViewById(R.id.edit_button);
@@ -63,7 +80,6 @@ public class DayDetailsActivity extends UpButtonActivity implements SearchView.O
 	@Override
 	protected void onStart() {
 		super.onStart();
-		getProgressBar().setVisibility(View.VISIBLE);
 
 		long id = getIntent().getLongExtra(Const.DAY, -1);
 		if (id != -1) {
@@ -75,6 +91,9 @@ public class DayDetailsActivity extends UpButtonActivity implements SearchView.O
 
 		createLocationFromIntent();
 		addLocationsToClickableList();
+
+		editTitle.setText(selected.getName());
+		editDescription.setText(selected.getDescription());
 
 		refreshContent();
 
@@ -213,14 +232,20 @@ public class DayDetailsActivity extends UpButtonActivity implements SearchView.O
 	}
 
 	public void refreshContent() {
-		LayoutUtils.setTitleText(findViewById(R.id.day_title), selected.getName());
-		setTitle(selected.getName());
-		LayoutUtils.setEditableDescriptionText(findViewById(R.id.day_description), findViewById(R.id.edit_description), selected.getDescription());
+		LayoutUtils.setEditableTitleText(titleText, editTitle, selected.getName());
+		LayoutUtils.setEditableDescriptionText(descriptionText, editDescription, selected.getDescription());
 		//TODO
 		LayoutUtils.setTextOnTextView(findViewById(R.id.day_duration), "TODO");
 		if (selected.getImageURI() != null) {
-			LayoutUtils.setOnlineImageURIOnImageView(getApplicationContext(), findViewById(R.id.day_image), selected.getImageURI());
+			LayoutUtils.setOnlineImageURIOnImageView(getApplicationContext(), dayImage, selected.getImageURI());
 		}
+
+		selected.setDescription(descriptionText.getText().toString());
+		selected.setName(titleText.getText().toString());
+
+		setTitle(selected.getName());
+
+		dayDao.update(selected);
 	}
 
 	private void toggleForm() {

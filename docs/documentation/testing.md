@@ -2,7 +2,7 @@
 
 ## Testing
 
-Version 1.0.0, 23. Juni 2021 | Alain Roser, Jan Henke
+> Version 1.0.0, 23. Juni 2021 | Alain Roser, Jan Henke
 
 ## Inhalt
 
@@ -117,12 +117,12 @@ Erwartetes Resultat |	Die Stadt wird nicht hinzugefügt und es wird eine Fehlerm
 
 ### 2.1 'Name Testperson'
 
-Datum, Zeit: 'Datum' 'Zeit'
+> Datum, Zeit: 'Datum' 'Zeit'
 
-Eingesetzte Software: 'Android Version', 'Projektversion', 'Gerätename'
+> Eingesetzte Software: Android 10, Swift-Travel, Nexus 5X
 
 ID      |   Erfolgreich   | Bemerkungen
 --------|-----------------|---------------------------------------------
-ST-01   | 	Ja  		  |
+ST-01   | 	Ja/Nein 	  |
 
-Unterschrift der Testperson: 'Unterschrift'
+> Unterschrift der Testperson: 'Unterschrift'

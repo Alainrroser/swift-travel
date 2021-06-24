@@ -23,7 +23,7 @@ import ch.bbcag.swift_travel.utils.LayoutUtils;
 public class TripAdapter extends ArrayAdapter<Trip> {
 	private MainActivity mainActivity;
 
-	public static class TripViewHolder {
+	public static class TripAdapterViewHolder {
 		TextView name;
 		TextView destination;
 		TextView duration;
@@ -39,10 +39,10 @@ public class TripAdapter extends ArrayAdapter<Trip> {
 	@Override
 	public View getView(int position, View convertView, ViewGroup parent) {
 		final Trip trip = getItem(position);
-		final TripViewHolder viewHolder;
+		final TripAdapterViewHolder viewHolder;
 
 		if (convertView == null) {
-			viewHolder = new TripViewHolder();
+			viewHolder = new TripAdapterViewHolder();
 			LayoutInflater inflater = LayoutInflater.from(mainActivity);
 			convertView = inflater.inflate(R.layout.three_line_list, parent, false);
 
@@ -54,9 +54,14 @@ public class TripAdapter extends ArrayAdapter<Trip> {
 
 			convertView.setTag(viewHolder);
 		} else {
-			viewHolder = (TripViewHolder) convertView.getTag();
+			viewHolder = (TripAdapterViewHolder) convertView.getTag();
 		}
 
+		addInformationToAdapter(viewHolder, trip);
+		return convertView;
+	}
+
+	private void addInformationToAdapter(TripAdapterViewHolder viewHolder, Trip trip) {
 		viewHolder.delete.setOnClickListener(v -> generateConfirmDialog(trip));
 
 		viewHolder.name.setText(trip.getName());
@@ -66,7 +71,7 @@ public class TripAdapter extends ArrayAdapter<Trip> {
 		if (trip.getDuration() == 1) {
 			duration = trip.getDuration() + " " + mainActivity.getString(R.string.day);
 		} else {
-			duration = trip.getDuration() + " " + mainActivity.getString(R.string.days_title);
+			duration = trip.getDuration() + " " + mainActivity.getString(R.string.days);
 		}
 		viewHolder.duration.setText(duration);
 		if (trip.getImageURI() != null) {
@@ -74,7 +79,6 @@ public class TripAdapter extends ArrayAdapter<Trip> {
 		} else {
 			viewHolder.image.setImageResource(R.drawable.trip_placeholder);
 		}
-		return convertView;
 	}
 
 	private void generateConfirmDialog(Trip trip) {
@@ -89,7 +93,7 @@ public class TripAdapter extends ArrayAdapter<Trip> {
 
 	private void deleteCountries(Trip trip) {
 		List<Country> countries = SwiftTravelDatabase.getInstance(mainActivity.getApplicationContext()).getCountryDao().getAllFromTrip(trip.getId());
-		for(Country country : countries) {
+		for (Country country : countries) {
 			deleteCities(country);
 			SwiftTravelDatabase.getInstance(mainActivity.getApplicationContext()).getCountryDao().deleteById(country.getId());
 		}
@@ -97,7 +101,7 @@ public class TripAdapter extends ArrayAdapter<Trip> {
 
 	private void deleteCities(Country country) {
 		List<City> cities = SwiftTravelDatabase.getInstance(mainActivity.getApplicationContext()).getCityDao().getAllFromCountry(country.getId());
-		for(City city : cities){
+		for (City city : cities) {
 			deleteDays(city);
 			SwiftTravelDatabase.getInstance(mainActivity.getApplicationContext()).getCityDao().deleteById(city.getId());
 		}
@@ -105,7 +109,7 @@ public class TripAdapter extends ArrayAdapter<Trip> {
 
 	private void deleteDays(City city) {
 		List<Day> days = SwiftTravelDatabase.getInstance(mainActivity.getApplicationContext()).getDayDao().getAllFromCity(city.getId());
-		for(Day day : days) {
+		for (Day day : days) {
 			deleteLocations(day);
 			SwiftTravelDatabase.getInstance(mainActivity.getApplicationContext()).getDayDao().deleteById(day.getId());
 		}
@@ -113,7 +117,7 @@ public class TripAdapter extends ArrayAdapter<Trip> {
 
 	private void deleteLocations(Day day) {
 		List<Location> locations = SwiftTravelDatabase.getInstance(mainActivity.getApplicationContext()).getLocationDao().getAllFromDay(day.getId());
-		for(Location location : locations) {
+		for (Location location : locations) {
 			SwiftTravelDatabase.getInstance(mainActivity.getApplicationContext()).getLocationDao().deleteById(location.getId());
 		}
 	}

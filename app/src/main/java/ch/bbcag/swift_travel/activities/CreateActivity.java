@@ -125,7 +125,7 @@ public class CreateActivity extends UpButtonActivity {
 	}
 
 	private void setDatePicker() {
-		MaterialDatePicker.Builder<Pair<Long, Long>> materialDateBuilder = MaterialDatePicker.Builder.dateRangePicker().setTitleText(getString(R.string.select_city_duration_title));
+		MaterialDatePicker.Builder<Pair<Long, Long>> materialDateBuilder = MaterialDatePicker.Builder.dateRangePicker().setTitleText(getString(R.string.select_city_duration));
 		materialDatePicker = materialDateBuilder.build();
 
 		selectDurationDate.setOnClickListener(v -> showDatePickerIfClosed());
@@ -151,7 +151,7 @@ public class CreateActivity extends UpButtonActivity {
 	private String getDuration(TimeRange timeRange) {
 		int hours = timeRange.getEndHour();
 		int minutes = timeRange.getEndMinute();
-		if(timeRange.getStartMinute() > timeRange.getEndMinute()) {
+		if (timeRange.getStartMinute() > timeRange.getEndMinute()) {
 			hours -= 1;
 			minutes += 60;
 		}
@@ -181,7 +181,7 @@ public class CreateActivity extends UpButtonActivity {
 		if (Objects.requireNonNull(nameEdit.getText()).toString().length() > 0 && Objects.requireNonNull(nameEdit.getText()).toString().length() <= 40) {
 			startActivity();
 		} else {
-			nameLayout.setError(getString(R.string.trip_name_error));
+			nameLayout.setError(getString(R.string.length_error));
 		}
 	}
 

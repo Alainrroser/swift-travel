@@ -1,37 +1,12 @@
 <resources>
     <string name="app_name">Swift-Travel</string>
 
-    <string name="trips_title">Trips</string>
-    <string name="create_trip_title">Create Trip</string>
-    <string name="trip_name">Trip name</string>
-    <string name="trip_destination">Destination</string>
-    <string name="trip_duration">Duration</string>
-    <string name="trip_name_hint">Trip Name</string>
-    <string name="trip_name_error">Check the input length</string>
-    <string name="trip_create_button_text">Create</string>
-    <string name="add_trip">Add Trip</string>
-
-    <string name="create">Create</string>
-    <string name="search">Search</string>
-    <string name="place_holder_image">Placeholder image</string>
-    <string name="edit">Edit</string>
-
     <string name="name_hint">Enter Name</string>
     <string name="description_hint">Enter Description</string>
-
-    <string name="internet_connection_error_title">Internet connection error</string>
-    <string name="internet_connection_error_text">You have to be connected to the internet to add a country, try again later</string>
-
-    <string name="duration_error">You have to select a duration</string>
-
-    <string name="hour">Hour</string>
-    <string name="hours">Hours</string>
-
-    <string name="entry_exists_error_title">Entry exists</string>
-    <string name="entry_exists_error_text">The entry you wanted to add exists already</string>
-    <string name="add_entry_to_list_error_title">List entries</string>
-    <string name="add_entries_to_list_error_text">An error occurred with listing the entries, try again later</string>
-
+    <string name="create">Create</string>
+    <string name="submit">Submit</string>
+    <string name="edit">Edit</string>
+    <string name="add_text">Add a text here by clicking on the edit button</string>
     <string name="delete">Delete</string>
     <string name="delete_entry_title">Delete Entry</string>
     <string name="delete_entry_text">Do you really want to delete this entry?</string>
@@ -40,40 +15,53 @@
     <string name="dialog_yes">Yes</string>
     <string name="dialog_no">No</string>
 
-    <string name="countries_title">Countries</string>
-    <string name="add_country">Add country</string>
-    <string name="add_description">Add description</string>
-    <string name="add_text">Add a text here on edit button click</string>
-    <string name="submit_text">Submit</string>
-    <string name="cities_title">Cities</string>
-    <string name="country_name">Country name</string>
-    <string name="country_description_hint">Country description</string>
-    <string name="country_duration">Country duration</string>
-    <string name="country_name_hint">Country name</string>
+    <string name="search">Search</string>
+    <string name="place_holder_image">Placeholder image</string>
 
-    <string name="create_city_title">Create City</string>
-    <string name="city_name">City name</string>
-    <string name="city_name_hint">City name</string>
-    <string name="city_description_hint">City description</string>
-    <string name="city_duration">Duration in city</string>
-    <string name="select_city_duration">Select duration in city</string>
-    <string name="select_city_duration_title">Select a date range</string>
+    <string name="length_error">Check the input length</string>
+    <string name="duration_error">You have to select a duration</string>
+    <string name="default_error_title">Error</string>
+    <string name="default_error_text">An error occurred, please contact the owner of the app</string>
+    <string name="internet_connection_error_title">Internet connection error</string>
+    <string name="internet_connection_error_text">You have to be connected to the internet to add a country, try again later</string>
+    <string name="add_entry_to_list_error_title">List entries</string>
+    <string name="add_entries_to_list_error_text">An error occurred with listing the entries, try again later</string>
+    <string name="entry_exists_error_title">Entry exists</string>
+    <string name="entry_exists_error_text">The entry you wanted to add was added already</string>
     <string name="duration_parse_error_title">Duration</string>
     <string name="duration_parse_error_text">An error occurred with the durations, try again later</string>
     <string name="duration_overlap_error_title">Duration Overlap</string>
-    <string name="duration_overlap_error_text">Durations are not allowed to overlap, please try another date</string>
+    <string name="duration_overlap_error_text">Durations are not allowed to overlap, try another date</string>
 
-    <string name="days_title">Days</string>
+    <string name="trips">Trips</string>
+    <string name="trip_name">Trip name</string>
+    <string name="trip_destination">Destination</string>
+    <string name="trip_duration">Duration</string>
+    <string name="create_trip_title">Create Trip</string>
+    <string name="trip_create_button_text">Create</string>
+    <string name="add_trip">Add Trip</string>
+
+    <string name="countries">Countries</string>
+    <string name="country_name">Country name</string>
+    <string name="country_duration">Duration in the country</string>
+    <string name="add_country">Add country</string>
+
+    <string name="cities">Cities</string>
+    <string name="city_name">City name</string>
+    <string name="city_duration">Duration in city</string>
+    <string name="select_city_duration">Select duration in city</string>
+    <string name="create_city_title">Create City</string>
+
+    <string name="days">Days</string>
     <string name="day">Day</string>
     <string name="day_date">Date of the day</string>
 
-    <string name="locations_title">Locations</string>
-    <string name="create_location_title">Create Location</string>
-    <string name="select_location_duration">Select duration in Location</string>
-    <string name="location_description_hint">Location description</string>
-    <string name="location_name_hint">Location name</string>
-    <string name="location_duration">Location duration</string>
+    <string name="locations">Locations</string>
     <string name="location_name">Location name</string>
-    <string name="error_default">An error occured. Please contact the developer of the app.</string>
-    <string name="error">Error!</string>
+    <string name="location_duration">Duration at the location</string>
+    <string name="select_location_duration">Select duration in Location</string>
+    <string name="create_location_title">Create Location</string>
+
+    <string name="hour">Hour</string>
+    <string name="hours">Hours</string>
 </resources>

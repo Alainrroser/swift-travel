@@ -23,7 +23,6 @@ import androidx.constraintlayout.widget.Group;
 
 import com.github.dhaval2404.imagepicker.ImagePicker;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
 
 import java.util.List;
@@ -201,7 +200,6 @@ public class TripDetailsActivity extends UpButtonActivity implements SearchView.
 		adapter.getFilter().filter(searchText);
 	}
 
-
 	private void createCountryFromIntent() {
 		Intent intent = getIntent();
 		Country country = new Country();
@@ -214,6 +212,7 @@ public class TripDetailsActivity extends UpButtonActivity implements SearchView.
 			country.setTripId(selected.getId());
 			long id = countryDao.insert(country);
 			country.setId(id);
+
 			adapter.add(country);
 		}
 	}
@@ -234,7 +233,7 @@ public class TripDetailsActivity extends UpButtonActivity implements SearchView.
 	private void refreshContent() {
 		LayoutUtils.setEditableTitleText(titleText, editTitle, selected.getName());
 		LayoutUtils.setEditableDescriptionText(descriptionText, editDescription, selected.getDescription());
-		LayoutUtils.setTextOnTextView(durationText, getTripDuration() + " " + getString(R.string.days_title));
+		LayoutUtils.setTextOnTextView(durationText, getTripDuration() + " " + getString(R.string.days));
 		if (selected.getImageURI() != null && !selected.getImageURI().isEmpty()) {
 			LayoutUtils.setImageURIOnImageView(tripImage, selected.getImageURI());
 		}
@@ -289,7 +288,7 @@ public class TripDetailsActivity extends UpButtonActivity implements SearchView.
 			selected.setName(editTitle.getText().toString());
 		} else {
 			nameValidated = false;
-			editTitleLayout.setError(getString(R.string.trip_name_error));
+			editTitleLayout.setError(getString(R.string.length_error));
 		}
 	}
 

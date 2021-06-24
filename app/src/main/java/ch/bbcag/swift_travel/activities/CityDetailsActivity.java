@@ -222,7 +222,7 @@ public class CityDetailsActivity extends UpButtonActivity implements SearchView.
 	private void refreshContent() {
 		LayoutUtils.setEditableTitleText(titleText, editTitle, selected.getName());
 		LayoutUtils.setEditableDescriptionText(descriptionText, editDescription, selected.getDescription());
-		LayoutUtils.setTextOnTextView(durationText, selected.getDuration() + " " + getString(R.string.days_title));
+		LayoutUtils.setTextOnTextView(durationText, selected.getDuration() + " " + getString(R.string.days));
 		if (selected.getImageURI() != null && !selected.getImageURI().isEmpty()) {
 			LayoutUtils.setImageURIOnImageView(cityImage, selected.getImageURI());
 		}
@@ -237,7 +237,7 @@ public class CityDetailsActivity extends UpButtonActivity implements SearchView.
 			selected.setName(editTitle.getText().toString());
 		} else {
 			nameValidated = false;
-			editTitleLayout.setError(getString(R.string.trip_name_error));
+			editTitleLayout.setError(getString(R.string.length_error));
 		}
 	}
 

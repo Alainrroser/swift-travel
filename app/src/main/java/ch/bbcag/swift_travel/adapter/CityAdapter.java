@@ -53,6 +53,11 @@ public class CityAdapter extends ArrayAdapter<City> {
 			viewHolder = (CityAdapterViewHolder) convertView.getTag();
 		}
 
+		addInformationToAdapter(viewHolder, city);
+		return convertView;
+	}
+
+	private void addInformationToAdapter(CityAdapterViewHolder viewHolder, City city) {
 		viewHolder.delete.setOnClickListener(v -> generateConfirmDialog(city));
 
 		viewHolder.name.setText(city.getName());
@@ -63,7 +68,6 @@ public class CityAdapter extends ArrayAdapter<City> {
 		} else {
 			viewHolder.image.setImageResource(R.drawable.trip_placeholder);
 		}
-		return convertView;
 	}
 
 	private void generateConfirmDialog(City city) {
@@ -76,9 +80,9 @@ public class CityAdapter extends ArrayAdapter<City> {
 		});
 	}
 
-	private void deleteDays(City city){
+	private void deleteDays(City city) {
 		List<Day> days = SwiftTravelDatabase.getInstance(countryDetailsActivity.getApplicationContext()).getDayDao().getAllFromCity(city.getId());
-		for(Day day : days) {
+		for (Day day : days) {
 			deleteLocations(day);
 			SwiftTravelDatabase.getInstance(countryDetailsActivity.getApplicationContext()).getDayDao().deleteById(day.getId());
 		}
@@ -86,7 +90,7 @@ public class CityAdapter extends ArrayAdapter<City> {
 
 	private void deleteLocations(Day day) {
 		List<Location> locations = SwiftTravelDatabase.getInstance(countryDetailsActivity.getApplicationContext()).getLocationDao().getAllFromDay(day.getId());
-		for(Location location : locations) {
+		for (Location location : locations) {
 			SwiftTravelDatabase.getInstance(countryDetailsActivity.getApplicationContext()).getLocationDao().deleteById(location.getId());
 		}
 	}

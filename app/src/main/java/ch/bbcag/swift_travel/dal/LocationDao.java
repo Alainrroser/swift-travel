@@ -25,7 +25,4 @@ public interface LocationDao {
 
 	@Query("DELETE FROM locations WHERE id = :id")
 	void deleteById(long id);
-
-	@Query("DELETE FROM locations WHERE dayId = :dayId")
-	void deleteByDayId(long dayId);
 }

@@ -234,7 +234,11 @@ public class CountryDetailsActivity extends UpButtonActivity implements SearchVi
 			city.setImageURI(intent.getStringExtra(Const.IMAGE_URI));
 			city.setStartDate(intent.getStringExtra(Const.START_DATE));
 			city.setEndDate(intent.getStringExtra(Const.END_DATE));
-			city.setDuration(getCityDuration(city));
+
+			long startDate = DateTimeUtils.parseDateToMilliseconds(city.getStartDate());
+			long endDate = DateTimeUtils.parseDateToMilliseconds(city.getEndDate());
+			city.setDuration(DateTimeUtils.getDaysCountFromTimeSpan(startDate, endDate));
+
 			city.setCountryId(selected.getId());
 			long id = cityDao.insert(city);
 			city.setId(id);
@@ -261,12 +265,6 @@ public class CountryDetailsActivity extends UpButtonActivity implements SearchVi
 
 			city.addDay(day);
 		}
-	}
-
-	private long getCityDuration(City city) {
-		long startDate = DateTimeUtils.parseDateToMilliseconds(city.getStartDate());
-		long endDate = DateTimeUtils.parseDateToMilliseconds(city.getEndDate());
-		return DateTimeUtils.getDaysCountFromTimeSpan(startDate, endDate);
 	}
 
 	private int compareCityStartDates(City cityOne, City cityTwo) {
@@ -317,7 +315,7 @@ public class CountryDetailsActivity extends UpButtonActivity implements SearchVi
 	public void refreshContent() {
 		LayoutUtils.setTitleText(titleText, selected.getName());
 		LayoutUtils.setEditableDescriptionText(descriptionText, editDescription, selected.getDescription());
-		LayoutUtils.setTextOnTextView(durationText, getCountryDuration() + " " + getString(R.string.days_title));
+		LayoutUtils.setTextOnTextView(durationText, getCountryDuration() + " " + getString(R.string.days));
 		if (selected.getImageURI() != null && !selected.getImageURI().isEmpty()) {
 			LayoutUtils.setOnlineImageURIOnImageView(getApplicationContext(), countryImage, selected.getImageURI());
 		}

@@ -54,6 +54,11 @@ public class CountryAdapter extends ArrayAdapter<Country> {
 			viewHolder = (CountryAdapterViewHolder) convertView.getTag();
 		}
 
+		addInformationToAdapter(viewHolder, country);
+		return convertView;
+	}
+
+	private void addInformationToAdapter(CountryAdapterViewHolder viewHolder, Country country) {
 		viewHolder.delete.setOnClickListener(v -> generateConfirmDialog(country));
 
 		viewHolder.name.setText(country.getName());
@@ -61,11 +66,10 @@ public class CountryAdapter extends ArrayAdapter<Country> {
 		if (country.getDuration() == 1) {
 			duration = country.getDuration() + " " + tripDetailsActivity.getString(R.string.day);
 		} else {
-			duration = country.getDuration() + " " + tripDetailsActivity.getString(R.string.days_title);
+			duration = country.getDuration() + " " + tripDetailsActivity.getString(R.string.days);
 		}
 		viewHolder.duration.setText(duration);
 		LayoutUtils.setOnlineImageURIOnImageView(getContext(), viewHolder.image, country.getImageURI());
-		return convertView;
 	}
 
 	private void generateConfirmDialog(Country country) {
@@ -79,7 +83,7 @@ public class CountryAdapter extends ArrayAdapter<Country> {
 
 	private void deleteCities(Country country) {
 		List<City> cities = SwiftTravelDatabase.getInstance(tripDetailsActivity.getApplicationContext()).getCityDao().getAllFromCountry(country.getId());
-		for(City city : cities){
+		for (City city : cities) {
 			deleteDays(city);
 			SwiftTravelDatabase.getInstance(tripDetailsActivity.getApplicationContext()).getCityDao().deleteById(city.getId());
 		}
@@ -87,7 +91,7 @@ public class CountryAdapter extends ArrayAdapter<Country> {
 
 	private void deleteDays(City city) {
 		List<Day> days = SwiftTravelDatabase.getInstance(tripDetailsActivity.getApplicationContext()).getDayDao().getAllFromCity(city.getId());
-		for(Day day : days) {
+		for (Day day : days) {
 			deleteLocations(day);
 			SwiftTravelDatabase.getInstance(tripDetailsActivity.getApplicationContext()).getDayDao().deleteById(day.getId());
 		}
@@ -95,7 +99,7 @@ public class CountryAdapter extends ArrayAdapter<Country> {
 
 	private void deleteLocations(Day day) {
 		List<Location> locations = SwiftTravelDatabase.getInstance(tripDetailsActivity.getApplicationContext()).getLocationDao().getAllFromDay(day.getId());
-		for(Location location : locations) {
+		for (Location location : locations) {
 			SwiftTravelDatabase.getInstance(tripDetailsActivity.getApplicationContext()).getLocationDao().deleteById(location.getId());
 		}
 	}

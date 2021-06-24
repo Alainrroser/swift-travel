@@ -34,11 +34,11 @@ public class DateTimeUtils {
 	}
 
 	public static int getHourForAmPm(TimeRange timeRange, boolean startHour) {
-		if(startHour && timeRange.getReadableTimeRange().startsWith("PM", 1)) {
+		if (startHour && timeRange.getReadableTimeRange().startsWith("PM", 1)) {
 			return timeRange.getStartHour() + 12;
-		} else if(timeRange.getReadableTimeRange().startsWith("PM", 10)) {
+		} else if (timeRange.getReadableTimeRange().startsWith("PM", 10)) {
 			return timeRange.getEndHour() + 12;
-		} else if(startHour) {
+		} else if (startHour) {
 			return timeRange.getStartHour();
 		}
 		return timeRange.getEndHour();

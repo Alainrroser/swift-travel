@@ -2,77 +2,67 @@
 <resources>
     <string name="app_name">Swift-Travel</string>
 
-    <string name="trips_title">Reisen</string>
-    <string name="create_trip_title">Reise erstellen</string>
-    <string name="trip_name">Trip name</string>
-    <string name="trip_destination">Destination</string>
-    <string name="trip_duration">Aufenthaltsdauer</string>
-    <string name="trip_name_hint">Trip Name</string>
-    <string name="trip_name_error">Überprüfe die Eingabelänge</string>
-    <string name="trip_create_button_text">Erstellen</string>
-    <string name="add_trip">Reise hinzufügen</string>
-
-    <string name="create">Erstellen</string>
-    <string name="search">Suche</string>
-    <string name="place_holder_image">Platzhalterbild</string>
-    <string name="edit">Bearbeiten</string>
-
     <string name="name_hint">Name eingeben</string>
-    <string name="description_hint">Beschreibung hinzufügen</string>
-
-    <string name="internet_connection_error_title">Internetverbindungsfehler</string>
-    <string name="internet_connection_error_text">Du musst mit dem Internet verbunden sein um ein Land hinzuzufügen, versuche es später erneut</string>
-
-    <string name="duration_error">Du musst eine Aufenthaltszeitspanne wählen</string>
-
-    <string name="hour">Hour</string>
-    <string name="hours">Hours</string>
-
+    <string name="description_hint">Beschreibung eingeben</string>
+    <string name="create">Erstellen</string>
+    <string name="submit">Bestätigen</string>
+    <string name="edit">Bearbeiten</string>
+    <string name="add_text">Mit einem Klick auf den Editbutton einen Text hinzufügen</string>
     <string name="delete">Löschen</string>
     <string name="delete_entry_title">Eintrag löschen</string>
-    <string name="delete_entry_text">Willst du diesen Eintrag wirklich löschen?</string>
-
-    <string name="add_entry_to_list_error_title">Einträge auflisten</string>
-    <string name="add_entries_to_list_error_text">Beim Auflisten der Einträge ist ein Fehler aufgetreten, versuche es später erneut</string>
+    <string name="delete_entry_text">Wollen Sie diesen Eintrag wirklich löschen?</string>
 
     <string name="dialog_close">Ok</string>
     <string name="dialog_yes">Ja</string>
     <string name="dialog_no">Nein</string>
 
-    <string name="countries_title">Länder</string>
-    <string name="add_country">Land hinzufügen</string>
-    <string name="add_description">Beschreibung hinzufügen</string>
-    <string name="add_text">Mit Klick auf den Editbutton einen Text hinzufügen</string>
-    <string name="submit_text">Bestätigen</string>
-    <string name="entry_exists_error_title">Land existiert</string>
-    <string name="entry_exists_error_text">Das Land, welches du hinzufügen wolltest, existiert bereits</string>
-    <string name="cities_title">Städte</string>
-    <string name="country_name">Ländername</string>
-    <string name="country_name_hint">Ländername</string>
-    <string name="country_description_hint">Landbeschreibung</string>
-    <string name="country_duration">Aufenthaltsdauer im Land</string>
+    <string name="search">Suche</string>
+    <string name="place_holder_image">Platzhalterbild</string>
 
-    <string name="create_city_title">Stadt erstellen</string>
-    <string name="city_name">Name der Stadt</string>
-    <string name="city_name_hint">Name der Stadt</string>
-    <string name="city_description_hint">Beschreibung der Stadt</string>
-    <string name="city_duration">Länge des Aufenthaltes</string>
-    <string name="select_city_duration">Länge des Aufenthaltes in dieser Stadt wählen</string>
-    <string name="select_city_duration_title">Wählen sie die Zeitspanne des Aufenthaltes</string>
+    <string name="length_error">Überprüfen Sie die Eingabelänge</string>
+    <string name="duration_error">Sie müssen eine Aufenthaltszeitspanne wählen</string>
+    <string name="default_error_title">Fehler</string>
+    <string name="default_error_text">Ein Fehler ist aufgetreten, bitte kontaktieren Sie den Inhaber der App</string>
+    <string name="internet_connection_error_title">Internetverbindungsfehler</string>
+    <string name="internet_connection_error_text">Sie müssen mit dem Internet verbunden sein um ein Land hinzuzufügen, versuchen Sie später erneut</string>
+    <string name="add_entry_to_list_error_title">Einträge auflisten</string>
+    <string name="add_entries_to_list_error_text">Beim Auflisten der Einträge ist ein Fehler aufgetreten, versuchen Sie es später erneut</string>
+    <string name="entry_exists_error_title">Eintrag existiert</string>
+    <string name="entry_exists_error_text">Der Eintrag, welchen Sie hinzufügen wollten, wurde bereits hinzugefügt</string>
     <string name="duration_parse_error_title">Zeitspanne</string>
-    <string name="duration_parse_error_text">Bei den Zeitspannen ist ein Fehler aufgetreten, versuche es später erneut</string>
+    <string name="duration_parse_error_text">Bei den Zeitspannen ist ein Fehler aufgetreten, versuchen Sie es später erneut</string>
     <string name="duration_overlap_error_title">Überlappen der Zeitspanne</string>
-    <string name="duration_overlap_error_text">Zeitspannen dürfen sich nicht überlappen, versuche ein anderes Datum</string>
+    <string name="duration_overlap_error_text">Zeitspannen dürfen sich nicht überlappen, versuchen Sie ein anderes Datum</string>
 
-    <string name="days_title">Tage</string>
+    <string name="trips">Reisen</string>
+    <string name="trip_name">Reisename</string>
+    <string name="trip_destination">Zielort</string>
+    <string name="trip_duration">Aufenthaltsdauer</string>
+    <string name="create_trip_title">Reise erstellen</string>
+    <string name="trip_create_button_text">Erstellen</string>
+    <string name="add_trip">Reise hinzufügen</string>
+
+    <string name="countries">Länder</string>
+    <string name="country_name">Ländername</string>
+    <string name="country_duration">Länge des Aufenthaltes im Land</string>
+    <string name="add_country">Land hinzufügen</string>
+
+    <string name="cities">Städte</string>
+    <string name="city_name">Name der Stadt</string>
+    <string name="city_duration">Länge des Aufenthaltes in der Stadt</string>
+    <string name="select_city_duration">Länge des Aufenthaltes in dieser Stadt wählen</string>
+    <string name="create_city_title">Stadt erstellen</string>
+
+    <string name="days">Tage</string>
     <string name="day">Tag</string>
     <string name="day_date">Datum des Tages</string>
 
-    <string name="locations_title">Orte</string>
-    <string name="create_location_title">Ort erstellen</string>
-    <string name="select_location_duration">Länge des Aufenthaltes an diesem Ort wählen</string>
-    <string name="location_description_hint">Beschreibung des Ortes</string>
+    <string name="locations">Orte</string>
     <string name="location_name">Ortsname</string>
-    <string name="location_name_hint">Ortsname</string>
-    <string name="location_duration">Aufenthaltsdauer im Ort</string>
+    <string name="location_duration">Länge des Aufenthaltes im Ort</string>
+    <string name="select_location_duration">Länge des Aufenthaltes an diesem Ort wählen</string>
+    <string name="create_location_title">Ort erstellen</string>
+
+    <string name="hours">Stunden</string>
+    <string name="hour">Stunde</string>
 </resources>

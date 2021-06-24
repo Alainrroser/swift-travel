@@ -272,7 +272,7 @@ public class DayDetailsActivity extends UpButtonActivity implements SearchView.O
 			selected.setName(editTitle.getText().toString());
 		} else {
 			nameValidated = false;
-			editTitleLayout.setError(getString(R.string.trip_name_error));
+			editTitleLayout.setError(getString(R.string.length_error));
 		}
 	}
 
@@ -283,10 +283,16 @@ public class DayDetailsActivity extends UpButtonActivity implements SearchView.O
 	}
 
 	private void toggleForm() {
+		boolean notChanged = false;
+
 		Group form = findViewById(R.id.day_form);
 		Group content = findViewById(R.id.day_content);
 
-		if (form.getVisibility() == View.VISIBLE) {
+		if (titleText.getText().equals(editTitle.getText().toString())) {
+			notChanged = true;
+		}
+
+		if (form.getVisibility() == View.VISIBLE && (nameValidated || notChanged)) {
 			form.setVisibility(View.GONE);
 			content.setVisibility(View.VISIBLE);
 		} else {

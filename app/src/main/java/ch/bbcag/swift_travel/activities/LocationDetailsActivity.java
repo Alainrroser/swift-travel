@@ -15,6 +15,9 @@ import androidx.annotation.Nullable;
 import androidx.constraintlayout.widget.Group;
 
 import com.github.dhaval2404.imagepicker.ImagePicker;
+import com.google.android.material.textfield.TextInputLayout;
+
+import java.util.Objects;
 
 import ch.bbcag.swift_travel.R;
 import ch.bbcag.swift_travel.dal.LocationDao;
@@ -37,6 +40,8 @@ public class LocationDetailsActivity extends UpButtonActivity {
 	private Location selected;
 
 	private LocationDao locationDao;
+
+	private boolean nameValidated = false;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -98,6 +103,7 @@ public class LocationDetailsActivity extends UpButtonActivity {
 
 	private void onSubmitButtonClick() {
 		submitButton.setOnClickListener(v -> {
+			editName();
 			editDescription();
 			locationDao.update(selected);
 			refreshContent();
@@ -116,6 +122,18 @@ public class LocationDetailsActivity extends UpButtonActivity {
 		setTitle(selected.getName());
 	}
 
+	private void editName() {
+		TextInputLayout editTitleLayout = findViewById(R.id.trip_edit_title_layout);
+		if (Objects.requireNonNull(editTitle.getText()).toString().length() > 0 && Objects.requireNonNull(editTitle.getText()).toString().length() <= Const.TITLE_LENGTH) {
+			nameValidated = true;
+			selected.setName(editTitle.getText().toString());
+		} else {
+			nameValidated = false;
+			editTitleLayout.setError(getString(R.string.length_error));
+		}
+	}
+
+
 	private void editDescription() {
 		if (editDescription.getText() != null && !editDescription.getText().toString().isEmpty()) {
 			selected.setDescription(editDescription.getText().toString());
@@ -123,10 +141,16 @@ public class LocationDetailsActivity extends UpButtonActivity {
 	}
 
 	private void toggleForm() {
+		boolean notChanged = false;
+
 		Group form = findViewById(R.id.location_form);
 		Group content = findViewById(R.id.location_content);
 
-		if (form.getVisibility() == View.VISIBLE) {
+		if (titleText.getText().equals(editTitle.getText().toString())) {
+			notChanged = true;
+		}
+
+		if (form.getVisibility() == View.VISIBLE && (nameValidated || notChanged)) {
 			form.setVisibility(View.GONE);
 			content.setVisibility(View.VISIBLE);
 		} else {

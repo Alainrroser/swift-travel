@@ -50,7 +50,13 @@ public class DayAdapter extends ArrayAdapter<Day> {
 			viewHolder = (DayAdapter.DayAdapterViewHolder) convertView.getTag();
 		}
 
+		addInformationToAdapter(viewHolder, day);
+		return convertView;
+	}
+
+	private void addInformationToAdapter(DayAdapterViewHolder viewHolder, Day day) {
 		viewHolder.delete.setVisibility(View.GONE);
+
 		viewHolder.name.setText(day.getName());
 		if (day.getImageURI() != null) {
 			LayoutUtils.setImageURIOnImageView(viewHolder.image, day.getImageURI());
@@ -58,7 +64,5 @@ public class DayAdapter extends ArrayAdapter<Day> {
 			viewHolder.image.setImageResource(R.drawable.trip_placeholder);
 		}
 		viewHolder.date.setText(day.getDate());
-
-		return convertView;
 	}
 }

@@ -50,7 +50,7 @@
         android:layout_marginBottom="16dp"
         android:maxHeight="150dp"
         android:scrollbars="vertical"
-        android:text="@string/location_description_hint"
+        android:text="@string/description_hint"
         app:layout_constraintBottom_toTopOf="@id/days_title"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -90,7 +90,7 @@
         android:layout_marginStart="16dp"
         android:layout_marginTop="8dp"
         android:layout_marginEnd="16dp"
-        android:text="@string/submit_text"
+        android:text="@string/submit"
         android:textSize="12sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -123,7 +123,7 @@
             android:id="@+id/edit_title"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="@string/location_name_hint"
+            android:hint="@string/name_hint"
             android:inputType="text" />
     </com.google.android.material.textfield.TextInputLayout>
 
@@ -136,7 +136,6 @@
         android:layout_marginTop="8dp"
         android:layout_marginEnd="16dp"
         android:gravity="start|top"
-        android:hint="@string/location_description_hint"
         android:importantForAutofill="no"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -146,7 +145,7 @@
             android:id="@+id/edit_description"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:hint="@string/location_description_hint"
+            android:hint="@string/description_hint"
             android:inputType="textMultiLine"
             android:textAppearance="@style/TextAppearance.AppCompat.Small" />
     </com.google.android.material.textfield.TextInputLayout>

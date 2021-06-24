@@ -48,19 +48,6 @@ public class BaseActivity extends AppCompatActivity {
 		dialog.show();
 	}
 
-	public void generateMessageDialogAndCloseApp(String title, String text) {
-		progressBar.setVisibility(View.GONE);
-		AlertDialog.Builder dialogBuilder;
-		dialogBuilder = new AlertDialog.Builder(this);
-		dialogBuilder.setPositiveButton(getString(R.string.dialog_close), (dialog, id) -> {
-			dialog.cancel();
-			System.exit(1);
-		});
-		dialogBuilder.setMessage(text).setTitle(title);
-		AlertDialog dialog = dialogBuilder.create();
-		dialog.show();
-	}
-
 	public void generateConfirmDialog(String title, String message, Runnable runnable) {
 		progressBar.setVisibility(View.GONE);
 		AlertDialog.Builder dialogBuilder;

@@ -32,7 +32,7 @@
         android:layout_marginBottom="16dp"
         android:ellipsize="end"
         android:maxLines="1"
-        android:text="@string/trips_title"
+        android:text="@string/trips"
         android:textAppearance="@style/TextAppearance.AppCompat.Title"
         android:textSize="34sp"
         app:layout_constraintBottom_toTopOf="@id/trips"

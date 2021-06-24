@@ -51,6 +51,11 @@ public class LocationAdapter extends ArrayAdapter<Location> {
 			viewHolder = (LocationAdapterViewHolder) convertView.getTag();
 		}
 
+		addInformationToAdapter(viewHolder, location);
+		return convertView;
+	}
+
+	private void addInformationToAdapter(LocationAdapterViewHolder viewHolder, Location location) {
 		viewHolder.delete.setOnClickListener(v -> generateConfirmDialog(location));
 
 		viewHolder.name.setText(location.getName());
@@ -60,7 +65,6 @@ public class LocationAdapter extends ArrayAdapter<Location> {
 		} else {
 			viewHolder.image.setImageResource(R.drawable.trip_placeholder);
 		}
-		return convertView;
 	}
 
 	private void generateConfirmDialog(Location location) {

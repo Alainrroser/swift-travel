@@ -35,7 +35,7 @@
         android:layout_marginBottom="16dp"
         android:ellipsize="end"
         android:maxLines="1"
-        android:text="@string/days_title"
+        android:text="@string/days"
         android:textAppearance="@style/TextAppearance.AppCompat.Title"
         android:textSize="24sp"
         app:layout_constraintBottom_toTopOf="@id/days"
@@ -91,7 +91,7 @@
         android:layout_marginBottom="16dp"
         android:maxHeight="150dp"
         android:scrollbars="vertical"
-        android:text="@string/city_description_hint"
+        android:text="@string/description_hint"
         app:layout_constraintBottom_toTopOf="@id/days_title"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -131,7 +131,7 @@
         android:layout_marginStart="16dp"
         android:layout_marginTop="8dp"
         android:layout_marginEnd="16dp"
-        android:text="@string/submit_text"
+        android:text="@string/submit"
         android:textSize="12sp"
         app:layout_constraintBottom_toBottomOf="@id/city_description"
         app:layout_constraintEnd_toEndOf="parent"
@@ -165,7 +165,7 @@
             android:id="@+id/city_edit_title"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="@string/city_name_hint"
+            android:hint="@string/name_hint"
             android:inputType="text" />
     </com.google.android.material.textfield.TextInputLayout>
 
@@ -178,7 +178,7 @@
         android:layout_marginTop="8dp"
         android:layout_marginEnd="16dp"
         android:gravity="start|top"
-        android:hint="@string/city_description_hint"
+        android:hint="@string/description_hint"
         android:importantForAutofill="no"
         app:layout_constraintBottom_toTopOf="@id/city_submit_button"
         app:layout_constraintEnd_toEndOf="parent"
@@ -189,7 +189,7 @@
             android:id="@+id/city_edit_description"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:hint="@string/city_description_hint"
+            android:hint="@string/description_hint"
             android:inputType="textMultiLine"
             android:textAppearance="@style/TextAppearance.AppCompat.Small" />
     </com.google.android.material.textfield.TextInputLayout>

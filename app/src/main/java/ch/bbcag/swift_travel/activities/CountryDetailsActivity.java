@@ -291,7 +291,7 @@ public class CountryDetailsActivity extends UpButtonActivity implements SearchVi
 		setTitle(selected.getName());
 		LayoutUtils.setEditableDescriptionText(findViewById(R.id.country_description), findViewById(R.id.edit_description), selected.getDescription());
 		LayoutUtils.setTextOnTextView(findViewById(R.id.country_duration), getCountryDuration() + " " + getString(R.string.days_title));
-		if (selected.getImageURI() != null) {
+		if (selected.getImageURI() != null && !selected.getImageURI().isEmpty()) {
 			LayoutUtils.setOnlineImageURIOnImageView(getApplicationContext(), findViewById(R.id.country_image), selected.getImageURI());
 		}
 	}

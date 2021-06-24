@@ -183,14 +183,14 @@ public class CityDetailsActivity extends UpButtonActivity implements SearchView.
 		setTitle(selected.getName());
 		LayoutUtils.setEditableDescriptionText(findViewById(R.id.city_description), findViewById(R.id.edit_description), selected.getDescription());
 		LayoutUtils.setTextOnTextView(findViewById(R.id.city_duration), selected.getDuration() + " " + getString(R.string.days_title));
-		if (selected.getImageURI() != null) {
+		if (selected.getImageURI() != null && !selected.getImageURI().isEmpty()) {
 			LayoutUtils.setImageURIOnImageView(findViewById(R.id.city_image), selected.getImageURI());
 		}
 	}
 
 	private void editDescription() {
 		EditText editDescription = findViewById(R.id.edit_description);
-		if (!editDescription.getText().toString().equals("")) {
+		if (editDescription.getText() != null && !editDescription.getText().toString().isEmpty()) {
 			selected.setDescription(editDescription.getText().toString());
 			cityDao.update(selected);
 		}

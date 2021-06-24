@@ -202,7 +202,7 @@ public class TripDetailsActivity extends UpButtonActivity implements SearchView.
 		setTitle(selected.getName());
 		LayoutUtils.setEditableDescriptionText(findViewById(R.id.trip_description), findViewById(R.id.edit_description), selected.getDescription());
 		LayoutUtils.setTextOnTextView(findViewById(R.id.trip_duration), getTripDuration() + " " + getString(R.string.days_title));
-		if (selected.getImageURI() != null) {
+		if (selected.getImageURI() != null && !selected.getImageURI().isEmpty()) {
 			LayoutUtils.setImageURIOnImageView(findViewById(R.id.trip_image), selected.getImageURI());
 		}
 	}
@@ -262,7 +262,7 @@ public class TripDetailsActivity extends UpButtonActivity implements SearchView.
 
 	private void editDescription() {
 		EditText editDescription = findViewById(R.id.edit_description);
-		if (!editDescription.getText().toString().equals("")) {
+		if (!editDescription.getText().toString().isEmpty()) {
 			selected.setDescription(editDescription.getText().toString());
 			tripDao.update(selected);
 		}

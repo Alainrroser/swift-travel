@@ -47,7 +47,6 @@ public class CreateActivity extends UpButtonActivity {
 
 	private String startDate;
 	private String endDate;
-	private String dateRange;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -107,17 +106,19 @@ public class CreateActivity extends UpButtonActivity {
 		materialDatePicker = materialDateBuilder.build();
 
 		selectDuration.setOnClickListener(v -> showDatePickerIfClosed());
-		materialDatePicker.addOnPositiveButtonClickListener(selection -> {
-			startDate = Instant.ofEpochMilli(selection.first).atZone(ZoneId.systemDefault()).toLocalDate().format(DateTimeFormatter.ofPattern("dd.MM.yyyy"));
-			endDate = Instant.ofEpochMilli(selection.second).atZone(ZoneId.systemDefault()).toLocalDate().format(DateTimeFormatter.ofPattern("dd.MM.yyyy"));
-			dateRange = startDate + "-" + endDate;
-			dateSelected = true;
-			duration.setText(dateRange);
-			datePickerOpened = false;
-		});
+		materialDatePicker.addOnPositiveButtonClickListener(this::onPositiveMaterialDatePickerClick);
 		materialDatePicker.addOnCancelListener(selection -> datePickerOpened = false);
 		materialDatePicker.addOnDismissListener(selection -> datePickerOpened = false);
 		materialDatePicker.addOnNegativeButtonClickListener(selection -> datePickerOpened = false);
+	}
+
+	private void onPositiveMaterialDatePickerClick(Pair<Long, Long> selection) {
+		startDate = Instant.ofEpochMilli(selection.first).atZone(ZoneId.systemDefault()).toLocalDate().format(DateTimeFormatter.ofPattern("dd.MM.yyyy"));
+		endDate = Instant.ofEpochMilli(selection.second).atZone(ZoneId.systemDefault()).toLocalDate().format(DateTimeFormatter.ofPattern("dd.MM.yyyy"));
+		String dateRange = startDate + "-" + endDate;
+		dateSelected = true;
+		duration.setText(dateRange);
+		datePickerOpened = false;
 	}
 
 	private void showDatePickerIfClosed() {
@@ -164,7 +165,7 @@ public class CreateActivity extends UpButtonActivity {
 
 		intent.putExtra(Const.IMAGE_URI, trip.getImageURI());
 
-		if (Objects.requireNonNull(descriptionEdit.getText()).toString().length() <= 0) {
+		if (descriptionEdit.getText() == null) {
 			descriptionEdit.setText("");
 		}
 		trip.setDescription(descriptionEdit.getText().toString());
@@ -184,7 +185,7 @@ public class CreateActivity extends UpButtonActivity {
 
 		intent.putExtra(Const.IMAGE_URI, trip.getImageURI());
 
-		if (Objects.requireNonNull(descriptionEdit.getText()).toString().length() <= 0) {
+		if (descriptionEdit.getText() == null) {
 			descriptionEdit.setText("");
 		}
 		city.setDescription(descriptionEdit.getText().toString());

@@ -2,68 +2,114 @@
 
 ## Inhalt
 
-1. [Abstract (Kurzbeschreibung)](#1-abstract-kurzbeschreibung)
-2. [Konkurrenzanalyse](#2-konkurrenzanalyse)
-3. [Mockups](#4-mockups)
-4. [Technische Realisierung](#5-technische-realisierung)
-5. [Testing](#6-testing)
-    1. [Manuelle UI-Tests](#61-manuelle-ui-tests)
-    2. [Testauswertung](#62-testauswertung)
-6. [Fazit](#7-fazit)
+1. [Abstract (Kurzbeschreibung)](#abstract-kurzbeschreibung)
+2. [Konkurrenzanalyse](#konkurrenzanalyse)
+3. [Design](#design)
+   1. [Mockups](#mockups)
+   2. [Klassendiagramm](#klassendiagramm)
+4. [Technische Realisierung](#technische-realisierung)
+   1. [Room Database](#room-database)
+      1. [SwiftTravelDatabase](#swifttraveldatabase)
+      2. [DAOs](#daos)
+      3. [Entities](#entities)
+   2. [Restcountries API](#restcountries-api)
+      1. [ChooseCountryActivity](#choosecountryactivity)
+5. [Testing](#testing)
+    1. [Manuelle UI-Tests](#manuelle-ui-tests)
+    2. [Testauswertung](#testauswertung)
+6. [Fazit](#fazit)
+   1. [Positives](#positives)
+   2. [Negatives](#negatives)
 
 # Abstract (Kurzbeschreibung)
 
 > Swift-Travel ist ein Projekt bei dem der Benutzer seine zukünftigen Reisen planen, sowie auch seine bereits getätigten Reisen festhalten und später wieder betrachten kann
 > Man hat dafür Trips, welche man hinzufügen kann, worin man Länder, welche man auf diesem Trip besucht, hinzufügen kann
-> Dort wiederum hat man die Möglichkeit Städte in den einzelnen Ländern hinzuzufügen
+> dort wiederum hat man die Möglichkeit Städte in den einzelnen Ländern hinzuzufügen
 > Pro Stadt hat man dann Tage (Die Anzahl entspricht der Zeitspanne, welche man in dieser Stadt verbringt) in welchen man dann festhalten kann, was man hier gemacht hat
 
 # Konkurrenzanalyse
+<table>
+   <tbody>
+      <tr>
+         <th>Konkurrenten</th>
+         <th>Beobachtung</th>
+      </tr>
+      <tr>
+         <td>
+            <ul>
+               <li><a href="https://play.google.com/store/apps/details?id=com.tripit">TripIt: Reiseplaner</a></li>
+               <li><a href="https://play.google.com/store/apps/details?id=com.travalour.tripplanner">TripPlanner - Trips & Travel planner(no sign-in)</a> </li>
+               <li><a href="https://play.google.com/store/apps/details?id=com.travefy.travelplannersapp.tripplans">My Travel Planner App</a> </li> 
+               <li><a href="https://play.google.com/store/apps/details?id=com.roadtrippers">Roadtrippers - Trip Planner</a></li> 
+            </ul>
+         </td>
+         <td>
+            <ul>
+               <h3> Was machen sie gut </h3>
+               <li>Auflistung und Unterteilung der Reisen</li>
+               <li>Übersichtlich</li>
+               <h3>Was machen sie schlecht</h3>
+               <li>Persönliche Erinnerungen können nicht hinzugefügt werden</li>
+               <li>Beschränkt (Keine genaueren Informationen über Ausflüge)</li>
+               <h3>Wie können wir uns abheben</h3>
+               <li>Persönlicher (Möglichkeit persönliche Erinnerungen hinzufügen zu können)</li>
+               <li>Weniger beschränkt (Möglichkeit Informationen über Ausflüge hinzufügen zu können)</li>
+               <li>Ziel ist nicht die Planung sondern die Reisen</li>
+            </ul>
+         </td>
+      </tr>
+   </tbody>
+</table>
 
-## [TripIt: Reiseplaner](https://play.google.com/store/apps/details?id=com.tripit)
-## [TripPlanner - Trips & Travel planner(no sign-in](https://play.google.com/store/apps/details?id=com.travalour.tripplanner)
-## [My Travel Planner App](https://play.google.com/store/apps/details?id=com.travefy.travelplannersapp.tripplans)	
-## [Roadtrippers - Trip Planner](https://play.google.com/store/apps/details?id=com.roadtrippers)	
-> Was machen sie gut
-	* Auflistung und Unterteilung der Reisen 
-	* Übersichtlich
-> Was machen sie schlecht 
-	* Persönliche Erinnerungen können nicht hinzugefügt werden 
-	* Beschränkt (Keine genaueren Informationen über Ausflüge)
-> Wie können wir uns abheben
-	* Persönlicher (Möglichkeit persönliche Erinnerungen hinzufügen zu können)
-	* Weniger beschränkt (Möglichkeit Informationen über Ausflüge hinzufügen zu können)
-	* Ziel ist nicht die Planung sondern die Reisen
-## [Lambus | Reiseplaner](https://play.google.com/store/apps/details?id=io.lambus.app)
-## [NextTripPlan | Trip Planner](https://play.google.com/store/apps/details?id=com.devpira.travel_plan)
-## [Itinerate](https://play.google.com/store/apps/details?id=com.blahovici.itinerate)	
-> Was machen sie gut
-	* Persönliche Erinnerungen können hinzugefügt werden 
-> Was machen sie schlecht 
-	* Unübersichtlich
-> Wie können wir uns abheben
-	* Einfacher und übersichtlicher aufgebaut
-	* Ziel ist nicht die Planung sondern die Reise
+<table>
+   <tbody>
+      <tr>
+         <th>Konkurrenten</th>
+         <th>Beobachtung</th>
+      </tr>
+      <tr>
+         <td>
+            <ul>
+               <li><a href="https://play.google.com/store/apps/details?id=io.lambus.app">Lambus | Reiseplaner</a></li>
+               <li><a href="https://play.google.com/store/apps/details?id=com.devpira.travel_plan">NextTripPlan | Trip Planner</a> </li>
+               <li><a href="https://play.google.com/store/apps/details?id=com.blahovici.itinerate">Itinerate</a> </li>
+            </ul>
+         </td>
+         <td>
+            <ul>
+               <h3> Was machen sie gut </h3>
+               <li>Persönliche Erinnerungen können hinzugefügt werden </li>
+               <h3>Was machen sie schlecht</h3>
+               <li> Unübersichtlich</li>
+               <h3>Wie können wir uns abheben</h3>
+               <li>Einfacher und übersichtlicher aufgebaut</li>
+               <li>Ziel ist nicht die Planung sondern die Reisen</li>
+            </ul>
+         </td>
+      </tr>
+   </tbody>
+</table>
 
 # Design
-## 4.1 Mockups
+## Mockups
 
 > ***1. Trips***  
-> [Trips](docs/images/Trips.png)
+> [Trips](../docs/images/Trips.png)
 > Dies ist die Startactivity. Man hat hier die Möglichkeit mithilfe eines Floating Action Buttons Reisen hinzuzufügen, welche dann in einer Liste angezeigt werden.
 
 > ***2.	Tripdetails***  
-> ![Tripdetails](docs/images/TripDetails.png)
+> ![Tripdetails](../docs/images/TripDetails.png)
 > In diese kommt man, indem man einen Eintrag der Liste der ersten Activity anklickt. Hier hat man zuerst Informationen zum Trip, welche man auch bearbeiten kann
 > Darunter ist ebenfalls eine Liste, diesmal aber mit allen Ländern, welche man in diesem Trip besucht und auch hier hat es einen Floating Action Button, mitwelchem man Länder hinzufügen kann
 
 > ***3. Sign In***   
-> ![ChooseCountry](docs/images/ChooseCountry.png)
+> ![ChooseCountry](../docs/images/ChooseCountry.png)
 > In diese Activity kommt man durch den Klick auf den Floating Action der TripDetailsActivity klickt
 > Sie beinhaltet eine Liste mit allen Ländern, welche man auch durchsuchen kann, welche man dann zu der Liste der Länder im Trip der TripDetailsActivity hinzufügen kann
 
 ## Klassendiagramm
-![Klassendiagramm](docs/images/uml.png)
+![Klassendiagramm](../docs/images/uml.png)
 
 # Technische Realisierung
 
@@ -93,6 +139,9 @@
 
 ## Manuelle UI-Tests
 > [Testing](testing.md)
+
+## Testauswertung
+>
 
 # Fazit
 

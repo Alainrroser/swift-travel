@@ -256,7 +256,13 @@ public class CountryDetailsActivity extends UpButtonActivity implements SearchVi
 			day.setName(getString(R.string.day) + " " + dayCount);
 
 			int dayDateDay = Integer.parseInt(city.getStartDate().substring(0, city.getStartDate().indexOf("."))) + dayCount - 1;
-			String dayDate = dayDateDay + "." + city.getStartDate().substring(3);
+			String dayDate;
+			if(dayDateDay < 10) {
+				dayDate = "0" + dayDateDay + "." + city.getStartDate().substring(3);
+			} else {
+				dayDate = dayDateDay + "." + city.getStartDate().substring(3);
+
+			}
 			day.setDate(dayDate);
 			day.setCityId(city.getId());
 

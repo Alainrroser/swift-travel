@@ -140,8 +140,8 @@ public class CreateActivity extends UpButtonActivity {
 		selectDurationTime.setOnClickListener(v -> timeRangePickerDialog.show(getSupportFragmentManager(), timeRangePickerDialog.toString()));
 		timeRangePickerDialog.setOnTimeRangeSelectedListener(timeRange -> {
 			timeDuration = getDuration(timeRange);
-			startTime = DateTimeUtils.addZeroToHour(DateTimeUtils.getHourForAmPm(timeRange, true)) + ":" + DateTimeUtils.addZeroToMinute(timeRange.getStartMinute());
-			endTime = DateTimeUtils.addZeroToHour(DateTimeUtils.getHourForAmPm(timeRange, false)) + ":" + DateTimeUtils.addZeroToMinute(timeRange.getEndMinute());
+			startTime = DateTimeUtils.addZeroToHour(timeRange.getStartHour()) + ":" + DateTimeUtils.addZeroToMinute(timeRange.getStartMinute());
+			endTime = DateTimeUtils.addZeroToHour(timeRange.getEndHour()) + ":" + DateTimeUtils.addZeroToMinute(timeRange.getEndMinute());
 			String timeRangeString = startTime + "-" + endTime;
 			durationTime.setText(timeRangeString);
 			timeSelected = true;

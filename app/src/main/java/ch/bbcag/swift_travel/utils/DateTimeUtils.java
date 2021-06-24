@@ -18,7 +18,6 @@ public class DateTimeUtils {
 		return ((endDate + 86400000) - startDate) / (1000 * 60 * 60 * 24);
 	}
 
-
 	public static String addZeroToHour(int hour) {
 		if (hour < 10) {
 			return "0" + hour;
@@ -32,16 +31,4 @@ public class DateTimeUtils {
 		}
 		return String.valueOf(minute);
 	}
-
-	public static int getHourForAmPm(TimeRange timeRange, boolean startHour) {
-		if (startHour && timeRange.getReadableTimeRange().startsWith("PM", 1)) {
-			return timeRange.getStartHour() + 12;
-		} else if (timeRange.getReadableTimeRange().startsWith("PM", 10)) {
-			return timeRange.getEndHour() + 12;
-		} else if (startHour) {
-			return timeRange.getStartHour();
-		}
-		return timeRange.getEndHour();
-	}
-
 }

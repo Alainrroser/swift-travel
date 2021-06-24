@@ -81,7 +81,7 @@ public class CountryDetailsActivity extends UpButtonActivity implements SearchVi
 		editDescription = findViewById(R.id.edit_description);
 		countryImage = findViewById(R.id.country_image);
 
-		submitButton = findViewById(R.id.city_submit_button);
+		submitButton = findViewById(R.id.country_submit_button);
 		editDescriptionButton = findViewById(R.id.edit_button);
 		floatingActionButton = findViewById(R.id.floating_action_button_country_details);
 	}

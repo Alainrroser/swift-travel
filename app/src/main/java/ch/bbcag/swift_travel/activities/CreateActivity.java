@@ -61,8 +61,8 @@ public class CreateActivity extends UpButtonActivity {
 		nameEdit = findViewById(R.id.add_title);
 		descriptionEdit = findViewById(R.id.add_description);
 		chooseImage = findViewById(R.id.place_holder_image);
-		duration = findViewById(R.id.duration);
-		selectDuration = findViewById(R.id.select_duration);
+		duration = findViewById(R.id.duration_date);
+		selectDuration = findViewById(R.id.select_duration_date);
 		create = findViewById(R.id.create);
 	}
 

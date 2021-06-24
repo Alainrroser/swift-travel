@@ -52,7 +52,7 @@
     <string name="city_name_hint">Name der Stadt</string>
     <string name="city_description_hint">Beschreibung der Stadt</string>
     <string name="city_duration">Länge des Aufenthaltes</string>
-    <string name="select_city_duration">Länge des Aufenthaltes wählen</string>
+    <string name="select_city_duration">Länge des Aufenthaltes in dieser Stadt wählen</string>
     <string name="city_duration_error">Du musst eine Aufenthaltszeitspanne wählen</string>
     <string name="select_city_duration_title">Wählen sie die Zeitspanne des Aufenthaltes</string>
     <string name="duration_parse_error_title">Zeitspanne</string>
@@ -64,5 +64,7 @@
     <string name="day">Tag</string>
     <string name="locations_title">Orte</string>
     <string name="day_date">Datum des Tages</string>
+
     <string name="create_location_title">Ort erstellen</string>
+    <string name="select_location_duration">Länge des Aufenthaltes an diesem Ort wählen</string>
 </resources>

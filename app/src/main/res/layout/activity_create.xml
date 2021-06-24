@@ -80,7 +80,7 @@
     </com.google.android.material.textfield.TextInputLayout>
 
     <TextView
-        android:id="@+id/duration"
+        android:id="@+id/duration_date"
         android:layout_width="192dp"
         android:layout_height="55dp"
         android:layout_marginStart="16dp"
@@ -89,28 +89,61 @@
         android:focusable="true"
         android:focusableInTouchMode="true"
         android:text="@string/select_city_duration"
-        app:layout_constraintEnd_toStartOf="@+id/select_duration"
+        app:layout_constraintEnd_toStartOf="@+id/select_duration_date"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/add_description_layout" />
 
     <Button
-        android:id="@+id/select_duration"
+        android:id="@+id/select_duration_date"
         android:layout_width="179dp"
         android:layout_height="57dp"
         android:layout_marginEnd="16dp"
         android:text="@string/select_city_duration"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/duration" />
+        app:layout_constraintTop_toTopOf="@+id/duration_date" />
 
     <androidx.constraintlayout.widget.Group
         android:id="@+id/city_duration"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:constraint_referenced_ids="duration, select_duration"
+        app:constraint_referenced_ids="duration_date, select_duration_date"
         app:layout_constraintEnd_toStartOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        tools:visibility="visible" />
+        tools:visibility="gone" />
+
+    <TextView
+        android:id="@+id/duration_time"
+        android:layout_width="192dp"
+        android:layout_height="55dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="8dp"
+        android:focusable="true"
+        android:focusableInTouchMode="true"
+        android:text="@string/select_location_duration"
+        app:layout_constraintEnd_toStartOf="@+id/select_duration_date"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/duration_date" />
+
+    <Button
+        android:id="@+id/select_duration_time"
+        android:layout_width="179dp"
+        android:layout_height="57dp"
+        android:layout_marginEnd="16dp"
+        android:text="@string/select_location_duration"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/duration_time" />
+
+    <androidx.constraintlayout.widget.Group
+        android:id="@+id/location_duration"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:constraint_referenced_ids="duration_time, select_duration_time"
+        app:layout_constraintEnd_toStartOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:visibility="gone" />
 
     <Button
         android:id="@+id/create"
@@ -122,7 +155,7 @@
         android:text="@string/trip_create_button_text"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/select_duration" />
+        app:layout_constraintTop_toBottomOf="@+id/duration_time" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

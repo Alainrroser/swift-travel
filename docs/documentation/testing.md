@@ -46,7 +46,7 @@ Abschnitt           |   Inhalt
 ID                  |   ST-03
 Anforderungen       |   #04, #06
 Vorbedingung        |   ST-02
-Ablauf              |   Landklick <br> Floatingactionbuttonklick <br> Namenseingabe <br> Bildauswahl <br> Zeitspannenauswahl <br> Create Klick
+Ablauf              |   Landklick <br> Floatingactionbuttonklick <br> Namenseingabe <br> Bildauswahl <br> Zeitspannenauswahl <br> Createklick
 Erwartetes Resultat |	Die erstellte Stadt wird auf dem Landdetailsbildschirm angezeigt
 
 Abschnitt           |   Inhalt
@@ -56,6 +56,14 @@ Anforderungen       |   #08, #09
 Vorbedingung        |   ST-03
 Ablauf              |   Stadtklick
 Erwartetes Resultat |	In der erstellten Stadt wird eine Liste mit Tagen angezeigt, wessen Länge der Länge des Aufenthaltes entspricht
+
+Abschnitt           |   Inhalt
+--------------------|-----------------------
+ID                  |   ST-05
+Anforderungen       |   #11, #12
+Vorbedingung        |   ST-03
+Ablauf              |   Tagklick <br> Floatingactionbuttonklick <br> Namenseingabe <br> Createklick
+Erwartetes Resultat |	Der erstellte Ort wird auf dem Tagdetailsbildschirm angezeigt
 
 Abschnitt           |   Inhalt
 --------------------|-----------------------

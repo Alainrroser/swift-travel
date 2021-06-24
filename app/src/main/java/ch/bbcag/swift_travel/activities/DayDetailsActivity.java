@@ -1,6 +1,8 @@
 package ch.bbcag.swift_travel.activities;
 
+import android.app.Activity;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -16,11 +18,15 @@ import android.widget.SearchView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.constraintlayout.widget.Group;
 
+import com.github.dhaval2404.imagepicker.ImagePicker;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.android.material.textfield.TextInputLayout;
 
 import java.util.List;
+import java.util.Objects;
 
 import ch.bbcag.swift_travel.R;
 import ch.bbcag.swift_travel.adapter.LocationAdapter;
@@ -53,6 +59,8 @@ public class DayDetailsActivity extends UpButtonActivity implements SearchView.O
 	private DayDao dayDao;
 	private LocationDao locationDao;
 
+	private boolean nameValidated = false;
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -66,15 +74,15 @@ public class DayDetailsActivity extends UpButtonActivity implements SearchView.O
 		locationDao = SwiftTravelDatabase.getInstance(getApplicationContext()).getLocationDao();
 
 		titleText = findViewById(R.id.day_title);
-		dateText = findViewById(R.id.day_duration);
+		dateText = findViewById(R.id.day_date);
 		descriptionText = findViewById(R.id.day_description);
-		editTitle = findViewById(R.id.edit_title);
-		editDescription = findViewById(R.id.edit_description);
+		editTitle = findViewById(R.id.day_edit_title);
+		editDescription = findViewById(R.id.day_edit_description);
 		dayImage = findViewById(R.id.day_image);
 
 		submitButton = findViewById(R.id.day_submit_button);
 		floatingActionButton = findViewById(R.id.floating_action_button_day_details);
-		editDescriptionButton = findViewById(R.id.edit_button);
+		editDescriptionButton = findViewById(R.id.day_edit_button);
 	}
 
 	@Override
@@ -104,6 +112,7 @@ public class DayDetailsActivity extends UpButtonActivity implements SearchView.O
 
 		onFloatingActionButtonClick();
 		editDescriptionButton.setOnClickListener(v -> toggleForm());
+		dayImage.setOnClickListener(v -> ImagePicker.with(this).cropSquare().start());
 		onSubmitButtonClick();
 	}
 
@@ -157,6 +166,17 @@ public class DayDetailsActivity extends UpButtonActivity implements SearchView.O
 		return false;
 	}
 
+	@Override
+	protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+		super.onActivityResult(requestCode, resultCode, data);
+		if (resultCode == Activity.RESULT_OK && data != null) {
+			Uri imageURI = data.getData();
+			selected.setImageURI(imageURI.toString());
+			dayDao.update(selected);
+			dayImage.setImageURI(imageURI);
+		}
+	}
+
 	private void setOnActionExpandListener() {
 		searchItem.setOnActionExpandListener(new MenuItem.OnActionExpandListener() {
 			@Override
@@ -205,7 +225,7 @@ public class DayDetailsActivity extends UpButtonActivity implements SearchView.O
 			location.setImageURI(intent.getStringExtra(Const.IMAGE_URI));
 			location.setStartTime(intent.getStringExtra(Const.START_TIME));
 			location.setEndTime(intent.getStringExtra(Const.END_TIME));
-			location.setDuration(intent.getLongExtra(Const.TIME_DURATION, -1));
+			location.setDuration(intent.getStringExtra(Const.TIME_DURATION));
 			location.setDayId(selected.getId());
 			long id = locationDao.insert(location);
 			location.setId(id);
@@ -226,6 +246,9 @@ public class DayDetailsActivity extends UpButtonActivity implements SearchView.O
 
 	private void onSubmitButtonClick() {
 		submitButton.setOnClickListener(v -> {
+			editName();
+			editDescription();
+			dayDao.update(selected);
 			refreshContent();
 			toggleForm();
 		});
@@ -234,18 +257,29 @@ public class DayDetailsActivity extends UpButtonActivity implements SearchView.O
 	public void refreshContent() {
 		LayoutUtils.setEditableTitleText(titleText, editTitle, selected.getName());
 		LayoutUtils.setEditableDescriptionText(descriptionText, editDescription, selected.getDescription());
-		//TODO
-		LayoutUtils.setTextOnTextView(findViewById(R.id.day_duration), "TODO");
-		if (selected.getImageURI() != null) {
-			LayoutUtils.setOnlineImageURIOnImageView(getApplicationContext(), dayImage, selected.getImageURI());
+		LayoutUtils.setTextOnTextView(dateText, selected.getDate());
+		if (selected.getImageURI() != null && !selected.getImageURI().isEmpty()) {
+			LayoutUtils.setImageURIOnImageView(dayImage, selected.getImageURI());
 		}
 
-		selected.setDescription(descriptionText.getText().toString());
-		selected.setName(titleText.getText().toString());
-
 		setTitle(selected.getName());
+	}
 
-		dayDao.update(selected);
+	private void editName() {
+		TextInputLayout editTitleLayout = findViewById(R.id.trip_edit_title_layout);
+		if (Objects.requireNonNull(editTitle.getText()).toString().length() > 0 && Objects.requireNonNull(editTitle.getText()).toString().length() <= Const.TITLE_LENGTH) {
+			nameValidated = true;
+			selected.setName(editTitle.getText().toString());
+		} else {
+			nameValidated = false;
+			editTitleLayout.setError(getString(R.string.trip_name_error));
+		}
+	}
+
+	private void editDescription() {
+		if (editDescription.getText() != null && !editDescription.getText().toString().isEmpty()) {
+			selected.setDescription(editDescription.getText().toString());
+		}
 	}
 
 	private void toggleForm() {
@@ -256,6 +290,8 @@ public class DayDetailsActivity extends UpButtonActivity implements SearchView.O
 			form.setVisibility(View.GONE);
 			content.setVisibility(View.VISIBLE);
 		} else {
+			editTitle.setText(selected.getName());
+			editDescription.setText(selected.getDescription());
 			form.setVisibility(View.VISIBLE);
 			content.setVisibility(View.GONE);
 		}

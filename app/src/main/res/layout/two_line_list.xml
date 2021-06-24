@@ -14,9 +14,9 @@
         android:layout_marginEnd="16dp"
         android:backgroundTint="#FFFFFF"
         android:contentDescription="@string/delete"
+        android:src="@drawable/outline_delete_black_24"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/outline_delete_black_24" />
+        app:layout_constraintTop_toTopOf="parent" />
 
     <ImageView
         android:id="@+id/image_two_line_list"
@@ -27,7 +27,7 @@
         android:contentDescription="@string/place_holder_image"
         android:scaleType="fitCenter"
         android:src="@drawable/trip_placeholder"
-        app:layout_constraintBottom_toBottomOf="@id/duration_two_line_list"
+        app:layout_constraintBottom_toBottomOf="@id/duration_or_date_two_line_list"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -48,7 +48,7 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
-        android:id="@+id/duration_two_line_list"
+        android:id="@+id/duration_or_date_two_line_list"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginEnd="16dp"

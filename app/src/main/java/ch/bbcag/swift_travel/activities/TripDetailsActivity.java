@@ -1,6 +1,8 @@
 package ch.bbcag.swift_travel.activities;
 
+import android.app.Activity;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -16,8 +18,10 @@ import android.widget.SearchView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.constraintlayout.widget.Group;
 
+import com.github.dhaval2404.imagepicker.ImagePicker;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
@@ -78,11 +82,11 @@ public class TripDetailsActivity extends UpButtonActivity implements SearchView.
 		titleText = findViewById(R.id.trip_title);
 		durationText = findViewById(R.id.trip_duration);
 		descriptionText = findViewById(R.id.trip_description);
-		editTitle = findViewById(R.id.edit_title);
-		editDescription = findViewById(R.id.edit_description);
+		editTitle = findViewById(R.id.trip_edit_title);
+		editDescription = findViewById(R.id.trip_edit_description);
 		tripImage = findViewById(R.id.trip_image);
 
-		editDescriptionButton = findViewById(R.id.edit_button);
+		editDescriptionButton = findViewById(R.id.trip_edit_button);
 		submitButton = findViewById(R.id.trip_submit_button);
 	}
 
@@ -101,17 +105,18 @@ public class TripDetailsActivity extends UpButtonActivity implements SearchView.
 		createCountryFromIntent();
 		addCountriesToClickableList();
 
-		Group form = findViewById(R.id.trip_form);
-		form.setVisibility(View.GONE);
-
 		editTitle.setText(selected.getName());
 		editDescription.setText(selected.getDescription());
+
+		Group form = findViewById(R.id.trip_form);
+		form.setVisibility(View.GONE);
 
 		refreshContent();
 		getProgressBar().setVisibility(View.GONE);
 
 		onFloatingActionButtonClick();
 		editDescriptionButton.setOnClickListener(v -> toggleForm());
+		tripImage.setOnClickListener(v -> ImagePicker.with(this).cropSquare().start());
 		onSubmitButtonClick();
 	}
 
@@ -165,6 +170,17 @@ public class TripDetailsActivity extends UpButtonActivity implements SearchView.
 		return false;
 	}
 
+	@Override
+	protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+		super.onActivityResult(requestCode, resultCode, data);
+		if (resultCode == Activity.RESULT_OK && data != null) {
+			Uri imageURI = data.getData();
+			selected.setImageURI(imageURI.toString());
+			tripDao.update(selected);
+			tripImage.setImageURI(imageURI);
+		}
+	}
+
 	private void setOnActionExpandListener() {
 		searchItem.setOnActionExpandListener(new MenuItem.OnActionExpandListener() {
 			@Override
@@ -184,6 +200,7 @@ public class TripDetailsActivity extends UpButtonActivity implements SearchView.
 	private void filterAdapter(String searchText) {
 		adapter.getFilter().filter(searchText);
 	}
+
 
 	private void createCountryFromIntent() {
 		Intent intent = getIntent();
@@ -222,12 +239,7 @@ public class TripDetailsActivity extends UpButtonActivity implements SearchView.
 			LayoutUtils.setImageURIOnImageView(tripImage, selected.getImageURI());
 		}
 
-		selected.setDescription(descriptionText.getText().toString());
-		selected.setName(titleText.getText().toString());
-
 		setTitle(selected.getName());
-
-		tripDao.update(selected);
 	}
 
 	private void toggleForm() {
@@ -244,6 +256,8 @@ public class TripDetailsActivity extends UpButtonActivity implements SearchView.
 			form.setVisibility(View.GONE);
 			content.setVisibility(View.VISIBLE);
 		} else {
+			editTitle.setText(selected.getName());
+			editDescription.setText(selected.getDescription());
 			form.setVisibility(View.VISIBLE);
 			content.setVisibility(View.GONE);
 		}
@@ -262,17 +276,17 @@ public class TripDetailsActivity extends UpButtonActivity implements SearchView.
 		submitButton.setOnClickListener(v -> {
 			editName();
 			editDescription();
+			tripDao.update(selected);
 			refreshContent();
 			toggleForm();
 		});
 	}
 
 	private void editName() {
-		TextInputLayout editTitleLayout = findViewById(R.id.edit_title_layout);
+		TextInputLayout editTitleLayout = findViewById(R.id.trip_edit_title_layout);
 		if (Objects.requireNonNull(editTitle.getText()).toString().length() > 0 && Objects.requireNonNull(editTitle.getText()).toString().length() <= Const.TITLE_LENGTH) {
 			nameValidated = true;
 			selected.setName(editTitle.getText().toString());
-			tripDao.update(selected);
 		} else {
 			nameValidated = false;
 			editTitleLayout.setError(getString(R.string.trip_name_error));
@@ -282,7 +296,6 @@ public class TripDetailsActivity extends UpButtonActivity implements SearchView.
 	private void editDescription() {
 		if (!editDescription.getText().toString().isEmpty()) {
 			selected.setDescription(editDescription.getText().toString());
-			tripDao.update(selected);
 		}
 	}
 

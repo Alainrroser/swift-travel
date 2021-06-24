@@ -42,7 +42,7 @@ public class LocationAdapter extends ArrayAdapter<Location> {
 			convertView = inflater.inflate(R.layout.two_line_list, parent, false);
 
 			viewHolder.name = convertView.findViewById(R.id.name_two_line_list);
-			viewHolder.duration = convertView.findViewById(R.id.duration_two_line_list);
+			viewHolder.duration = convertView.findViewById(R.id.duration_or_date_two_line_list);
 			viewHolder.image = convertView.findViewById(R.id.image_two_line_list);
 			viewHolder.delete = convertView.findViewById(R.id.delete_two_line_list);
 
@@ -54,13 +54,7 @@ public class LocationAdapter extends ArrayAdapter<Location> {
 		viewHolder.delete.setOnClickListener(v -> generateConfirmDialog(location));
 
 		viewHolder.name.setText(location.getName());
-		String duration;
-		if (location.getDuration() == 1) {
-			duration = location.getDuration() + " " + dayDetailsActivity.getString(R.string.hour);
-		} else {
-			duration = location.getDuration() + " " + dayDetailsActivity.getString(R.string.hours);
-		}
-		viewHolder.duration.setText(duration);
+		viewHolder.duration.setText(location.getDuration());
 		if (location.getImageURI() != null) {
 			LayoutUtils.setImageURIOnImageView(viewHolder.image, location.getImageURI());
 		} else {

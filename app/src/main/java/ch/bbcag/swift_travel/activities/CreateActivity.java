@@ -28,6 +28,8 @@ import ch.bbcag.swift_travel.entities.City;
 import ch.bbcag.swift_travel.entities.Location;
 import ch.bbcag.swift_travel.entities.Trip;
 import ch.bbcag.swift_travel.utils.Const;
+import ch.bbcag.swift_travel.utils.DateTimeUtils;
+import zion830.com.range_picker_dialog.TimeRange;
 import zion830.com.range_picker_dialog.TimeRangePickerDialog;
 
 public class CreateActivity extends UpButtonActivity {
@@ -55,7 +57,7 @@ public class CreateActivity extends UpButtonActivity {
 
 	private String startTime;
 	private String endTime;
-	private long timeDuration;
+	private String timeDuration;
 	private boolean timeSelected = false;
 
 	@Override
@@ -70,7 +72,7 @@ public class CreateActivity extends UpButtonActivity {
 		nameLayout = findViewById(R.id.add_title_layout);
 		nameEdit = findViewById(R.id.add_title);
 		descriptionEdit = findViewById(R.id.add_description);
-		chooseImage = findViewById(R.id.place_holder_image);
+		chooseImage = findViewById(R.id.create_place_holder_image);
 		durationDate = findViewById(R.id.duration_date);
 		selectDurationDate = findViewById(R.id.select_duration_date);
 		durationTime = findViewById(R.id.duration_time);
@@ -137,34 +139,25 @@ public class CreateActivity extends UpButtonActivity {
 	private void setTimePicker() {
 		selectDurationTime.setOnClickListener(v -> timeRangePickerDialog.show(getSupportFragmentManager(), timeRangePickerDialog.toString()));
 		timeRangePickerDialog.setOnTimeRangeSelectedListener(timeRange -> {
-			timeDuration = timeRange.getEndHour() - timeRange.getStartHour();
-			startTime = addZeroToHour(getHourForAmPm(timeRange.getStartHour())) + ":" + addZeroToMinute(timeRange.getStartMinute());
-			endTime = addZeroToHour(getHourForAmPm(timeRange.getEndHour())) + ":" + addZeroToMinute(timeRange.getEndMinute());
+			timeDuration = getDuration(timeRange);
+			startTime = DateTimeUtils.addZeroToHour(DateTimeUtils.getHourForAmPm(timeRange, true)) + ":" + DateTimeUtils.addZeroToMinute(timeRange.getStartMinute());
+			endTime = DateTimeUtils.addZeroToHour(DateTimeUtils.getHourForAmPm(timeRange, false)) + ":" + DateTimeUtils.addZeroToMinute(timeRange.getEndMinute());
 			String timeRangeString = startTime + "-" + endTime;
 			durationTime.setText(timeRangeString);
 			timeSelected = true;
 		});
 	}
 
-	private String addZeroToHour(int hour) {
-		if (hour < 10) {
-			return "0" + hour;
+	private String getDuration(TimeRange timeRange) {
+		int hours = timeRange.getEndHour();
+		int minutes = timeRange.getEndMinute();
+		if(timeRange.getStartMinute() > timeRange.getEndMinute()) {
+			hours -= 1;
+			minutes += 60;
 		}
-		return String.valueOf(hour);
-	}
-
-	private String addZeroToMinute(int minute) {
-		if (minute == 0) {
-			return "00";
-		}
-		return String.valueOf(minute);
-	}
-
-	private int getHourForAmPm(int hour) {
-		if (hour > 12) {
-			return hour + 12;
-		}
-		return hour;
+		minutes -= timeRange.getStartMinute();
+		hours -= timeRange.getStartHour();
+		return hours + "h:" + minutes + "min";
 	}
 
 	private void onPositiveMaterialDatePickerClick(Pair<Long, Long> selection) {

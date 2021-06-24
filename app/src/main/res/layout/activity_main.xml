@@ -16,12 +16,12 @@
         android:adjustViewBounds="true"
         android:contentDescription="@string/place_holder_image"
         android:scaleType="centerCrop"
+        android:src="@drawable/trips_image"
         android:visibility="visible"
         app:layout_constraintDimensionRatio="21:9"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/trips_image" />
+        app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
         android:id="@+id/countries_title"

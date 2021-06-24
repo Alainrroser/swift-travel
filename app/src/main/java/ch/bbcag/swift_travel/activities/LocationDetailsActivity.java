@@ -1,9 +1,8 @@
 package ch.bbcag.swift_travel.activities;
 
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.constraintlayout.widget.Group;
-
+import android.app.Activity;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -12,14 +11,14 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import java.util.List;
+import androidx.annotation.Nullable;
+import androidx.constraintlayout.widget.Group;
+
+import com.github.dhaval2404.imagepicker.ImagePicker;
 
 import ch.bbcag.swift_travel.R;
-import ch.bbcag.swift_travel.adapter.DayAdapter;
 import ch.bbcag.swift_travel.dal.LocationDao;
 import ch.bbcag.swift_travel.dal.SwiftTravelDatabase;
-import ch.bbcag.swift_travel.entities.City;
-import ch.bbcag.swift_travel.entities.Day;
 import ch.bbcag.swift_travel.entities.Location;
 import ch.bbcag.swift_travel.utils.Const;
 import ch.bbcag.swift_travel.utils.LayoutUtils;
@@ -81,12 +80,25 @@ public class LocationDetailsActivity extends UpButtonActivity {
 		getProgressBar().setVisibility(View.GONE);
 
 		editDescriptionButton.setOnClickListener(v -> toggleForm());
+		locationImage.setOnClickListener(v -> ImagePicker.with(this).cropSquare().start());
 		onSubmitButtonClick();
+	}
+
+	@Override
+	protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+		super.onActivityResult(requestCode, resultCode, data);
+		if (resultCode == Activity.RESULT_OK && data != null) {
+			Uri imageURI = data.getData();
+			selected.setImageURI(imageURI.toString());
+			locationDao.update(selected);
+			locationImage.setImageURI(imageURI);
+		}
 	}
 
 	private void onSubmitButtonClick() {
 		submitButton.setOnClickListener(v -> {
 			editDescription();
+			locationDao.update(selected);
 			refreshContent();
 			toggleForm();
 		});
@@ -95,23 +107,17 @@ public class LocationDetailsActivity extends UpButtonActivity {
 	private void refreshContent() {
 		LayoutUtils.setEditableTitleText(titleText, editTitle, selected.getName());
 		LayoutUtils.setEditableDescriptionText(descriptionText, editDescription, selected.getDescription());
-		LayoutUtils.setTextOnTextView(durationText, selected.getDuration() + " " + getString(R.string.days_title));
+		LayoutUtils.setTextOnTextView(durationText, selected.getDuration());
 		if (selected.getImageURI() != null && !selected.getImageURI().isEmpty()) {
 			LayoutUtils.setImageURIOnImageView(locationImage, selected.getImageURI());
 		}
 
-		selected.setDescription(descriptionText.getText().toString());
-		selected.setName(titleText.getText().toString());
-
 		setTitle(selected.getName());
-
-		locationDao.update(selected);
 	}
 
 	private void editDescription() {
 		if (editDescription.getText() != null && !editDescription.getText().toString().isEmpty()) {
 			selected.setDescription(editDescription.getText().toString());
-			locationDao.update(selected);
 		}
 	}
 
@@ -123,6 +129,8 @@ public class LocationDetailsActivity extends UpButtonActivity {
 			form.setVisibility(View.GONE);
 			content.setVisibility(View.VISIBLE);
 		} else {
+			editTitle.setText(selected.getName());
+			editDescription.setText(selected.getDescription());
 			form.setVisibility(View.VISIBLE);
 			content.setVisibility(View.GONE);
 		}

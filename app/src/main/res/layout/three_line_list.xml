@@ -29,7 +29,7 @@
         android:contentDescription="@string/delete"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/outline_delete_black_24" />
+        android:src="@drawable/outline_delete_black_24" />
 
     <TextView
         android:id="@+id/name_three_line_list"

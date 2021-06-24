@@ -42,7 +42,7 @@ public class CountryAdapter extends ArrayAdapter<Country> {
 			convertView = inflater.inflate(R.layout.two_line_list, parent, false);
 
 			viewHolder.name = convertView.findViewById(R.id.name_two_line_list);
-			viewHolder.duration = convertView.findViewById(R.id.duration_two_line_list);
+			viewHolder.duration = convertView.findViewById(R.id.duration_or_date_two_line_list);
 			viewHolder.image = convertView.findViewById(R.id.image_two_line_list);
 			viewHolder.delete = convertView.findViewById(R.id.delete_two_line_list);
 

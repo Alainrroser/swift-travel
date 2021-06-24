@@ -22,6 +22,8 @@ public class Day {
 	private String imageURI;
 	@ColumnInfo(name = "cityId")
 	private long cityId;
+	@ColumnInfo(name = "date")
+	private String date;
 	@Ignore
 	private List<Location> locationList = new ArrayList<>();
 
@@ -72,6 +74,14 @@ public class Day {
 
 	public void setImageURI(String imageURI) {
 		this.imageURI = imageURI;
+	}
+
+	public String getDate() {
+		return date;
+	}
+
+	public void setDate(String date) {
+		this.date = date;
 	}
 
 	public List<Location> getLocationList() {

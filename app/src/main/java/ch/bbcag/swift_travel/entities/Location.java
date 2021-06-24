@@ -23,7 +23,7 @@ public class Location {
 	@ColumnInfo(name = "endTime")
 	private String endTime;
 	@ColumnInfo(name = "duration")
-	private long duration;
+	private String duration;
 	@ColumnInfo(name = "dayId")
 	private long dayId;
 
@@ -76,11 +76,11 @@ public class Location {
 		this.endTime = endTime;
 	}
 
-	public long getDuration() {
+	public String getDuration() {
 		return duration;
 	}
 
-	public void setDuration(long duration) {
+	public void setDuration(String duration) {
 		this.duration = duration;
 	}
 

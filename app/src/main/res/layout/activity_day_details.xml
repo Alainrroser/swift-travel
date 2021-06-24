@@ -12,17 +12,17 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 
-    <ImageView
+    <ImageButton
         android:id="@+id/day_image"
         android:layout_width="160dp"
         android:layout_height="120dp"
         android:layout_marginStart="16dp"
         android:layout_marginTop="16dp"
         android:contentDescription="@string/place_holder_image"
-        android:scaleType="centerCrop"
+        android:scaleType="fitXY"
+        android:src="@drawable/trips_image"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/trips_image" />
+        app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
         android:id="@+id/day_title"
@@ -33,13 +33,13 @@
         android:text="@string/day"
         android:textColor="@color/black"
         android:textSize="24sp"
-        app:layout_constraintEnd_toStartOf="@+id/edit_button"
+        app:layout_constraintEnd_toStartOf="@+id/day_edit_button"
         app:layout_constraintStart_toEndOf="@id/day_image"
         app:layout_constraintTop_toTopOf="parent"
         tools:visibility="visible" />
 
     <ImageButton
-        android:id="@+id/edit_button"
+        android:id="@+id/day_edit_button"
         android:layout_width="36dp"
         android:layout_height="36dp"
         android:layout_marginTop="16dp"
@@ -47,21 +47,21 @@
         android:backgroundTint="#FFFFFF"
         android:clickable="true"
         android:contentDescription="@string/edit"
+        android:src="@drawable/outline_edit_black_20"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/outline_edit_black_20" />
+        app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
-        android:id="@+id/day_duration"
+        android:id="@+id/day_date"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
         android:layout_marginEnd="16dp"
         android:text="@string/day_date"
-        app:layout_constraintBottom_toTopOf="@id/duration_space"
+        app:layout_constraintBottom_toTopOf="@id/day_duration_space"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@id/day_image"
-        app:layout_constraintTop_toBottomOf="@+id/edit_button"
+        app:layout_constraintTop_toBottomOf="@+id/day_edit_button"
         tools:visibility="visible" />
 
 
@@ -69,11 +69,11 @@
         android:id="@+id/day_description"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:maxHeight="150dp"
         android:layout_marginStart="16dp"
         android:layout_marginTop="16dp"
         android:layout_marginEnd="16dp"
         android:layout_marginBottom="16dp"
+        android:maxHeight="150dp"
         android:scrollbars="vertical"
         android:text="@string/description_hint"
         app:layout_constraintBottom_toTopOf="@id/locations_title"
@@ -83,7 +83,7 @@
         tools:visibility="visible" />
 
     <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/edit_title_layout"
+        android:id="@+id/day_edit_title_layout"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
@@ -93,13 +93,13 @@
         app:counterEnabled="true"
         app:counterMaxLength="40"
         app:errorEnabled="true"
-        app:layout_constraintEnd_toStartOf="@id/edit_button"
+        app:layout_constraintEnd_toStartOf="@id/day_edit_button"
         app:layout_constraintStart_toEndOf="@id/day_image"
         app:layout_constraintTop_toBottomOf="@id/day_title"
         app:layout_constraintTop_toTopOf="parent">
 
         <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/edit_title"
+            android:id="@+id/day_edit_title"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="@string/city_name_hint"
@@ -107,7 +107,7 @@
     </com.google.android.material.textfield.TextInputLayout>
 
     <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/edit_description_layout"
+        android:id="@+id/day_edit_description_layout"
         style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
@@ -123,7 +123,7 @@
         app:layout_constraintTop_toBottomOf="@id/day_image">
 
         <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/edit_description"
+            android:id="@+id/day_edit_description"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:hint="@string/description_hint"
@@ -144,13 +144,13 @@
         app:layout_constraintBottom_toTopOf="@id/locations_title"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/edit_description_layout" />
+        app:layout_constraintTop_toBottomOf="@id/day_edit_description_layout" />
 
     <androidx.constraintlayout.widget.Group
         android:id="@+id/day_form"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:constraint_referenced_ids="day_submit_button, edit_description_layout, edit_title_layout"
+        app:constraint_referenced_ids="day_submit_button, day_edit_description_layout, day_edit_title_layout"
         app:layout_constraintEnd_toStartOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
@@ -167,7 +167,7 @@
         tools:visibility="visible" />
 
     <Space
-        android:id="@+id/duration_space"
+        android:id="@+id/day_duration_space"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         app:layout_constraintBottom_toBottomOf="@id/day_image"

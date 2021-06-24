@@ -32,7 +32,7 @@ import ch.bbcag.swift_travel.entities.City;
 import ch.bbcag.swift_travel.entities.Country;
 import ch.bbcag.swift_travel.entities.Day;
 import ch.bbcag.swift_travel.utils.Const;
-import ch.bbcag.swift_travel.utils.DateUtils;
+import ch.bbcag.swift_travel.utils.DateTimeUtils;
 import ch.bbcag.swift_travel.utils.LayoutUtils;
 
 import static java.lang.Math.max;
@@ -78,11 +78,11 @@ public class CountryDetailsActivity extends UpButtonActivity implements SearchVi
 		titleText = findViewById(R.id.country_title);
 		durationText = findViewById(R.id.country_duration);
 		descriptionText = findViewById(R.id.country_description);
-		editDescription = findViewById(R.id.edit_description);
+		editDescription = findViewById(R.id.country_edit_description);
 		countryImage = findViewById(R.id.country_image);
 
 		submitButton = findViewById(R.id.country_submit_button);
-		editDescriptionButton = findViewById(R.id.edit_button);
+		editDescriptionButton = findViewById(R.id.country_edit_button);
 		floatingActionButton = findViewById(R.id.floating_action_button_country_details);
 	}
 
@@ -216,10 +216,10 @@ public class CountryDetailsActivity extends UpButtonActivity implements SearchVi
 
 	private void checkIfDurationOverlaps(Intent intent) {
 		for (City existingCity : cityDao.getAllFromCountry(selected.getId())) {
-			long startDateExisting = DateUtils.parseDateToMilliseconds(existingCity.getStartDate());
-			long startDateNew = DateUtils.parseDateToMilliseconds(intent.getStringExtra(Const.START_DATE));
-			long endDateExisting = DateUtils.parseDateToMilliseconds(existingCity.getEndDate());
-			long endDateNew = DateUtils.parseDateToMilliseconds(intent.getStringExtra(Const.END_DATE));
+			long startDateExisting = DateTimeUtils.parseDateToMilliseconds(existingCity.getStartDate());
+			long startDateNew = DateTimeUtils.parseDateToMilliseconds(intent.getStringExtra(Const.START_DATE));
+			long endDateExisting = DateTimeUtils.parseDateToMilliseconds(existingCity.getEndDate());
+			long endDateNew = DateTimeUtils.parseDateToMilliseconds(intent.getStringExtra(Const.END_DATE));
 			if (max(startDateNew, startDateExisting) < min(endDateNew, endDateExisting)) {
 				durationOverlaps = true;
 				break;
@@ -250,6 +250,10 @@ public class CountryDetailsActivity extends UpButtonActivity implements SearchVi
 		for (int dayCount = 1; dayCount <= city.getDuration(); dayCount++) {
 			Day day = new Day();
 			day.setName(getString(R.string.day) + " " + dayCount);
+
+			int dayDateDay = Integer.parseInt(city.getStartDate().substring(0, city.getStartDate().indexOf("."))) + dayCount - 1;
+			String dayDate = dayDateDay + "." + city.getStartDate().substring(3);
+			day.setDate(dayDate);
 			day.setCityId(city.getId());
 
 			long dayID = dayDao.insert(day);
@@ -260,14 +264,14 @@ public class CountryDetailsActivity extends UpButtonActivity implements SearchVi
 	}
 
 	private long getCityDuration(City city) {
-		long startDate = DateUtils.parseDateToMilliseconds(city.getStartDate());
-		long endDate = DateUtils.parseDateToMilliseconds(city.getEndDate());
-		return DateUtils.getDaysCountFromTimeSpan(startDate, endDate);
+		long startDate = DateTimeUtils.parseDateToMilliseconds(city.getStartDate());
+		long endDate = DateTimeUtils.parseDateToMilliseconds(city.getEndDate());
+		return DateTimeUtils.getDaysCountFromTimeSpan(startDate, endDate);
 	}
 
 	private int compareCityStartDates(City cityOne, City cityTwo) {
-		long cityOneStartDate = DateUtils.parseDateToMilliseconds(cityOne.getStartDate());
-		long cityTwoStartDate = DateUtils.parseDateToMilliseconds(cityTwo.getStartDate());
+		long cityOneStartDate = DateTimeUtils.parseDateToMilliseconds(cityOne.getStartDate());
+		long cityTwoStartDate = DateTimeUtils.parseDateToMilliseconds(cityTwo.getStartDate());
 		return Long.compare(cityOneStartDate, cityTwoStartDate);
 	}
 
@@ -283,6 +287,8 @@ public class CountryDetailsActivity extends UpButtonActivity implements SearchVi
 
 	private void onSubmitButtonClick() {
 		submitButton.setOnClickListener(v -> {
+			editDescription();
+			countryDao.update(selected);
 			refreshContent();
 			toggleForm();
 		});
@@ -296,8 +302,15 @@ public class CountryDetailsActivity extends UpButtonActivity implements SearchVi
 			form.setVisibility(View.GONE);
 			content.setVisibility(View.VISIBLE);
 		} else {
+			editDescription.setText(selected.getDescription());
 			form.setVisibility(View.VISIBLE);
 			content.setVisibility(View.GONE);
+		}
+	}
+
+	private void editDescription() {
+		if (editDescription.getText() != null && !editDescription.getText().toString().isEmpty()) {
+			selected.setDescription(editDescription.getText().toString());
 		}
 	}
 
@@ -308,9 +321,6 @@ public class CountryDetailsActivity extends UpButtonActivity implements SearchVi
 		if (selected.getImageURI() != null && !selected.getImageURI().isEmpty()) {
 			LayoutUtils.setOnlineImageURIOnImageView(getApplicationContext(), countryImage, selected.getImageURI());
 		}
-
-		selected.setDescription(descriptionText.getText().toString());
-		countryDao.update(selected);
 	}
 
 	private long getCountryDuration() {

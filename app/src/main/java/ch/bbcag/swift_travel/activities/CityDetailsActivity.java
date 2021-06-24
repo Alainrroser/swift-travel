@@ -1,6 +1,8 @@
 package ch.bbcag.swift_travel.activities;
 
+import android.app.Activity;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -16,9 +18,14 @@ import android.widget.SearchView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.constraintlayout.widget.Group;
 
+import com.github.dhaval2404.imagepicker.ImagePicker;
+import com.google.android.material.textfield.TextInputLayout;
+
 import java.util.List;
+import java.util.Objects;
 
 import ch.bbcag.swift_travel.R;
 import ch.bbcag.swift_travel.adapter.DayAdapter;
@@ -51,6 +58,8 @@ public class CityDetailsActivity extends UpButtonActivity implements SearchView.
 	private CityDao cityDao;
 	private DayDao dayDao;
 
+	private boolean nameValidated = false;
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -66,12 +75,12 @@ public class CityDetailsActivity extends UpButtonActivity implements SearchView.
 		titleText = findViewById(R.id.city_title);
 		durationText = findViewById(R.id.city_duration);
 		descriptionText = findViewById(R.id.city_description);
-		editTitle = findViewById(R.id.edit_title);
-		editDescription = findViewById(R.id.edit_description);
+		editTitle = findViewById(R.id.city_edit_title);
+		editDescription = findViewById(R.id.city_edit_description);
 		cityImage = findViewById(R.id.city_image);
 
 		submitButton = findViewById(R.id.city_submit_button);
-		editDescriptionButton = findViewById(R.id.edit_button);
+		editDescriptionButton = findViewById(R.id.city_edit_button);
 	}
 
 	@Override
@@ -99,6 +108,7 @@ public class CityDetailsActivity extends UpButtonActivity implements SearchView.
 		getProgressBar().setVisibility(View.GONE);
 
 		editDescriptionButton.setOnClickListener(v -> toggleForm());
+		cityImage.setOnClickListener(v -> ImagePicker.with(this).cropSquare().start());
 		onSubmitButtonClick();
 	}
 
@@ -152,6 +162,17 @@ public class CityDetailsActivity extends UpButtonActivity implements SearchView.
 		return false;
 	}
 
+	@Override
+	protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+		super.onActivityResult(requestCode, resultCode, data);
+		if (resultCode == Activity.RESULT_OK && data != null) {
+			Uri imageURI = data.getData();
+			selected.setImageURI(imageURI.toString());
+			cityDao.update(selected);
+			cityImage.setImageURI(imageURI);
+		}
+	}
+
 	private void setOnActionExpandListener() {
 		searchItem.setOnActionExpandListener(new MenuItem.OnActionExpandListener() {
 			@Override
@@ -190,7 +211,9 @@ public class CityDetailsActivity extends UpButtonActivity implements SearchView.
 
 	private void onSubmitButtonClick() {
 		submitButton.setOnClickListener(v -> {
+			editName();
 			editDescription();
+			cityDao.update(selected);
 			refreshContent();
 			toggleForm();
 		});
@@ -204,29 +227,41 @@ public class CityDetailsActivity extends UpButtonActivity implements SearchView.
 			LayoutUtils.setImageURIOnImageView(cityImage, selected.getImageURI());
 		}
 
-		selected.setDescription(descriptionText.getText().toString());
-		selected.setName(titleText.getText().toString());
-
 		setTitle(selected.getName());
+	}
 
-		cityDao.update(selected);
+	private void editName() {
+		TextInputLayout editTitleLayout = findViewById(R.id.trip_edit_title_layout);
+		if (Objects.requireNonNull(editTitle.getText()).toString().length() > 0 && Objects.requireNonNull(editTitle.getText()).toString().length() <= Const.TITLE_LENGTH) {
+			nameValidated = true;
+			selected.setName(editTitle.getText().toString());
+		} else {
+			nameValidated = false;
+			editTitleLayout.setError(getString(R.string.trip_name_error));
+		}
 	}
 
 	private void editDescription() {
 		if (editDescription.getText() != null && !editDescription.getText().toString().isEmpty()) {
 			selected.setDescription(editDescription.getText().toString());
-			cityDao.update(selected);
 		}
 	}
 
 	private void toggleForm() {
+		boolean notChanged = false;
 		Group form = findViewById(R.id.city_form);
 		Group content = findViewById(R.id.city_content);
 
-		if (form.getVisibility() == View.VISIBLE) {
+		if (titleText.getText().equals(editTitle.getText().toString())) {
+			notChanged = true;
+		}
+
+		if (form.getVisibility() == View.VISIBLE && (nameValidated || notChanged)) {
 			form.setVisibility(View.GONE);
 			content.setVisibility(View.VISIBLE);
 		} else {
+			editTitle.setText(selected.getName());
+			editDescription.setText(selected.getDescription());
 			form.setVisibility(View.VISIBLE);
 			content.setVisibility(View.GONE);
 		}

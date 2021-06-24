@@ -10,19 +10,19 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 
-    <ImageView
+    <ImageButton
         android:id="@+id/location_image"
         android:layout_width="147dp"
         android:layout_height="101dp"
         android:layout_marginStart="16dp"
         android:layout_marginTop="16dp"
         android:contentDescription="@string/place_holder_image"
-        android:scaleType="centerCrop"
+        android:scaleType="fitXY"
+        android:src="@drawable/trips_image"
         android:visibility="visible"
         app:layout_constraintDimensionRatio="21:9"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/trips_image" />
+        app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
         android:id="@+id/location_title"
@@ -65,9 +65,9 @@
         android:backgroundTint="#FFFFFF"
         android:clickable="true"
         android:contentDescription="@string/edit"
+        android:src="@drawable/outline_edit_black_20"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/outline_edit_black_20" />
+        app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
         android:id="@+id/location_duration"

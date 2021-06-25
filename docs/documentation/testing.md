@@ -20,6 +20,8 @@
 Software            |    Version
 --------------------|-----------------------
 Windows 10          |    1909
+Android 10          |    Q x86
+Nexus 5X            |    API 29
 
 ### 1.2 Testfälle
 

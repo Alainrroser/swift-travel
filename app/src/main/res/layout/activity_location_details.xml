@@ -158,7 +158,7 @@
         app:layout_constraintEnd_toStartOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        tools:visibility="gone" />
+        tools:visibility="visible" />
 
     <androidx.constraintlayout.widget.Group
         android:id="@+id/location_form"
@@ -168,6 +168,70 @@
         app:layout_constraintEnd_toStartOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        tools:visibility="visible" />
+        tools:visibility="gone" />
+
+    <TextView
+        android:id="@+id/location_pictures_title"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginBottom="16dp"
+        android:ellipsize="end"
+        android:maxLines="1"
+        android:text="@string/locations_pictures"
+        android:textAppearance="@style/TextAppearance.AppCompat.Title"
+        android:textSize="24sp"
+        app:layout_constraintBottom_toTopOf="@id/location_pictures"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/location_description" />
+
+    <View
+        android:id="@+id/divider_day_details"
+        android:layout_width="0dp"
+        android:layout_height="1dp"
+        android:background="?android:attr/listDivider"
+        android:visibility="visible"
+        app:layout_constraintBottom_toTopOf="@id/locations"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <ListView
+        android:id="@+id/location_pictures"
+        style="@style/Widget.AppCompat.Light.ListView.DropDown"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_marginBottom="88dp"
+        android:background="#FFFFFF"
+        android:divider="@android:drawable/divider_horizontal_dark"
+        android:dividerHeight="1dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/location_pictures_title" />
+
+    <View
+        android:id="@+id/divider_locations"
+        android:layout_width="0dp"
+        android:layout_height="1dp"
+        android:background="?android:attr/listDivider"
+        android:visibility="visible"
+        app:layout_constraintBottom_toBottomOf="@id/location_pictures"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/floating_action_button_location_pictures"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="end|bottom"
+        android:layout_marginEnd="16dp"
+        android:layout_marginBottom="16dp"
+        android:contentDescription="@string/add_country"
+        android:src="@drawable/add"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

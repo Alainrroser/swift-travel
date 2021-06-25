@@ -208,6 +208,7 @@
         style="@style/Widget.AppCompat.Light.ListView.DropDown"
         android:layout_width="match_parent"
         android:layout_height="0dp"
+        android:layout_marginBottom="88dp"
         android:background="#FFFFFF"
         android:divider="@android:drawable/divider_horizontal_dark"
         android:dividerHeight="1dp"
@@ -216,10 +217,21 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/countries_title" />
 
+    <View
+        android:id="@+id/divider_countries"
+        android:layout_width="0dp"
+        android:layout_height="1dp"
+        android:background="?android:attr/listDivider"
+        android:visibility="visible"
+        app:layout_constraintBottom_toBottomOf="@id/countries"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/floating_action_button_trip_details"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="56dp"
+        android:layout_height="56dp"
         android:layout_gravity="end|bottom"
         android:layout_marginEnd="16dp"
         android:layout_marginBottom="16dp"

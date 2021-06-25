@@ -109,7 +109,7 @@
 > Sie beinhaltet eine Liste mit allen Ländern, welche man auch durchsuchen kann, welche man dann zu der Liste der Länder im Trip der TripDetailsActivity hinzufügen kann
 
 ## Klassendiagramm
-![Klassendiagramm](../designs/images/Klassendiagramm.png)
+![Klassendiagramm](../designs/images/classdiagram.png)
 
 # Technische Realisierung
 

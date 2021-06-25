@@ -95,11 +95,11 @@
 ## Mockups
 
 > ***1. Trips***  
-> ![Trips](../designs/images/Trips.png)  
+> ![Trips](../designs/images/Trips.PNG)  
 > Dies ist die Startactivity. Man hat hier die Möglichkeit mithilfe eines Floating Action Buttons Reisen hinzuzufügen, welche dann in einer Liste angezeigt werden.
 
 > ***2.	Tripdetails***  
-> ![Tripdetails](../designs/images/TripDetails.png)  
+> ![Tripdetails](../designs/images/TripDetails.PNG)  
 > In diese kommt man, indem man einen Eintrag der Liste der ersten Activity anklickt. Hier hat man zuerst Informationen zum Trip, welche man auch bearbeiten kann
 > Darunter ist ebenfalls eine Liste, diesmal aber mit allen Ländern, welche man in diesem Trip besucht und auch hier hat es einen Floating Action Button, mitwelchem man Länder hinzufügen kann
 
@@ -114,14 +114,58 @@
 # Technische Realisierung
 
 ## Room Database
-> Alle Trips, Countries, Cities und Days werden in lokal in einer Room Datenbank gespeichert
+> Alle Trips, Countries, Cities, Days und Locations werden lokal in einer Room Datenbank gespeichert.
 
 ### SwiftTravelDatabase
 > Die Datenbank mit den Gettern für die DAOs
+```Java
+@androidx.room.Database(entities = {Trip.class, Country.class, City.class, Day.class, Location.class}, version = 1, exportSchema = false)
+public abstract class SwiftTravelDatabase extends RoomDatabase {
+	private static SwiftTravelDatabase INSTANCE;
+
+	public static synchronized SwiftTravelDatabase getInstance(Context context) {
+		if (INSTANCE == null) {
+			INSTANCE = Room.databaseBuilder(context.getApplicationContext(), SwiftTravelDatabase.class, "SwiftTravelDatabase").allowMainThreadQueries().fallbackToDestructiveMigration().build();
+		}
+		return INSTANCE;
+	}
+
+	public abstract TripDao getTripDao();
+
+	public abstract CountryDao getCountryDao();
+
+	public abstract CityDao getCityDao();
+
+	public abstract DayDao getDayDao();
+
+	public abstract LocationDao getLocationDao();
+}
+```
 
 ### DAOs
-> TripDao, CountryDao, CityDao und DayDao
+* TripDao, CountryDao, CityDao, DayDao und LocationDao
 > Die Data Access Objects mit den Abfragen für die Entities
+#### Aufbau eines Daos
+Es gibt jeweils ein Select-Statement für alle Einträge mit der übergeordneten ID (im Beispiel Select * from cities where countryId = countryId) im TripDao wird jeder Eintrag ausgelesen und dargestellt. Desweiteren bekommen die Daos weitere Abfragen die für das Löschen einzelner Einträge nötig sind.
+```Java
+@Dao
+public interface CityDao {
+	@Query("SELECT * FROM cities WHERE countryId = :countryId")
+	List<City> getAllFromCountry(long countryId);
+
+	@Query("SELECT * FROM cities WHERE id = :id")
+	City getById(long id);
+
+	@Insert
+	long insert(City city);
+
+	@Update
+	void update(City city);
+
+	@Query("DELETE FROM cities WHERE id = :id")
+	void deleteById(long id);
+}
+```
 
 ### Entities 
 > Trip, Country, City, Day 

@@ -32,7 +32,7 @@
 
     <string name="trips">Reisen</string>
     <string name="trip_name">Reisename</string>
-    <string name="trip_destination">Zielort</string>
+    <string name="trip_destination">Start- und Zielort</string>
     <string name="trip_duration">Aufenthaltsdauer</string>
     <string name="create_trip_title">Reise erstellen</string>
     <string name="trip_create_button_text">Erstellen</string>

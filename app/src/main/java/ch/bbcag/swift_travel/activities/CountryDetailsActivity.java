@@ -32,9 +32,11 @@ import ch.bbcag.swift_travel.dal.CityDao;
 import ch.bbcag.swift_travel.dal.CountryDao;
 import ch.bbcag.swift_travel.dal.DayDao;
 import ch.bbcag.swift_travel.dal.SwiftTravelDatabase;
+import ch.bbcag.swift_travel.dal.TripDao;
 import ch.bbcag.swift_travel.entities.City;
 import ch.bbcag.swift_travel.entities.Country;
 import ch.bbcag.swift_travel.entities.Day;
+import ch.bbcag.swift_travel.entities.Trip;
 import ch.bbcag.swift_travel.utils.Const;
 import ch.bbcag.swift_travel.utils.DateTimeUtils;
 import ch.bbcag.swift_travel.utils.LayoutUtils;
@@ -60,6 +62,7 @@ public class CountryDetailsActivity extends UpButtonActivity implements SearchVi
 
 	private Country selected;
 
+	private TripDao tripDao;
 	private CountryDao countryDao;
 	private CityDao cityDao;
 	private DayDao dayDao;
@@ -75,6 +78,7 @@ public class CountryDetailsActivity extends UpButtonActivity implements SearchVi
 		String name = intent.getStringExtra(Const.COUNTRY_NAME);
 		setTitle(name);
 
+		tripDao = SwiftTravelDatabase.getInstance(getApplicationContext()).getTripDao();
 		countryDao = SwiftTravelDatabase.getInstance(getApplicationContext()).getCountryDao();
 		cityDao = SwiftTravelDatabase.getInstance(getApplicationContext()).getCityDao();
 		dayDao = SwiftTravelDatabase.getInstance(getApplicationContext()).getDayDao();
@@ -249,6 +253,14 @@ public class CountryDetailsActivity extends UpButtonActivity implements SearchVi
 			addDaysToCity(city);
 			adapter.add(city);
 			adapter.sort(this::compareCityStartDates);
+
+			City firstCity = adapter.getItem(0);
+			City lastCity = adapter.getItem(adapter.getCount() - 1);
+			Country country = countryDao.getById(firstCity.getCountryId());
+			Trip trip = tripDao.getById(country.getTripId());
+			trip.setOrigin(firstCity.getName());
+			trip.setDestination(lastCity.getName());
+			tripDao.update(trip);
 		} else {
 			generateMessageDialog(getString(R.string.duration_overlap_error_title), getString(R.string.duration_overlap_error_text));
 		}

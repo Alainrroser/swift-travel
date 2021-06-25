@@ -48,7 +48,7 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
-        android:id="@+id/destination_three_line_list"
+        android:id="@+id/origin_destination_three_line_list"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:text="@string/trip_destination"
@@ -65,9 +65,9 @@
         android:text="@string/trip_duration"
         android:textColor="@color/black"
         android:textSize="14sp"
-        app:layout_constraintEnd_toEndOf="@+id/destination_three_line_list"
+        app:layout_constraintEnd_toEndOf="@+id/origin_destination_three_line_list"
         app:layout_constraintStart_toStartOf="@id/name_three_line_list"
-        app:layout_constraintTop_toBottomOf="@id/destination_three_line_list" />
+        app:layout_constraintTop_toBottomOf="@id/origin_destination_three_line_list" />
 
     <View
         android:id="@+id/divider_three_line_list"

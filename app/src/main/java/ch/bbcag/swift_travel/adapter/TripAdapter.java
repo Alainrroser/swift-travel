@@ -39,7 +39,7 @@ public class TripAdapter extends ArrayAdapter<Trip> {
 			convertView = inflater.inflate(R.layout.three_line_list, parent, false);
 
 			viewHolder.name = convertView.findViewById(R.id.name_three_line_list);
-			viewHolder.destination = convertView.findViewById(R.id.destination_three_line_list);
+			viewHolder.originDestination = convertView.findViewById(R.id.origin_destination_three_line_list);
 			viewHolder.duration = convertView.findViewById(R.id.duration_three_line_list);
 			viewHolder.image = convertView.findViewById(R.id.image_three_line_list);
 			viewHolder.delete = convertView.findViewById(R.id.delete_three_line_list);
@@ -57,7 +57,10 @@ public class TripAdapter extends ArrayAdapter<Trip> {
 		viewHolder.delete.setOnClickListener(v -> generateConfirmDialog(trip));
 
 		viewHolder.name.setText(trip.getName());
-		viewHolder.destination.setText(trip.getDestination());
+		if(trip.getOrigin() != null && trip.getDestination() != null) {
+			String originDestination = trip.getOrigin() + "-" + trip.getDestination();
+			viewHolder.originDestination.setText(originDestination);
+		}
 
 		String duration;
 		if (trip.getDuration() == 1) {
@@ -116,7 +119,7 @@ public class TripAdapter extends ArrayAdapter<Trip> {
 
 	public static class TripAdapterViewHolder {
 		TextView name;
-		TextView destination;
+		TextView originDestination;
 		TextView duration;
 		ImageView image;
 		ImageButton delete;

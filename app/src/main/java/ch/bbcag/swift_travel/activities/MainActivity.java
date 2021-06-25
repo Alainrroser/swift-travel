@@ -14,12 +14,18 @@ import androidx.annotation.NonNull;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 import ch.bbcag.swift_travel.R;
 import ch.bbcag.swift_travel.adapter.TripAdapter;
+import ch.bbcag.swift_travel.dal.CityDao;
+import ch.bbcag.swift_travel.dal.CountryDao;
 import ch.bbcag.swift_travel.dal.SwiftTravelDatabase;
 import ch.bbcag.swift_travel.dal.TripDao;
+import ch.bbcag.swift_travel.entities.City;
+import ch.bbcag.swift_travel.entities.Country;
 import ch.bbcag.swift_travel.entities.Trip;
 import ch.bbcag.swift_travel.utils.Const;
 
@@ -32,6 +38,8 @@ public class MainActivity extends BaseActivity implements SearchView.OnQueryText
 	private ListView allTrips;
 
 	private TripDao tripDao;
+	private CountryDao countryDao;
+	private CityDao cityDao;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -40,6 +48,8 @@ public class MainActivity extends BaseActivity implements SearchView.OnQueryText
 		setTitle(getString(R.string.app_name));
 
 		tripDao = SwiftTravelDatabase.getInstance(getApplicationContext()).getTripDao();
+		countryDao = SwiftTravelDatabase.getInstance(getApplicationContext()).getCountryDao();
+		cityDao = SwiftTravelDatabase.getInstance(getApplicationContext()).getCityDao();
 
 		floatingActionButton = findViewById(R.id.floating_action_button_main);
 		allTrips = findViewById(R.id.trips);
@@ -51,6 +61,10 @@ public class MainActivity extends BaseActivity implements SearchView.OnQueryText
 		List<Trip> trips = tripDao.getAll();
 		adapter = new TripAdapter(this, trips);
 		allTrips.setAdapter(adapter);
+		for (Trip trip : trips) {
+			updateDestinationAndOrigin(trip, LocalDate.parse("01.01.2200", DateTimeFormatter.ofPattern("dd.MM.yyyy")), true);
+			updateDestinationAndOrigin(trip, LocalDate.parse("01.01.1800", DateTimeFormatter.ofPattern("dd.MM.yyyy")), false);
+		}
 		getProgressBar().setVisibility(View.GONE);
 		createTripFromIntent();
 		onTripClick();
@@ -139,9 +153,45 @@ public class MainActivity extends BaseActivity implements SearchView.OnQueryText
 			trip.setImageURI(intent.getStringExtra(Const.IMAGE_URI));
 			long id = tripDao.insert(trip);
 			trip.setId(id);
-
 			adapter.add(trip);
 		}
+	}
+
+	private void updateDestinationAndOrigin(Trip trip, LocalDate localDate, boolean updateOrigin) {
+		for (Country country : countryDao.getAllFromTrip(trip.getId())) {
+			loopThroughCities(trip, country, localDate, updateOrigin);
+		}
+	}
+
+	private void loopThroughCities(Trip trip, Country country, LocalDate localDate, boolean updateOrigin) {
+		for (City city : cityDao.getAllFromCountry(country.getId())) {
+			localDate = updateOriginOrDestination(trip, city, localDate, updateOrigin);
+		}
+	}
+
+	private LocalDate updateOriginOrDestination(Trip trip, City city, LocalDate localDate, boolean updateOrigin) {
+		if (updateOrigin) {
+			localDate = updateOrigin(trip, city, localDate);
+		} else {
+			localDate = updateDestination(trip, city, localDate);
+		}
+		return localDate;
+	}
+
+	private LocalDate updateOrigin(Trip trip, City city, LocalDate localDate) {
+		if (localDate.compareTo(LocalDate.parse(city.getStartDate(), DateTimeFormatter.ofPattern("dd.MM.yyyy"))) > 0) {
+			localDate = LocalDate.parse(city.getStartDate(), DateTimeFormatter.ofPattern("dd.MM.yyyy"));
+			trip.setOrigin(city.getName());
+		}
+		return localDate;
+	}
+
+	private LocalDate updateDestination(Trip trip, City city, LocalDate localDate) {
+		if (localDate.compareTo(LocalDate.parse(city.getStartDate(), DateTimeFormatter.ofPattern("dd.MM.yyyy"))) < 0) {
+			localDate = LocalDate.parse(city.getStartDate(), DateTimeFormatter.ofPattern("dd.MM.yyyy"));
+			trip.setDestination(city.getName());
+		}
+		return localDate;
 	}
 
 	private void onTripClick() {

@@ -57,9 +57,11 @@ public class TripAdapter extends ArrayAdapter<Trip> {
 		viewHolder.delete.setOnClickListener(v -> generateConfirmDialog(trip));
 
 		viewHolder.name.setText(trip.getName());
-		if(trip.getOrigin() != null && trip.getDestination() != null) {
+		if (trip.getOrigin() != null && trip.getDestination() != null) {
 			String originDestination = trip.getOrigin() + "-" + trip.getDestination();
 			viewHolder.originDestination.setText(originDestination);
+		} else {
+			viewHolder.originDestination.setText(mainActivity.getString(R.string.trip_origin_destination));
 		}
 
 		String duration;

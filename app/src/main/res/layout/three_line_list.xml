@@ -51,7 +51,7 @@
         android:id="@+id/origin_destination_three_line_list"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:text="@string/trip_destination"
+        android:text="@string/trip_origin_destination"
         android:textColor="@color/black"
         android:textSize="14sp"
         app:layout_constraintEnd_toEndOf="@+id/name_three_line_list"

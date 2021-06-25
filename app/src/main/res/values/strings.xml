@@ -31,7 +31,7 @@
 
     <string name="trips">Trips</string>
     <string name="trip_name">Trip name</string>
-    <string name="trip_destination">Origin and Destination</string>
+    <string name="trip_origin_destination">Origin and Destination</string>
     <string name="trip_duration">Duration</string>
     <string name="create_trip_title">Create Trip</string>
     <string name="trip_create_button_text">Create</string>

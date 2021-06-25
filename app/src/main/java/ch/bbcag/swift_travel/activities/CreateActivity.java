@@ -114,18 +114,22 @@ public class CreateActivity extends UpButtonActivity {
 
 	private Uri setImageURI(Intent data) {
 		Uri imageURI = data.getData();
-		if (getIntent().getBooleanExtra(Const.ADD_TRIP, false)) {
-			trip.setImageURI(imageURI.toString());
-		} else if (getIntent().getBooleanExtra(Const.ADD_CITY, false)) {
-			city.setImageURI(imageURI.toString());
-		} else if (getIntent().getBooleanExtra(Const.ADD_LOCATION, false)) {
-			location.setImageURI(imageURI.toString());
+		String imageURIString = imageURI.toString();
+		Intent intent = getIntent();
+		if (intent.getBooleanExtra(Const.ADD_TRIP, false)) {
+			trip.setImageURI(imageURIString);
+		} else if (intent.getBooleanExtra(Const.ADD_CITY, false)) {
+			city.setImageURI(imageURIString);
+		} else if (intent.getBooleanExtra(Const.ADD_LOCATION, false)) {
+			location.setImageURI(imageURIString);
 		}
 		return imageURI;
 	}
 
 	private void setDatePicker() {
-		MaterialDatePicker.Builder<Pair<Long, Long>> materialDateBuilder = MaterialDatePicker.Builder.dateRangePicker().setTitleText(getString(R.string.select_city_duration));
+		long millisecondsInAWeek = System.currentTimeMillis() + (1000 * 60 * 60 * 24 * 7);
+		MaterialDatePicker.Builder<Pair<Long, Long>> materialDateBuilder = MaterialDatePicker.Builder.dateRangePicker();
+		materialDateBuilder.setTitleText(getString(R.string.select_city_duration)).setSelection(new Pair<>(System.currentTimeMillis(), millisecondsInAWeek));
 		materialDatePicker = materialDateBuilder.build();
 
 		selectDurationDate.setOnClickListener(v -> showDatePickerIfClosed());
@@ -137,11 +141,12 @@ public class CreateActivity extends UpButtonActivity {
 
 
 	private void setTimePicker() {
-		selectDurationTime.setOnClickListener(v -> timeRangePickerDialog.show(getSupportFragmentManager(), timeRangePickerDialog.toString()));
+		timeRangePickerDialog.setOneDayMode(true);
+		selectDurationTime.setOnClickListener(v -> timeRangePickerDialog.show(getSupportFragmentManager().beginTransaction(), timeRangePickerDialog.toString()));
 		timeRangePickerDialog.setOnTimeRangeSelectedListener(timeRange -> {
 			timeDuration = getDuration(timeRange);
-			startTime = DateTimeUtils.addZeroToHour(timeRange.getStartHour()) + ":" + DateTimeUtils.addZeroToMinute(timeRange.getStartMinute());
-			endTime = DateTimeUtils.addZeroToHour(timeRange.getEndHour()) + ":" + DateTimeUtils.addZeroToMinute(timeRange.getEndMinute());
+			startTime = DateTimeUtils.addZeroToHour(timeRange.getStartHour()) + "." + DateTimeUtils.addZeroToMinute(timeRange.getStartMinute());
+			endTime = DateTimeUtils.addZeroToHour(timeRange.getEndHour()) + "." + DateTimeUtils.addZeroToMinute(timeRange.getEndMinute());
 			String timeRangeString = startTime + "-" + endTime;
 			durationTime.setText(timeRangeString);
 			timeSelected = true;

@@ -26,7 +26,7 @@ public class DateTimeUtils {
 	}
 
 	public static String addZeroToMinute(int minute) {
-		if (minute == 0) {
+		if (minute < 10) {
 			return "00";
 		}
 		return String.valueOf(minute);

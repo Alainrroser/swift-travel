@@ -6,6 +6,9 @@
 2. [Konkurrenzanalyse](#konkurrenzanalyse)
 3. [Design](#design)
    1. [Mockups](#mockups)
+      1. [Mockup Alain](#mockup-alain)
+      2. [Mockup Jan](#mockup-jan)
+      3. [Activity-Beschreibung](#activity-beschreibung)
    2. [Klassendiagramm](#klassendiagramm)
 4. [Technische Realisierung](#technische-realisierung)
    1. [Room Database](#room-database)
@@ -15,8 +18,6 @@
    2. [Restcountries API](#restcountries-api)
       1. [ChooseCountryActivity](#choosecountryactivity)
 5. [Testing](#testing)
-    1. [Manuelle UI-Tests](#manuelle-ui-tests)
-    2. [Testauswertung](#testauswertung)
 6. [Fazit](#fazit)
    1. [Positives](#positives)
    2. [Negatives](#negatives)
@@ -94,19 +95,29 @@
 # Design
 ## Mockups
 
-> ***1. Trips***  
-> ![Trips](../designs/images/Trips.PNG)  
-> Dies ist die Startactivity. Man hat hier die Möglichkeit mithilfe eines Floating Action Buttons Reisen hinzuzufügen, welche dann in einer Liste angezeigt werden.
+### Mockup Alain
+![Mockup Alain](../designs/images/MockupAlain.JPG)
 
-> ***2.	Tripdetails***  
-> ![Tripdetails](../designs/images/TripDetails.PNG)  
-> In diese kommt man, indem man einen Eintrag der Liste der ersten Activity anklickt. Hier hat man zuerst Informationen zum Trip, welche man auch bearbeiten kann
-> Darunter ist ebenfalls eine Liste, diesmal aber mit allen Ländern, welche man in diesem Trip besucht und auch hier hat es einen Floating Action Button, mitwelchem man Länder hinzufügen kann
+### Mockup Jan
+![Mockup Jan](../designs/images/MockupJan.JPG)
 
-> ***3. Sign In***   
-> ![ChooseCountry](../designs/images/ChooseCountry.png)  
-> In diese Activity kommt man durch den Klick auf den Floating Action der TripDetailsActivity klickt
-> Sie beinhaltet eine Liste mit allen Ländern, welche man auch durchsuchen kann, welche man dann zu der Liste der Länder im Trip der TripDetailsActivity hinzufügen kann
+### Activity-Beschreibung
+#### MainActivity
+In der MainActivity werden hinzugefügte Trips angezeigt und können für eine Detailansicht angeklickt werden. Es gibt desweiteren einen Floating-Action-Button zum Hinzufügen neuer Trips.
+#### TripDetailsActivity
+In der TripDetailsActivity wird die Detailansicht des Trips angezeigt mit einer Beschreibung, Dauer und Auflistung der Länder die man innerhalb dieses Trips besucht.
+#### CountryDetailsActivity
+In der CountryDetailsActivity werden die Beschreibung, Aufenthaltsdauer und eine Auflistung aller selbst hinzugefügten Städte angezeigt. Hier gibt es auch wieder einen Floating-Action-Button um neue Städte hinzufügen zu können.
+#### CityDetailsActivity
+In der CityDetailsActivity werden die Beschreibung, Aufenthaltsdauer und die Auflistung aller Tage, welche man in der Stadt verbringt angezeigt. Die Anzahl Tage werden automatisch anhand der Aufenthaltsdauer in der Stadt berechnet und daraus dann Tage in der Liste erstellt.
+#### DayDetailsActivity
+Die DayDetailsActivity hat wieder eine Beschreibung, das Datum und eine Auflistung von Locations, welche der Benutzer hinzugefügt hat angezeigt. Hier gibt es nun wieder einen Floating-Action-Button um neue Locations hinzufügen zu können.
+#### LocationDetailsActivity
+In den LocationDetails wird nun noch eine Information zur hinzugefügten Location angezeigt, bei welcher man eine Beschreibung und die Aufenthaltsdauer sehen kann.
+#### ChooseCountryActivity
+In der ChooseCountryActivity können Countries aus einer Liste ausgewählt und zum Trip hinzugefügt werden.
+#### UpButtonActivity & BaseActivity
+Die UpButton- & BaseActivity sind die Standard-Activities, von denen die anderen erben. Hier wird der Up-Button hinzugefügt und Standard-Elemente wie die Progress-Bar
 
 ## Klassendiagramm
 ![Klassendiagramm](../designs/images/classdiagram.png)

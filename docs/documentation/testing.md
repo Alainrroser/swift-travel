@@ -117,14 +117,8 @@ Erwartetes Resultat |	Die Stadt wird nicht hinzugefügt und es wird eine Fehlerm
 
 ## 2 Testprotokolle
 
-### 2.1 'Name Testperson'
+### 2.1 Vijayanantha Piriyan
 
-> Datum, Zeit: 'Datum' 'Zeit'
-
+> Datum, Zeit: 25.06.2021, 11.00
 > Eingesetzte Software: Android 10, Swift-Travel, Nexus 5X
-
-ID      |   Erfolgreich   | Bemerkungen
---------|-----------------|---------------------------------------------
-ST-01   | 	Ja/Nein 	  |
-
-> Unterschrift der Testperson: 'Unterschrift'
+> Alle Testfälle positiv ohne Bemerkungen

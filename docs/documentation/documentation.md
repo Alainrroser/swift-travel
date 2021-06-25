@@ -119,6 +119,8 @@ In der ChooseCountryActivity können Countries aus einer Liste ausgewählt und z
 #### UpButtonActivity & BaseActivity
 Die UpButton- & BaseActivity sind die Standard-Activities, von denen die anderen erben. Hier wird der Up-Button hinzugefügt und Standard-Elemente wie die Progress-Bar
 
+*Bei sämtlichen Activities (ausser UpButton-, Base- und LocationDetailsActivity) gibt es eine Suchfunktion um die vorhandene Liste zu filtern.
+
 ## Klassendiagramm
 ![Klassendiagramm](../designs/images/classdiagram.png)
 
@@ -179,8 +181,64 @@ public interface CityDao {
 ```
 
 ### Entities 
-> Trip, Country, City, Day 
-> Die Entities mit den einzelnen Columns und den Gettern und Settern dafür
+* Trip, Country, City, Day, Location
+* Die Entities mit den einzelnen Columns und den Gettern und Settern dafür
+```Java 
+@Entity(tableName = "days")
+public class Day {
+	@PrimaryKey(autoGenerate = true)
+	@ColumnInfo(name = "id")
+	private long id;
+	@ColumnInfo(name = "name")
+	private String name;
+	@ColumnInfo(name = "description")
+	private String description;
+	@ColumnInfo(name = "imageURI")
+	private String imageURI;
+	@ColumnInfo(name = "cityId")
+	private long cityId;
+	@ColumnInfo(name = "date")
+	private String date;
+	@Ignore
+	private List<Location> locationList = new ArrayList<>();
+
+	public Day() {
+	}
+
+	@NonNull
+	@Override
+	public String toString() {
+		return name;}
+	public long getId() {
+		return id;}
+	public void setId(long id) {
+		this.id = id;}
+	public String getName() {
+		return name;}
+	public void setName(String name) {
+		this.name = name;}
+	public String getDescription() {
+		return description;}
+	public void setDescription(String description) {
+		this.description = description;}
+	public long getCityId() {
+		return cityId;}
+	public void setCityId(long cityId) {
+		this.cityId = cityId;}
+	public String getImageURI() {
+		return imageURI;}
+	public void setImageURI(String imageURI) {
+		this.imageURI = imageURI;}
+	public String getDate() {
+		return date;}
+	public void setDate(String date) {
+		this.date = date;}
+	public List<Location> getLocationList() {
+		return locationList;}
+	public void setLocationList(List<Location> locationList) {
+		this.locationList = locationList;}
+}
+```
 
 ## Restcountries API
 > Bei der TripDetailsActivity soll eine Liste von den Ländern angezeigt werden, welche man in diesem Trip besucht

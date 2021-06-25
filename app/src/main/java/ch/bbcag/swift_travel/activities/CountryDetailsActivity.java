@@ -20,6 +20,10 @@ import androidx.constraintlayout.widget.Group;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.Date;
 import java.util.List;
 
 import ch.bbcag.swift_travel.R;
@@ -255,15 +259,8 @@ public class CountryDetailsActivity extends UpButtonActivity implements SearchVi
 			Day day = new Day();
 			day.setName(getString(R.string.day) + " " + dayCount);
 
-			int dayDateDay = Integer.parseInt(city.getStartDate().substring(0, city.getStartDate().indexOf("."))) + dayCount - 1;
-			String dayDate;
-			if (dayDateDay < 10) {
-				dayDate = "0" + dayDateDay + "." + city.getStartDate().substring(3);
-			} else {
-				dayDate = dayDateDay + "." + city.getStartDate().substring(3);
-
-			}
-			day.setDate(dayDate);
+			LocalDate dayDate = LocalDate.parse(city.getStartDate(), DateTimeFormatter.ofPattern("dd.MM.yyyy")).plusDays(dayCount - 1);
+			day.setDate(dayDate.format(DateTimeFormatter.ofPattern("dd.MM.yyyy")));
 			day.setCityId(city.getId());
 
 			long dayID = dayDao.insert(day);

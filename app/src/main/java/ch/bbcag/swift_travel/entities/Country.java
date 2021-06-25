@@ -6,8 +6,6 @@ import androidx.room.Entity;
 import androidx.room.Ignore;
 import androidx.room.PrimaryKey;
 
-import com.google.android.material.progressindicator.CircularProgressIndicator;
-
 import java.util.ArrayList;
 import java.util.List;
 

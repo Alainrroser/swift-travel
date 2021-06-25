@@ -223,7 +223,7 @@ public class TripDetailsActivity extends UpButtonActivity implements SearchView.
 	}
 
 	private int compareCountryStartDates(Country countryOne, Country countryTwo) {
-		if(countryOne.getStartDate() != null && countryTwo.getStartDate() != null) {
+		if (countryOne.getStartDate() != null && countryTwo.getStartDate() != null) {
 			long countryOneStartDate = DateTimeUtils.parseDateToMilliseconds(countryOne.getStartDate());
 			long countryTwoStartDate = DateTimeUtils.parseDateToMilliseconds(countryTwo.getStartDate());
 			return Long.compare(countryOneStartDate, countryTwoStartDate);

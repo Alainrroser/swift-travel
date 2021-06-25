@@ -156,7 +156,7 @@ public class MainActivity extends BaseActivity implements SearchView.OnQueryText
 	}
 
 	private int compareTripStartDates(Trip tripOne, Trip tripTwo) {
-		if(tripOne.getStartDate() != null && tripTwo.getStartDate() != null) {
+		if (tripOne.getStartDate() != null && tripTwo.getStartDate() != null) {
 			long tripOneStartDate = DateTimeUtils.parseDateToMilliseconds(tripOne.getStartDate());
 			long tripTwoStartDate = DateTimeUtils.parseDateToMilliseconds(tripTwo.getStartDate());
 			return Long.compare(tripOneStartDate, tripTwoStartDate);

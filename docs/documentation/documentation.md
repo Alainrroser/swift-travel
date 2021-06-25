@@ -17,6 +17,10 @@
       3. [Entities](#entities)
    2. [Restcountries API](#restcountries-api)
       1. [ChooseCountryActivity](#choosecountryactivity)
+   3. [Darstellen der Listen](#darstellung-der-listen)
+      1. [ListView in der Activity](#listview-in-der-activity)
+      2. [Adapter](#adapter)
+      3. [Custom-List-Item](#custom-list-item-xml)
 5. [Testing](#testing)
 6. [Fazit](#fazit)
    1. [Positives](#positives)
@@ -247,6 +251,122 @@ public class Day {
 > Man kann Countries hinzufügen mit einem Klick auf den Floating Action Button in den TripDetails hinzufügen
 > Man kommt dann in diese Activity wo man eine Liste mit den Ländernamen und Flaggen sieht
 > Diese Informationen werden von der restcountries API unter [diesem Link](https://restcountries.eu/rest/v2/all) abgerufen
+
+## Darstellung der Listen
+### Listview in der Activity
+Hinzufügen von List-Items zu einer Clickable-List.
+```Java
+ public void addCitiesToClickableList() {
+     ListView cities = findViewById(R.id.cities);
+     cities.setAdapter(adapter);
+     adapter.sort(this::compareCityStartDates);
+
+     getProgressBar().setVisibility(View.GONE);
+
+     AdapterView.OnItemClickListener mListClickedHandler = (parent, v, position, id) -> {
+         Intent intent = new Intent(getApplicationContext(), CityDetailsActivity.class);
+         City selected = (City) parent.getItemAtPosition(position);
+         intent.putExtra(Const.CITY_NAME, selected.getName());
+         intent.putExtra(Const.CITY, selected.getId());
+         startActivity(intent);
+     };
+
+     cities.setOnItemClickListener(mListClickedHandler);
+ }
+```
+### Adapter
+Der Adapter um die einzelnen List-Items zum korrekten XML-File zuzuordnen.
+Die Funktionalität zum Löschen eines Items aus der Liste, sowie das Löschen aus der Datenbank befinden sich ebenfalls im Adapter.
+```Java
+public class CountryAdapter extends ArrayAdapter<Country> {
+	private TripDetailsActivity tripDetailsActivity;
+
+	public CountryAdapter(TripDetailsActivity tripDetailsActivity, List<Country> countries) {
+		super(tripDetailsActivity, R.layout.two_line_list, countries);
+		this.tripDetailsActivity = tripDetailsActivity;
+	}
+
+	@Override
+	public View getView(int position, View convertView, ViewGroup parent) {
+		final Country country = getItem(position);
+		final CountryAdapterViewHolder viewHolder;
+
+		if (convertView == null) {
+			viewHolder = new CountryAdapterViewHolder();
+			LayoutInflater inflater = LayoutInflater.from(tripDetailsActivity);
+			convertView = inflater.inflate(R.layout.two_line_list, parent, false);
+
+			viewHolder.name = convertView.findViewById(R.id.name_two_line_list);
+			viewHolder.duration = convertView.findViewById(R.id.duration_or_date_two_line_list);
+			viewHolder.image = convertView.findViewById(R.id.image_two_line_list);
+			viewHolder.delete = convertView.findViewById(R.id.delete_two_line_list);
+
+			convertView.setTag(viewHolder);
+		} else {
+			viewHolder = (CountryAdapterViewHolder) convertView.getTag();
+		}
+
+		addInformationToAdapter(viewHolder, country);
+		return convertView;
+	}
+
+	private void addInformationToAdapter(CountryAdapterViewHolder viewHolder, Country country) {
+		viewHolder.delete.setOnClickListener(v -> generateConfirmDialog(country));
+
+		viewHolder.name.setText(country.getName());
+		String duration;
+		if (country.getDuration() == 1) {
+			duration = country.getDuration() + " " + tripDetailsActivity.getString(R.string.day);
+		} else {
+			duration = country.getDuration() + " " + tripDetailsActivity.getString(R.string.days);
+		}
+		viewHolder.duration.setText(duration);
+		LayoutUtils.setOnlineImageURIOnImageView(getContext(), viewHolder.image, country.getImageURI());
+	}
+
+	private void generateConfirmDialog(Country country) {
+		tripDetailsActivity.generateConfirmDialog(tripDetailsActivity.getString(R.string.delete_entry_title), tripDetailsActivity.getString(R.string.delete_entry_text), () -> {
+			remove(country);
+			notifyDataSetChanged();
+			deleteCities(country);
+			SwiftTravelDatabase.getInstance(tripDetailsActivity.getApplicationContext()).getCountryDao().deleteById(country.getId());
+		});
+	}
+
+	private void deleteCities(Country country) {
+		List<City> cities = SwiftTravelDatabase.getInstance(tripDetailsActivity.getApplicationContext()).getCityDao().getAllFromCountry(country.getId());
+		for (City city : cities) {
+			deleteDays(city);
+			SwiftTravelDatabase.getInstance(tripDetailsActivity.getApplicationContext()).getCityDao().deleteById(city.getId());
+		}
+	}
+
+	private void deleteDays(City city) {
+		List<Day> days = SwiftTravelDatabase.getInstance(tripDetailsActivity.getApplicationContext()).getDayDao().getAllFromCity(city.getId());
+		for (Day day : days) {
+			deleteLocations(day);
+			SwiftTravelDatabase.getInstance(tripDetailsActivity.getApplicationContext()).getDayDao().deleteById(day.getId());
+		}
+	}
+
+	private void deleteLocations(Day day) {
+		List<Location> locations = SwiftTravelDatabase.getInstance(tripDetailsActivity.getApplicationContext()).getLocationDao().getAllFromDay(day.getId());
+		for (Location location : locations) {
+			SwiftTravelDatabase.getInstance(tripDetailsActivity.getApplicationContext()).getLocationDao().deleteById(location.getId());
+		}
+	}
+
+	public static class CountryAdapterViewHolder {
+		TextView name;
+		TextView duration;
+		ImageView image;
+		ImageButton delete;
+	}
+}
+```
+### Custom-List-Item-XML
+Unsere Custom-List-Items bestehen aus einer ImageView, diversen TextViews (je nach Anzahl Lines) und bei löschbaren Items noch der Löschen-Button.
+![Image of custom three line list item](../designs/images/three_line_item.JPG)
 
 # Testing
 

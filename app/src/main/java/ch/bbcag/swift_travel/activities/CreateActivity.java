@@ -37,6 +37,7 @@ public class CreateActivity extends UpButtonActivity {
 	private Trip trip = new Trip();
 	private City city = new City();
 	private Location location = new Location();
+	
 	private TextInputLayout nameLayout;
 	private TextInputEditText nameEdit;
 	private TextInputEditText descriptionEdit;

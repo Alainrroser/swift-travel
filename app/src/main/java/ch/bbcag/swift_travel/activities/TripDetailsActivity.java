@@ -36,6 +36,7 @@ import ch.bbcag.swift_travel.dal.TripDao;
 import ch.bbcag.swift_travel.entities.Country;
 import ch.bbcag.swift_travel.entities.Trip;
 import ch.bbcag.swift_travel.utils.Const;
+import ch.bbcag.swift_travel.utils.DateTimeUtils;
 import ch.bbcag.swift_travel.utils.LayoutUtils;
 
 public class TripDetailsActivity extends UpButtonActivity implements SearchView.OnQueryTextListener, SearchView.OnCloseListener {
@@ -100,6 +101,10 @@ public class TripDetailsActivity extends UpButtonActivity implements SearchView.
 
 		List<Country> countriesList = countryDao.getAllFromTrip(selected.getId());
 		adapter = new CountryAdapter(this, countriesList);
+
+		selected.setStartDate(adapter.getItem(0).getStartDate());
+		selected.setEndDate(adapter.getItem(adapter.getCount() - 1).getEndDate());
+		tripDao.update(selected);
 
 		createCountryFromIntent();
 		addCountriesToClickableList();
@@ -217,8 +222,18 @@ public class TripDetailsActivity extends UpButtonActivity implements SearchView.
 		}
 	}
 
+	private int compareCountryStartDates(Country countryOne, Country countryTwo) {
+		if(countryOne.getStartDate() != null && countryTwo.getStartDate() != null) {
+			long countryOneStartDate = DateTimeUtils.parseDateToMilliseconds(countryOne.getStartDate());
+			long countryTwoStartDate = DateTimeUtils.parseDateToMilliseconds(countryTwo.getStartDate());
+			return Long.compare(countryOneStartDate, countryTwoStartDate);
+		}
+		return 0;
+	}
+
 	private void addCountriesToClickableList() {
 		countries.setAdapter(adapter);
+		adapter.sort(this::compareCountryStartDates);
 
 		AdapterView.OnItemClickListener mListClickedHandler = (parent, v, position, id) -> {
 			Intent intent = new Intent(getApplicationContext(), CountryDetailsActivity.class);

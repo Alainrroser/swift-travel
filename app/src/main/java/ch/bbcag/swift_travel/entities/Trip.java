@@ -24,6 +24,10 @@ public class Trip {
 	private String origin;
 	@ColumnInfo(name = "destination")
 	private String destination;
+	@ColumnInfo(name = "startDate")
+	private String startDate;
+	@ColumnInfo(name = "endDate")
+	private String endDate;
 	@ColumnInfo(name = "duration")
 	private long duration;
 	@Ignore
@@ -61,6 +65,22 @@ public class Trip {
 
 	public void setDestination(String destination) {
 		this.destination = destination;
+	}
+
+	public String getStartDate() {
+		return startDate;
+	}
+
+	public void setStartDate(String startDate) {
+		this.startDate = startDate;
+	}
+
+	public String getEndDate() {
+		return endDate;
+	}
+
+	public void setEndDate(String endDate) {
+		this.endDate = endDate;
 	}
 
 	public long getDuration() {

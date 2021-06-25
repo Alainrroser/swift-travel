@@ -6,6 +6,8 @@ import androidx.room.Entity;
 import androidx.room.Ignore;
 import androidx.room.PrimaryKey;
 
+import com.google.android.material.progressindicator.CircularProgressIndicator;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -24,6 +26,10 @@ public class Country {
 	private String imageURI;
 	@ColumnInfo(name = "tripId")
 	private long tripId;
+	@ColumnInfo(name = "startDate")
+	private String startDate;
+	@ColumnInfo(name = "endDate")
+	private String endDate;
 	@ColumnInfo(name = "duration")
 	private long duration;
 	@Ignore
@@ -61,6 +67,22 @@ public class Country {
 
 	public void setCode(String code) {
 		this.code = code;
+	}
+
+	public String getStartDate() {
+		return startDate;
+	}
+
+	public void setStartDate(String startDate) {
+		this.startDate = startDate;
+	}
+
+	public String getEndDate() {
+		return endDate;
+	}
+
+	public void setEndDate(String endDate) {
+		this.endDate = endDate;
 	}
 
 	public long getDuration() {

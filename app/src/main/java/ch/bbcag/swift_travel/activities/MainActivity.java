@@ -28,6 +28,7 @@ import ch.bbcag.swift_travel.entities.City;
 import ch.bbcag.swift_travel.entities.Country;
 import ch.bbcag.swift_travel.entities.Trip;
 import ch.bbcag.swift_travel.utils.Const;
+import ch.bbcag.swift_travel.utils.DateTimeUtils;
 
 public class MainActivity extends BaseActivity implements SearchView.OnQueryTextListener, SearchView.OnCloseListener {
 	private SearchView searchView;
@@ -60,14 +61,11 @@ public class MainActivity extends BaseActivity implements SearchView.OnQueryText
 		super.onStart();
 		List<Trip> trips = tripDao.getAll();
 		adapter = new TripAdapter(this, trips);
-		allTrips.setAdapter(adapter);
-		for (Trip trip : trips) {
-			updateDestinationAndOrigin(trip, LocalDate.parse("01.01.2200", DateTimeFormatter.ofPattern("dd.MM.yyyy")), true);
-			updateDestinationAndOrigin(trip, LocalDate.parse("01.01.1800", DateTimeFormatter.ofPattern("dd.MM.yyyy")), false);
-		}
-		getProgressBar().setVisibility(View.GONE);
+
 		createTripFromIntent();
-		onTripClick();
+		addTripsToClickableList(trips);
+
+		getProgressBar().setVisibility(View.GONE);
 
 		onFloatingActionButtonClick();
 	}
@@ -157,16 +155,26 @@ public class MainActivity extends BaseActivity implements SearchView.OnQueryText
 		}
 	}
 
+	private int compareTripStartDates(Trip tripOne, Trip tripTwo) {
+		if(tripOne.getStartDate() != null && tripTwo.getStartDate() != null) {
+			long tripOneStartDate = DateTimeUtils.parseDateToMilliseconds(tripOne.getStartDate());
+			long tripTwoStartDate = DateTimeUtils.parseDateToMilliseconds(tripTwo.getStartDate());
+			return Long.compare(tripOneStartDate, tripTwoStartDate);
+		}
+		return 0;
+	}
+
 	private void updateDestinationAndOrigin(Trip trip, LocalDate localDate, boolean updateOrigin) {
 		for (Country country : countryDao.getAllFromTrip(trip.getId())) {
-			loopThroughCities(trip, country, localDate, updateOrigin);
+			localDate = loopThroughCities(trip, country, localDate, updateOrigin);
 		}
 	}
 
-	private void loopThroughCities(Trip trip, Country country, LocalDate localDate, boolean updateOrigin) {
+	private LocalDate loopThroughCities(Trip trip, Country country, LocalDate localDate, boolean updateOrigin) {
 		for (City city : cityDao.getAllFromCountry(country.getId())) {
 			localDate = updateOriginOrDestination(trip, city, localDate, updateOrigin);
 		}
+		return localDate;
 	}
 
 	private LocalDate updateOriginOrDestination(Trip trip, City city, LocalDate localDate, boolean updateOrigin) {
@@ -194,7 +202,14 @@ public class MainActivity extends BaseActivity implements SearchView.OnQueryText
 		return localDate;
 	}
 
-	private void onTripClick() {
+	private void addTripsToClickableList(List<Trip> trips) {
+		allTrips.setAdapter(adapter);
+		adapter.sort(this::compareTripStartDates);
+		for (Trip trip : trips) {
+			updateDestinationAndOrigin(trip, LocalDate.parse("01.01.2200", DateTimeFormatter.ofPattern("dd.MM.yyyy")), true);
+			updateDestinationAndOrigin(trip, LocalDate.parse("01.01.1800", DateTimeFormatter.ofPattern("dd.MM.yyyy")), false);
+		}
+
 		AdapterView.OnItemClickListener onItemClickListener = (parent, v, position, id) -> {
 			Intent intent = new Intent(getApplicationContext(), TripDetailsActivity.class);
 			Trip selected = (Trip) parent.getItemAtPosition(position);

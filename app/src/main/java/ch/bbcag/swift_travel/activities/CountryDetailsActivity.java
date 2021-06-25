@@ -245,8 +245,13 @@ public class CountryDetailsActivity extends UpButtonActivity implements SearchVi
 			long id = cityDao.insert(city);
 			city.setId(id);
 			addDaysToCity(city);
+
 			adapter.add(city);
 			adapter.sort(this::compareCityStartDates);
+
+			selected.setStartDate(adapter.getItem(0).getStartDate());
+			selected.setEndDate(adapter.getItem(adapter.getCount() - 1).getEndDate());
+			countryDao.update(selected);
 		} else {
 			generateMessageDialog(getString(R.string.duration_overlap_error_title), getString(R.string.duration_overlap_error_text));
 		}

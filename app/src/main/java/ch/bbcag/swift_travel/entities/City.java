@@ -11,6 +11,8 @@ import java.util.List;
 
 @Entity(tableName = "cities")
 public class City {
+	@Ignore
+	List<Day> days = new ArrayList<>();
 	@PrimaryKey(autoGenerate = true)
 	@ColumnInfo(name = "id")
 	private long id;
@@ -28,8 +30,6 @@ public class City {
 	private long duration;
 	@ColumnInfo(name = "countryId")
 	private long countryId;
-	@Ignore
-	List<Day> days = new ArrayList<>();
 
 	public City() {
 	}

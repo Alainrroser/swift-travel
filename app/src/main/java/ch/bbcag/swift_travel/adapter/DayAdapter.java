@@ -18,13 +18,6 @@ import ch.bbcag.swift_travel.utils.LayoutUtils;
 public class DayAdapter extends ArrayAdapter<Day> {
 	private CityDetailsActivity cityDetailsActivity;
 
-	public static class DayAdapterViewHolder {
-		TextView name;
-		TextView date;
-		ImageView image;
-		ImageButton delete;
-	}
-
 	public DayAdapter(CityDetailsActivity cityDetailsActivity, List<Day> days) {
 		super(cityDetailsActivity, R.layout.two_line_list, days);
 		this.cityDetailsActivity = cityDetailsActivity;
@@ -64,5 +57,12 @@ public class DayAdapter extends ArrayAdapter<Day> {
 			viewHolder.image.setImageResource(R.drawable.trip_placeholder);
 		}
 		viewHolder.date.setText(day.getDate());
+	}
+
+	public static class DayAdapterViewHolder {
+		TextView name;
+		TextView date;
+		ImageView image;
+		ImageButton delete;
 	}
 }

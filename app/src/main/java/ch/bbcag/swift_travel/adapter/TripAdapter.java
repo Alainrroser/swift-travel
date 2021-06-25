@@ -23,14 +23,6 @@ import ch.bbcag.swift_travel.utils.LayoutUtils;
 public class TripAdapter extends ArrayAdapter<Trip> {
 	private MainActivity mainActivity;
 
-	public static class TripAdapterViewHolder {
-		TextView name;
-		TextView destination;
-		TextView duration;
-		ImageView image;
-		ImageButton delete;
-	}
-
 	public TripAdapter(MainActivity mainActivity, List<Trip> trips) {
 		super(mainActivity, R.layout.three_line_list, trips);
 		this.mainActivity = mainActivity;
@@ -120,5 +112,13 @@ public class TripAdapter extends ArrayAdapter<Trip> {
 		for (Location location : locations) {
 			SwiftTravelDatabase.getInstance(mainActivity.getApplicationContext()).getLocationDao().deleteById(location.getId());
 		}
+	}
+
+	public static class TripAdapterViewHolder {
+		TextView name;
+		TextView destination;
+		TextView duration;
+		ImageView image;
+		ImageButton delete;
 	}
 }

@@ -17,11 +17,6 @@ import ch.bbcag.swift_travel.utils.LayoutUtils;
 public class ChooseCountryAdapter extends ArrayAdapter<Country> {
 	private ChooseCountryActivity chooseCountryActivity;
 
-	public static class ChooseCountryAdapterViewHolder {
-		TextView name;
-		ImageView image;
-	}
-
 	public ChooseCountryAdapter(ChooseCountryActivity chooseCountryActivity, List<Country> countries) {
 		super(chooseCountryActivity, R.layout.one_line_list, countries);
 		this.chooseCountryActivity = chooseCountryActivity;
@@ -52,5 +47,10 @@ public class ChooseCountryAdapter extends ArrayAdapter<Country> {
 	private void addInformationToAdapter(ChooseCountryAdapterViewHolder viewHolder, Country country) {
 		viewHolder.name.setText(country.getName());
 		LayoutUtils.setOnlineImageURIOnImageView(getContext(), viewHolder.image, country.getImageURI());
+	}
+
+	public static class ChooseCountryAdapterViewHolder {
+		TextView name;
+		ImageView image;
 	}
 }

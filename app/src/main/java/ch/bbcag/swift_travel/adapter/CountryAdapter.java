@@ -22,13 +22,6 @@ import ch.bbcag.swift_travel.utils.LayoutUtils;
 public class CountryAdapter extends ArrayAdapter<Country> {
 	private TripDetailsActivity tripDetailsActivity;
 
-	public static class CountryAdapterViewHolder {
-		TextView name;
-		TextView duration;
-		ImageView image;
-		ImageButton delete;
-	}
-
 	public CountryAdapter(TripDetailsActivity tripDetailsActivity, List<Country> countries) {
 		super(tripDetailsActivity, R.layout.two_line_list, countries);
 		this.tripDetailsActivity = tripDetailsActivity;
@@ -102,5 +95,12 @@ public class CountryAdapter extends ArrayAdapter<Country> {
 		for (Location location : locations) {
 			SwiftTravelDatabase.getInstance(tripDetailsActivity.getApplicationContext()).getLocationDao().deleteById(location.getId());
 		}
+	}
+
+	public static class CountryAdapterViewHolder {
+		TextView name;
+		TextView duration;
+		ImageView image;
+		ImageButton delete;
 	}
 }

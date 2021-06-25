@@ -21,13 +21,6 @@ import ch.bbcag.swift_travel.utils.LayoutUtils;
 public class CityAdapter extends ArrayAdapter<City> {
 	private CountryDetailsActivity countryDetailsActivity;
 
-	public static class CityAdapterViewHolder {
-		TextView name;
-		TextView duration;
-		ImageView image;
-		ImageButton delete;
-	}
-
 	public CityAdapter(CountryDetailsActivity countryDetailsActivity, List<City> cities) {
 		super(countryDetailsActivity, R.layout.two_line_list, cities);
 		this.countryDetailsActivity = countryDetailsActivity;
@@ -93,5 +86,12 @@ public class CityAdapter extends ArrayAdapter<City> {
 		for (Location location : locations) {
 			SwiftTravelDatabase.getInstance(countryDetailsActivity.getApplicationContext()).getLocationDao().deleteById(location.getId());
 		}
+	}
+
+	public static class CityAdapterViewHolder {
+		TextView name;
+		TextView duration;
+		ImageView image;
+		ImageButton delete;
 	}
 }

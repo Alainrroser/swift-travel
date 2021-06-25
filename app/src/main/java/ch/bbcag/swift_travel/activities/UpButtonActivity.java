@@ -1,10 +1,10 @@
 package ch.bbcag.swift_travel.activities;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.ActionBar;
-
 import android.os.Bundle;
 import android.view.MenuItem;
+
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.ActionBar;
 
 public class UpButtonActivity extends BaseActivity {
 

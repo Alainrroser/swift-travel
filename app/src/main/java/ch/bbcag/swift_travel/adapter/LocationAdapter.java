@@ -19,13 +19,6 @@ import ch.bbcag.swift_travel.utils.LayoutUtils;
 public class LocationAdapter extends ArrayAdapter<Location> {
 	private DayDetailsActivity dayDetailsActivity;
 
-	public static class LocationAdapterViewHolder {
-		TextView name;
-		TextView duration;
-		ImageView image;
-		ImageButton delete;
-	}
-
 	public LocationAdapter(DayDetailsActivity dayDetailsActivity, List<Location> locations) {
 		super(dayDetailsActivity, R.layout.two_line_list, locations);
 		this.dayDetailsActivity = dayDetailsActivity;
@@ -73,5 +66,12 @@ public class LocationAdapter extends ArrayAdapter<Location> {
 			notifyDataSetChanged();
 			SwiftTravelDatabase.getInstance(dayDetailsActivity.getApplicationContext()).getLocationDao().deleteById(location.getId());
 		});
+	}
+
+	public static class LocationAdapterViewHolder {
+		TextView name;
+		TextView duration;
+		ImageView image;
+		ImageButton delete;
 	}
 }

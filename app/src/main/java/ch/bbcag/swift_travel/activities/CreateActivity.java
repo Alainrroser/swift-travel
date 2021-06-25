@@ -33,10 +33,10 @@ import zion830.com.range_picker_dialog.TimeRange;
 import zion830.com.range_picker_dialog.TimeRangePickerDialog;
 
 public class CreateActivity extends UpButtonActivity {
+	TimeRangePickerDialog timeRangePickerDialog = new TimeRangePickerDialog();
 	private Trip trip = new Trip();
 	private City city = new City();
 	private Location location = new Location();
-
 	private TextInputLayout nameLayout;
 	private TextInputEditText nameEdit;
 	private TextInputEditText descriptionEdit;
@@ -46,10 +46,7 @@ public class CreateActivity extends UpButtonActivity {
 	private TextView durationTime;
 	private Button selectDurationTime;
 	private Button create;
-
 	private MaterialDatePicker<Pair<Long, Long>> materialDatePicker;
-	TimeRangePickerDialog timeRangePickerDialog = new TimeRangePickerDialog();
-
 	private String startDate;
 	private String endDate;
 	private boolean dateSelected = false;
@@ -162,7 +159,7 @@ public class CreateActivity extends UpButtonActivity {
 		}
 		minutes -= timeRange.getStartMinute();
 		hours -= timeRange.getStartHour();
-		return hours + ":" + minutes + "h";
+		return hours + "." + minutes + "h";
 	}
 
 	private void onPositiveMaterialDatePickerClick(Pair<Long, Long> selection) {

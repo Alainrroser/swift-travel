@@ -4,8 +4,6 @@ import java.time.LocalDate;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 
-import zion830.com.range_picker_dialog.TimeRange;
-
 public class DateTimeUtils {
 	public static long parseDateToMilliseconds(String dateString) {
 		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy");

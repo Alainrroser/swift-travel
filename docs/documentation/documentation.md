@@ -185,12 +185,12 @@ public interface CityDao {
 
 # Fazit
 
-> * *Was lief gut/schlecht?*
-> * *Wie seid ihr mit dem Ergebniss zufrieden?*
-> * *Was habt ihr gelernt?*
-> * *War alles vorhanden oder was fehlte noch?*
-
 ## Positives 
->
+> Die Zusammenarbeit hat sehr gut geklappt 
+> Alle Pflicht-Ziele wurden erreicht 
+> Auch einige optionale (aber nicht alle) Ziele wurden erreicht
+> Viel Neues gelernt (Android App Entwicklung, Android, Java, ...)
+> Sehr zufrieden mit dem Endprodukt 
 ## Negatives
->
+> Es wurden nicht alle optionalen Ziele erreicht (aber die Wichtigsten)
+> Wir arbeiteten oft an derselben Datei, weshalb man dann mergen musste (Worum man aber fast nicht kommt)

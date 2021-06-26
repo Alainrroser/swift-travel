@@ -108,7 +108,7 @@ public class CityDetailsActivity extends UpButtonActivity implements SearchView.
 		getProgressBar().setVisibility(View.GONE);
 
 		editDescriptionButton.setOnClickListener(v -> toggleForm());
-		cityImage.setOnClickListener(v -> ImagePicker.with(this).cropSquare().start());
+		cityImage.setOnClickListener(v -> ImagePicker.with(this).crop().start());
 		onSubmitButtonClick();
 	}
 

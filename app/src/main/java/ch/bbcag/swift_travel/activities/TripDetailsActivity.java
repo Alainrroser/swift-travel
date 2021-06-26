@@ -122,7 +122,7 @@ public class TripDetailsActivity extends UpButtonActivity implements SearchView.
 
 		onFloatingActionButtonClick();
 		editDescriptionButton.setOnClickListener(v -> toggleForm());
-		tripImage.setOnClickListener(v -> ImagePicker.with(this).cropSquare().start());
+		tripImage.setOnClickListener(v -> ImagePicker.with(this).crop().start());
 		onSubmitButtonClick();
 	}
 

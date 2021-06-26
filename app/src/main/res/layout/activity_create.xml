@@ -34,7 +34,7 @@
         android:layout_marginTop="32dp"
         android:background="@android:color/darker_gray"
         android:contentDescription="@string/place_holder_image"
-        android:scaleType="fitCenter"
+        android:scaleType="center"
         android:src="@drawable/image_placeholder"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/create_title" />

@@ -112,7 +112,7 @@ public class DayDetailsActivity extends UpButtonActivity implements SearchView.O
 
 		onFloatingActionButtonClick();
 		editDescriptionButton.setOnClickListener(v -> toggleForm());
-		dayImage.setOnClickListener(v -> ImagePicker.with(this).cropSquare().start());
+		dayImage.setOnClickListener(v -> ImagePicker.with(this).crop().start());
 		onSubmitButtonClick();
 	}
 

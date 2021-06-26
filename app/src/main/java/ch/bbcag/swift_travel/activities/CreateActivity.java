@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.Nullable;
@@ -98,12 +99,13 @@ public class CreateActivity extends UpButtonActivity {
 			locationDuration.setVisibility(View.GONE);
 		}
 		create.setOnClickListener(v -> startIntentOrShowError());
-		chooseImage.setOnClickListener(v -> ImagePicker.with(this).cropSquare().start());
+		chooseImage.setOnClickListener(v -> ImagePicker.with(this).crop().start());
 	}
 
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
 		super.onActivityResult(requestCode, resultCode, data);
+		chooseImage.setScaleType(ImageView.ScaleType.FIT_XY);
 		if (resultCode == Activity.RESULT_OK && data != null) {
 			Uri imageURI = setImageURI(data);
 			chooseImage.setImageURI(imageURI);
@@ -245,7 +247,7 @@ public class CreateActivity extends UpButtonActivity {
 		city.setName(Objects.requireNonNull(nameEdit.getText()).toString());
 		intent.putExtra(Const.CITY_NAME, city.getName());
 
-		intent.putExtra(Const.IMAGE_URI, trip.getImageURI());
+		intent.putExtra(Const.IMAGE_URI, city.getImageURI());
 
 		if (descriptionEdit.getText() == null) {
 			descriptionEdit.setText("");

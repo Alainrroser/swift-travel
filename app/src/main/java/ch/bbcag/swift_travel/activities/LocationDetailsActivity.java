@@ -85,7 +85,7 @@ public class LocationDetailsActivity extends UpButtonActivity {
 		getProgressBar().setVisibility(View.GONE);
 
 		editDescriptionButton.setOnClickListener(v -> toggleForm());
-		locationImage.setOnClickListener(v -> ImagePicker.with(this).cropSquare().start());
+		locationImage.setOnClickListener(v -> ImagePicker.with(this).crop().start());
 		onSubmitButtonClick();
 	}
 

@@ -250,7 +250,13 @@ public class TripDetailsActivity extends UpButtonActivity implements SearchView.
 	private void refreshContent() {
 		LayoutUtils.setEditableTitleText(titleText, editTitle, selected.getName());
 		LayoutUtils.setEditableDescriptionText(descriptionText, editDescription, selected.getDescription());
-		LayoutUtils.setTextOnTextView(durationText, getTripDuration() + " " + getString(R.string.days));
+		String duration;
+		if (getTripDuration() == 1) {
+			duration = getTripDuration() + " " + getString(R.string.day);
+		} else {
+			duration = getTripDuration() + " " + getString(R.string.days);
+		}
+		LayoutUtils.setTextOnTextView(durationText, duration);
 		if (selected.getImageURI() != null && !selected.getImageURI().isEmpty()) {
 			LayoutUtils.setImageURIOnImageView(tripImage, selected.getImageURI());
 		}

@@ -222,7 +222,13 @@ public class CityDetailsActivity extends UpButtonActivity implements SearchView.
 	private void refreshContent() {
 		LayoutUtils.setEditableTitleText(titleText, editTitle, selected.getName());
 		LayoutUtils.setEditableDescriptionText(descriptionText, editDescription, selected.getDescription());
-		LayoutUtils.setTextOnTextView(durationText, selected.getDuration() + " " + getString(R.string.days));
+		String duration;
+		if (selected.getDuration() == 1) {
+			duration = selected.getDuration() + " " + getString(R.string.day);
+		} else {
+			duration = selected.getDuration() + " " + getString(R.string.days);
+		}
+		LayoutUtils.setTextOnTextView(durationText, duration);
 		if (selected.getImageURI() != null && !selected.getImageURI().isEmpty()) {
 			LayoutUtils.setImageURIOnImageView(cityImage, selected.getImageURI());
 		}

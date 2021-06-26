@@ -321,7 +321,13 @@ public class CountryDetailsActivity extends UpButtonActivity implements SearchVi
 	public void refreshContent() {
 		LayoutUtils.setTitleText(titleText, selected.getName());
 		LayoutUtils.setEditableDescriptionText(descriptionText, editDescription, selected.getDescription());
-		LayoutUtils.setTextOnTextView(durationText, getCountryDuration() + " " + getString(R.string.days));
+		String duration;
+		if (getCountryDuration() == 1) {
+			duration = getCountryDuration() + " " + getString(R.string.day);
+		} else {
+			duration = getCountryDuration() + " " + getString(R.string.days);
+		}
+		LayoutUtils.setTextOnTextView(durationText, duration);
 		if (selected.getImageURI() != null && !selected.getImageURI().isEmpty()) {
 			LayoutUtils.setOnlineImageURIOnImageView(getApplicationContext(), countryImage, selected.getImageURI());
 		}

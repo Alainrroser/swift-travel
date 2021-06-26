@@ -105,9 +105,9 @@ public class CreateActivity extends UpButtonActivity {
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
 		super.onActivityResult(requestCode, resultCode, data);
-		chooseImage.setScaleType(ImageView.ScaleType.FIT_XY);
 		if (resultCode == Activity.RESULT_OK && data != null) {
 			Uri imageURI = setImageURI(data);
+			chooseImage.setScaleType(ImageView.ScaleType.FIT_XY);
 			chooseImage.setImageURI(imageURI);
 		}
 	}
@@ -145,8 +145,8 @@ public class CreateActivity extends UpButtonActivity {
 		selectDurationTime.setOnClickListener(v -> timeRangePickerDialog.show(getSupportFragmentManager().beginTransaction(), timeRangePickerDialog.toString()));
 		timeRangePickerDialog.setOnTimeRangeSelectedListener(timeRange -> {
 			timeDuration = getDuration(timeRange);
-			startTime = DateTimeUtils.addZeroToHour(timeRange.getStartHour()) + "." + DateTimeUtils.addZeroToMinute(timeRange.getStartMinute());
-			endTime = DateTimeUtils.addZeroToHour(timeRange.getEndHour()) + "." + DateTimeUtils.addZeroToMinute(timeRange.getEndMinute());
+			startTime = DateTimeUtils.addZeroToHour(timeRange.getStartHour()) + ":" + DateTimeUtils.addZeroToMinute(timeRange.getStartMinute());
+			endTime = DateTimeUtils.addZeroToHour(timeRange.getEndHour()) + ":" + DateTimeUtils.addZeroToMinute(timeRange.getEndMinute());
 			String timeRangeString = startTime + "-" + endTime;
 			durationTime.setText(timeRangeString);
 			timeSelected = true;
@@ -162,7 +162,7 @@ public class CreateActivity extends UpButtonActivity {
 		}
 		minutes -= timeRange.getStartMinute();
 		hours -= timeRange.getStartHour();
-		return hours + "." + minutes + "h";
+		return hours + ":" + minutes + "h";
 	}
 
 	private void onPositiveMaterialDatePickerClick(Pair<Long, Long> selection) {

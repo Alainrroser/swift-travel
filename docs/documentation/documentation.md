@@ -100,10 +100,10 @@
 ## Mockups
 
 ### Mockup Alain
-![Mockup Alain](../designs/images/MockupAlain.JPG)
+![Mockup Alain](../designs/images/MockupAlain.png)
 
 ### Mockup Jan
-![Mockup Jan](../designs/images/MockupJan.JPG)
+![Mockup Jan](../designs/images/MockupJan.png)
 
 ### Activity-Beschreibung
 #### MainActivity
@@ -366,7 +366,7 @@ public class CountryAdapter extends ArrayAdapter<Country> {
 ```
 ### Custom-List-Item-XML
 Unsere Custom-List-Items bestehen aus einer ImageView, diversen TextViews (je nach Anzahl Lines) und bei löschbaren Items noch der Löschen-Button.
-![Image of custom three line list item](../designs/images/three_line_item.JPG)
+![Image of custom three line list item](../designs/images/three_line_item.png)
 
 # Testing
 

@@ -102,7 +102,7 @@ public class TripDetailsActivity extends UpButtonActivity implements SearchView.
 		List<Country> countriesList = countryDao.getAllFromTrip(selected.getId());
 		adapter = new CountryAdapter(this, countriesList);
 
-		if(adapter.getCount() > 0) {
+		if (adapter.getCount() > 0) {
 			selected.setStartDate(adapter.getItem(0).getStartDate());
 			selected.setEndDate(adapter.getItem(adapter.getCount() - 1).getEndDate());
 			tripDao.update(selected);

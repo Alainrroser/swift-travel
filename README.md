@@ -19,15 +19,15 @@
 
 ## Mockups
 <div align="center">
-    <img src="docs/images/MockupAlain.png" alt="Bild Mockup">
+    <img src="docs/designs/images/MockupAlain.png" alt="Bild Mockup">
 </div>
 <div align="center">
-    <img src="docs/images/MockupJan.png" alt="Bild Mockup">
+    <img src="docs/designs/images/MockupJan.png" alt="Bild Mockup">
 </div>
 
 ## Klassendiagramm
 <div align="center">
-    <img src="docs/images/classdiagram.png" alt="Bild Klassendiagramm" style="width: 50vw;">
+    <img src="docs/designs/images/classdiagram.png" alt="Bild Klassendiagramm" style="width: 50vw;">
 </div>
 
 ## Testfälle

@@ -334,8 +334,8 @@ public class CountryDetailsActivity extends UpButtonActivity implements SearchVi
 
 	public void refreshContent() {
 		LayoutUtils.setTitleText(titleText, selected.getName());
-		LayoutUtils.setEditableText(descriptionText, editDescription, selected.getDescription());
-		LayoutUtils.setEditableText(transportText, editTransport, selected.getTransport());
+		LayoutUtils.setEditableText(descriptionText, editDescription, selected.getDescription(), getString(R.string.description_hint));
+		LayoutUtils.setEditableText(transportText, editTransport, selected.getTransport(), getString(R.string.transport_hint));
 		String duration;
 		if (getCountryDuration() == 1) {
 			duration = getCountryDuration() + " " + getString(R.string.day);

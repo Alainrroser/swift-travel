@@ -2,14 +2,13 @@
 <resources>
     <string name="app_name">Swift-Travel</string>
 
-    <string name="transport">Enter Transportmittel</string>
+    <string name="transport">Gib ein Transportmittel ein</string>
     <string name="transport_hint">Gib ein (das Transportmittel) wie du angekommen bist</string>
     <string name="name_hint">Name eingeben</string>
     <string name="description_hint">Beschreibung eingeben</string>
     <string name="create">Erstellen</string>
     <string name="submit">Bestätigen</string>
     <string name="edit">Bearbeiten</string>
-    <string name="add_text">Mit einem Klick auf den Editbutton einen Text hinzufügen</string>
     <string name="delete">Löschen</string>
     <string name="delete_entry_title">Eintrag löschen</string>
     <string name="delete_entry_text">Wollen Sie diesen Eintrag wirklich löschen?</string>

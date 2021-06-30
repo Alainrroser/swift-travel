@@ -263,8 +263,8 @@ public class DayDetailsActivity extends UpButtonActivity implements SearchView.O
 
 	public void refreshContent() {
 		LayoutUtils.setEditableTitleText(titleText, editTitle, selected.getName());
-		LayoutUtils.setEditableText(descriptionText, editDescription, selected.getDescription());
-		LayoutUtils.setEditableText(transportText, editTransport, selected.getTransport());
+		LayoutUtils.setEditableText(descriptionText, editDescription, selected.getDescription(), getString(R.string.description_hint));
+		LayoutUtils.setEditableText(transportText, editTransport, selected.getTransport(), getString(R.string.transport_hint));
 		LayoutUtils.setTextOnTextView(dateText, selected.getDate());
 		if (selected.getImageURI() != null && !selected.getImageURI().isEmpty()) {
 			LayoutUtils.setImageURIOnImageView(dayImage, selected.getImageURI());

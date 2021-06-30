@@ -1,14 +1,13 @@
 <resources>
     <string name="app_name">Swift-Travel</string>
 
-    <string name="transport">Transport vehicle</string>
+    <string name="transport">Enter a Transport vehicle</string>
     <string name="transport_hint">Enter how (with what vehicle) you arrived</string>
     <string name="name_hint">Enter Name</string>
     <string name="description_hint">Enter Description</string>
     <string name="create">Create</string>
     <string name="submit">Submit</string>
     <string name="edit">Edit</string>
-    <string name="add_text">Add a text here by clicking on the edit button</string>
     <string name="delete">Delete</string>
     <string name="delete_entry_title">Delete Entry</string>
     <string name="delete_entry_text">Do you really want to delete this entry?</string>

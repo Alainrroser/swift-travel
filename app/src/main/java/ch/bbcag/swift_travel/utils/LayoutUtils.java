@@ -29,9 +29,9 @@ public class LayoutUtils {
 		}
 	}
 
-	public static void emptyMessageOnEmptyTextView(TextView textView) {
+	public static void emptyMessageOnEmptyTextView(TextView textView, String placeHolderText) {
 		if (textView.getText().toString().isEmpty()) {
-			textView.setText(R.string.add_text);
+			textView.setText(placeHolderText);
 		}
 	}
 
@@ -45,9 +45,9 @@ public class LayoutUtils {
 		setTitleSize(titleTextView);
 	}
 
-	public static void setEditableText(TextView descriptionTextView, EditText editTextBox, String text) {
+	public static void setEditableText(TextView descriptionTextView, EditText editTextBox, String text, String placeHolderText) {
 		setTextOnTextView(descriptionTextView, editTextBox.getText().toString());
-		emptyMessageOnEmptyTextView(descriptionTextView);
+		emptyMessageOnEmptyTextView(descriptionTextView, placeHolderText);
 		descriptionTextView.setMovementMethod(new ScrollingMovementMethod());
 		setTextOnEditText(editTextBox, text);
 	}

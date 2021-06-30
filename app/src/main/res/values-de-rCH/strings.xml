@@ -60,4 +60,15 @@
     <string name="select_location_duration">Länge des Aufenthaltes an diesem Ort wählen</string>
     <string name="create_location_title">Ort erstellen</string>
     <string name="add_location">Ort hinzufügen</string>
+
+    <string name="locations_pictures">Bilder</string>
+    <string name="email_hint">Gib deine E-Mail ein</string>
+    <string name="password_hint">Gib dein Passwort ein</string>
+    <string name="login">Anmelden</string>
+    <string name="register">Registrieren</string>
+    <string name="registered_yet">Noch nicht registriert?</string>
+    <string name="already_registered">Bist du bereits registriert?</string>
+    <string name="password_confirm_hint">Passwort bestätigen</string>
+    <string name="email_empty">Gib eine E-Mail ein</string>
+    <string name="password_empty">Gib ein Passwort ein</string>
 </resources>

@@ -1,5 +1,6 @@
 plugins {
     id 'com.android.application'
+    id 'com.google.gms.google-services'
 }
 
 android {
@@ -40,6 +41,10 @@ dependencies {
     implementation 'org.geonames:geonames:1.0'
     implementation 'com.github.zion830:RangeTimePickerDialog:1.2'
     implementation 'org.jetbrains:annotations:16.0.3'
+    implementation 'com.google.firebase:firebase-analytics'
+    implementation 'com.google.firebase:firebase-core:19.0.0'
+    implementation 'com.google.firebase:firebase-auth:21.0.1'
+    implementation platform('com.google.firebase:firebase-bom:28.2.0')
 
     testImplementation 'junit:junit:4.13.2'
 

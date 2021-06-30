@@ -7,6 +7,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.SearchView;
 
@@ -35,6 +36,7 @@ public class MainActivity extends BaseActivity implements SearchView.OnQueryText
 	private MenuItem searchItem;
 
 	private FloatingActionButton floatingActionButton;
+	private ImageButton loginButton;
 	private TripAdapter adapter;
 	private ListView allTrips;
 
@@ -53,6 +55,7 @@ public class MainActivity extends BaseActivity implements SearchView.OnQueryText
 		cityDao = SwiftTravelDatabase.getInstance(getApplicationContext()).getCityDao();
 
 		floatingActionButton = findViewById(R.id.floating_action_button_main);
+		loginButton = findViewById(R.id.login_button);
 		allTrips = findViewById(R.id.trips);
 	}
 
@@ -68,6 +71,7 @@ public class MainActivity extends BaseActivity implements SearchView.OnQueryText
 		getProgressBar().setVisibility(View.GONE);
 
 		onFloatingActionButtonClick();
+		onLoginButtonClick();
 	}
 
 	@Override
@@ -225,6 +229,13 @@ public class MainActivity extends BaseActivity implements SearchView.OnQueryText
 			Intent intent = new Intent(getApplicationContext(), CreateActivity.class);
 			intent.putExtra(Const.ADD_TRIP, true);
 			intent.putExtra(Const.CREATE_TITLE, getString(R.string.create_trip_title));
+			startActivity(intent);
+		});
+	}
+
+	private void onLoginButtonClick() {
+		loginButton.setOnClickListener(v -> {
+			Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
 			startActivity(intent);
 		});
 	}

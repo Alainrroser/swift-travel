@@ -12,6 +12,9 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.SwiftTravel"
         android:usesCleartextTraffic="true">
+        <activity android:name=".activities.UserActivity" />
+        <activity android:name=".activities.LoginActivity" />
+        <activity android:name=".activities.RegisterActivity" />
         <activity android:name=".activities.LocationDetailsActivity" />
         <activity android:name=".activities.DayDetailsActivity" />
         <activity android:name=".activities.CityDetailsActivity" />

@@ -63,6 +63,19 @@
         app:layout_constraintTop_toBottomOf="@+id/day_edit_button"
         tools:visibility="visible" />
 
+    <TextView
+        android:id="@+id/day_transport"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginBottom="16dp"
+        android:text="@string/transport"
+        app:layout_constraintBottom_toTopOf="@id/locations_title"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/day_description"
+        tools:visibility="visible" />
 
     <TextView
         android:id="@+id/day_description"
@@ -71,11 +84,11 @@
         android:layout_marginStart="16dp"
         android:layout_marginTop="16dp"
         android:layout_marginEnd="16dp"
-        android:layout_marginBottom="16dp"
+        android:layout_marginBottom="8dp"
         android:maxHeight="150dp"
         android:scrollbars="vertical"
         android:text="@string/description_hint"
-        app:layout_constraintBottom_toTopOf="@id/locations_title"
+        app:layout_constraintBottom_toTopOf="@id/day_transport"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/day_image"
@@ -116,7 +129,7 @@
         android:gravity="start|top"
         android:hint="@string/description_hint"
         android:importantForAutofill="no"
-        app:layout_constraintBottom_toTopOf="@id/day_submit_button"
+        app:layout_constraintBottom_toTopOf="@id/day_edit_transport_layout"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/day_image">
@@ -131,6 +144,30 @@
             android:textAppearance="@style/TextAppearance.AppCompat.Small" />
     </com.google.android.material.textfield.TextInputLayout>
 
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/day_edit_transport_layout"
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="16dp"
+        android:gravity="start|top"
+        android:hint="@string/transport_hint"
+        android:importantForAutofill="no"
+        app:layout_constraintBottom_toTopOf="@id/day_submit_button"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/day_edit_description_layout">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/day_edit_transport"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:inputType="textMultiLine"
+            android:textAppearance="@style/TextAppearance.AppCompat.Small" />
+    </com.google.android.material.textfield.TextInputLayout>
+
     <Button
         android:id="@+id/day_submit_button"
         android:layout_width="0dp"
@@ -138,32 +175,33 @@
         android:layout_marginStart="16dp"
         android:layout_marginTop="8dp"
         android:layout_marginEnd="16dp"
+        android:layout_marginBottom="16dp"
         android:text="@string/submit"
         android:textSize="12sp"
         app:layout_constraintBottom_toTopOf="@id/locations_title"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/day_edit_description_layout" />
+        app:layout_constraintTop_toBottomOf="@id/day_edit_transport_layout" />
 
     <androidx.constraintlayout.widget.Group
         android:id="@+id/day_form"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:constraint_referenced_ids="day_submit_button, day_edit_description_layout, day_edit_title_layout"
+        app:constraint_referenced_ids="day_submit_button, day_edit_description_layout, day_edit_title_layout, day_edit_transport_layout"
         app:layout_constraintEnd_toStartOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        tools:visibility="gone" />
+        tools:visibility="visible" />
 
     <androidx.constraintlayout.widget.Group
         android:id="@+id/day_content"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:constraint_referenced_ids="day_description, day_title"
+        app:constraint_referenced_ids="day_description, day_title, day_transport"
         app:layout_constraintEnd_toStartOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        tools:visibility="visible" />
+        tools:visibility="gone" />
 
     <Space
         android:id="@+id/day_duration_space"
@@ -189,7 +227,7 @@
         app:layout_constraintBottom_toTopOf="@id/locations"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/day_description" />
+        app:layout_constraintTop_toBottomOf="@id/day_transport" />
 
     <View
         android:id="@+id/divider_day_details"
@@ -231,7 +269,7 @@
         android:layout_gravity="end|bottom"
         android:layout_marginEnd="16dp"
         android:layout_marginBottom="16dp"
-        android:contentDescription="@string/add_country"
+        android:contentDescription="@string/add_location"
         android:src="@drawable/add"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />

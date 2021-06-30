@@ -1,6 +1,8 @@
 <resources>
     <string name="app_name">Swift-Travel</string>
 
+    <string name="transport">Transport vehicle</string>
+    <string name="transport_hint">Enter how (with what vehicle) you arrived</string>
     <string name="name_hint">Enter Name</string>
     <string name="description_hint">Enter Description</string>
     <string name="create">Create</string>
@@ -57,5 +59,5 @@
     <string name="location_duration">Duration at the location</string>
     <string name="select_location_duration">Select duration in Location</string>
     <string name="create_location_title">Create Location</string>
-    <string name="locations_pictures">Pictures</string>
+    <string name="add_location">Add Location</string>
 </resources>

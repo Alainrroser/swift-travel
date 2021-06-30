@@ -33,8 +33,10 @@ public class LocationDetailsActivity extends UpButtonActivity {
 	private TextView titleText;
 	private TextView durationText;
 	private TextView descriptionText;
+	private TextView transportText;
 	private EditText editTitle;
 	private EditText editDescription;
+	private EditText editTransport;
 	private ImageView locationImage;
 
 	private Location selected;
@@ -57,8 +59,10 @@ public class LocationDetailsActivity extends UpButtonActivity {
 		titleText = findViewById(R.id.location_title);
 		durationText = findViewById(R.id.location_duration);
 		descriptionText = findViewById(R.id.location_description);
+		transportText = findViewById(R.id.location_transport);
 		editTitle = findViewById(R.id.edit_title);
-		editDescription = findViewById(R.id.edit_description);
+		editDescription = findViewById(R.id.location_edit_description);
+		editTransport = findViewById(R.id.location_edit_transport);
 		locationImage = findViewById(R.id.location_image);
 
 		submitButton = findViewById(R.id.location_submit_button);
@@ -76,6 +80,7 @@ public class LocationDetailsActivity extends UpButtonActivity {
 
 		editTitle.setText(selected.getName());
 		editDescription.setText(selected.getDescription());
+		editTransport.setText(selected.getTransport());
 
 		refreshContent();
 
@@ -104,6 +109,7 @@ public class LocationDetailsActivity extends UpButtonActivity {
 		submitButton.setOnClickListener(v -> {
 			editName();
 			editDescription();
+			editTransport();
 			locationDao.update(selected);
 			refreshContent();
 			toggleForm();
@@ -112,12 +118,12 @@ public class LocationDetailsActivity extends UpButtonActivity {
 
 	private void refreshContent() {
 		LayoutUtils.setEditableTitleText(titleText, editTitle, selected.getName());
-		LayoutUtils.setEditableDescriptionText(descriptionText, editDescription, selected.getDescription());
+		LayoutUtils.setEditableText(descriptionText, editDescription, selected.getDescription());
+		LayoutUtils.setEditableText(transportText, editTransport, selected.getTransport());
 		LayoutUtils.setTextOnTextView(durationText, selected.getDuration());
 		if (selected.getImageURI() != null && !selected.getImageURI().isEmpty()) {
 			LayoutUtils.setImageURIOnImageView(locationImage, selected.getImageURI());
 		}
-
 		setTitle(selected.getName());
 	}
 
@@ -139,6 +145,12 @@ public class LocationDetailsActivity extends UpButtonActivity {
 		}
 	}
 
+	private void editTransport() {
+		if (editTransport.getText() != null && !editTransport.getText().toString().isEmpty()) {
+			selected.setTransport(editTransport.getText().toString());
+		}
+	}
+
 	private void toggleForm() {
 		boolean notChanged = false;
 
@@ -155,6 +167,7 @@ public class LocationDetailsActivity extends UpButtonActivity {
 		} else {
 			editTitle.setText(selected.getName());
 			editDescription.setText(selected.getDescription());
+			editTransport.setText(selected.getTransport());
 			form.setVisibility(View.VISIBLE);
 			content.setVisibility(View.GONE);
 		}

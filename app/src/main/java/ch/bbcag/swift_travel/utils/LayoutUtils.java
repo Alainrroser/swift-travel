@@ -45,7 +45,7 @@ public class LayoutUtils {
 		setTitleSize(titleTextView);
 	}
 
-	public static void setEditableDescriptionText(TextView descriptionTextView, EditText editTextBox, String text) {
+	public static void setEditableText(TextView descriptionTextView, EditText editTextBox, String text) {
 		setTextOnTextView(descriptionTextView, editTextBox.getText().toString());
 		emptyMessageOnEmptyTextView(descriptionTextView);
 		descriptionTextView.setMovementMethod(new ScrollingMovementMethod());

@@ -49,8 +49,10 @@ public class CityDetailsActivity extends UpButtonActivity implements SearchView.
 	private TextView titleText;
 	private TextView durationText;
 	private TextView descriptionText;
+	private TextView transportText;
 	private EditText editTitle;
 	private EditText editDescription;
+	private EditText editTransport;
 	private ImageView cityImage;
 
 	private City selected;
@@ -75,8 +77,10 @@ public class CityDetailsActivity extends UpButtonActivity implements SearchView.
 		titleText = findViewById(R.id.city_title);
 		durationText = findViewById(R.id.city_duration);
 		descriptionText = findViewById(R.id.city_description);
+		transportText = findViewById(R.id.city_transport);
 		editTitle = findViewById(R.id.city_edit_title);
 		editDescription = findViewById(R.id.city_edit_description);
+		editTransport = findViewById(R.id.city_edit_transport);
 		cityImage = findViewById(R.id.city_image);
 
 		submitButton = findViewById(R.id.city_submit_button);
@@ -99,6 +103,7 @@ public class CityDetailsActivity extends UpButtonActivity implements SearchView.
 
 		editTitle.setText(selected.getName());
 		editDescription.setText(selected.getDescription());
+		editTransport.setText(selected.getTransport());
 
 		refreshContent();
 
@@ -213,6 +218,7 @@ public class CityDetailsActivity extends UpButtonActivity implements SearchView.
 		submitButton.setOnClickListener(v -> {
 			editName();
 			editDescription();
+			editTransport();
 			cityDao.update(selected);
 			refreshContent();
 			toggleForm();
@@ -221,7 +227,8 @@ public class CityDetailsActivity extends UpButtonActivity implements SearchView.
 
 	private void refreshContent() {
 		LayoutUtils.setEditableTitleText(titleText, editTitle, selected.getName());
-		LayoutUtils.setEditableDescriptionText(descriptionText, editDescription, selected.getDescription());
+		LayoutUtils.setEditableText(descriptionText, editDescription, selected.getDescription());
+		LayoutUtils.setEditableText(transportText, editTransport, selected.getTransport());
 		String duration;
 		if (selected.getDuration() == 1) {
 			duration = selected.getDuration() + " " + getString(R.string.day);
@@ -253,6 +260,12 @@ public class CityDetailsActivity extends UpButtonActivity implements SearchView.
 		}
 	}
 
+	private void editTransport() {
+		if (editTransport.getText() != null && !editTransport.getText().toString().isEmpty()) {
+			selected.setTransport(editTransport.getText().toString());
+		}
+	}
+
 	private void toggleForm() {
 		boolean notChanged = false;
 		Group form = findViewById(R.id.city_form);
@@ -268,6 +281,7 @@ public class CityDetailsActivity extends UpButtonActivity implements SearchView.
 		} else {
 			editTitle.setText(selected.getName());
 			editDescription.setText(selected.getDescription());
+			editTransport.setText(selected.getTransport());
 			form.setVisibility(View.VISIBLE);
 			content.setVisibility(View.GONE);
 		}

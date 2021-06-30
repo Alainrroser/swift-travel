@@ -93,9 +93,10 @@
         android:layout_marginStart="16dp"
         android:layout_marginTop="8dp"
         android:layout_marginEnd="16dp"
+        android:layout_marginBottom="16dp"
         android:text="@string/submit"
         android:textSize="12sp"
-        app:layout_constraintBottom_toBottomOf="@id/trip_description"
+        app:layout_constraintBottom_toTopOf="@id/countries_title"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/trip_edit_description_layout" />
@@ -157,7 +158,6 @@
             android:textAppearance="@style/TextAppearance.AppCompat.Small" />
     </com.google.android.material.textfield.TextInputLayout>
 
-
     <TextView
         android:id="@+id/trip_description"
         android:layout_width="0dp"
@@ -165,7 +165,7 @@
         android:layout_marginStart="16dp"
         android:layout_marginTop="16dp"
         android:layout_marginEnd="16dp"
-        android:layout_marginBottom="16dp"
+        android:layout_marginBottom="8dp"
         android:maxHeight="150dp"
         android:scrollbars="vertical"
         android:text="@string/description_hint"
@@ -184,7 +184,6 @@
         android:layout_marginEnd="16dp"
         android:layout_marginBottom="16dp"
         android:ellipsize="end"
-        android:maxLines="1"
         android:text="@string/countries"
         android:textAppearance="@style/TextAppearance.AppCompat.Title"
         android:textSize="24sp"
@@ -213,6 +212,7 @@
         android:dividerHeight="1dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/countries_title" />
 

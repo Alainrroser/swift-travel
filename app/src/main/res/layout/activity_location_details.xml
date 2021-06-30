@@ -47,14 +47,26 @@
         android:layout_marginStart="16dp"
         android:layout_marginTop="16dp"
         android:layout_marginEnd="16dp"
-        android:layout_marginBottom="16dp"
         android:maxHeight="150dp"
         android:scrollbars="vertical"
         android:text="@string/description_hint"
-        app:layout_constraintBottom_toTopOf="@id/days_title"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/location_image"
+        tools:visibility="visible" />
+
+    <TextView
+        android:id="@+id/location_transport"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginBottom="16dp"
+        android:text="@string/transport"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/location_description"
         tools:visibility="visible" />
 
     <ImageButton
@@ -94,7 +106,7 @@
         android:textSize="12sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/edit_description_layout" />
+        app:layout_constraintTop_toBottomOf="@+id/location_edit_transport_layout" />
 
     <Space
         android:id="@+id/duration_space"
@@ -128,7 +140,7 @@
     </com.google.android.material.textfield.TextInputLayout>
 
     <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/edit_description_layout"
+        android:id="@+id/location_edit_description_layout"
         style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
@@ -142,10 +154,34 @@
         app:layout_constraintTop_toBottomOf="@id/location_image">
 
         <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/edit_description"
+            android:id="@+id/location_edit_description"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:hint="@string/description_hint"
+            android:inputType="textMultiLine"
+            android:textAppearance="@style/TextAppearance.AppCompat.Small" />
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/location_edit_transport_layout"
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="16dp"
+        android:gravity="start|top"
+        android:hint="@string/transport_hint"
+        android:importantForAutofill="no"
+        app:layout_constraintBottom_toTopOf="@id/location_submit_button"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/location_edit_description_layout">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/location_edit_transport"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
             android:inputType="textMultiLine"
             android:textAppearance="@style/TextAppearance.AppCompat.Small" />
     </com.google.android.material.textfield.TextInputLayout>
@@ -154,20 +190,20 @@
         android:id="@+id/location_content"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:constraint_referenced_ids="location_title, location_description"
+        app:constraint_referenced_ids="location_title, location_description, location_transport"
         app:layout_constraintEnd_toStartOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        tools:visibility="visible" />
+        tools:visibility="gone" />
 
     <androidx.constraintlayout.widget.Group
         android:id="@+id/location_form"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:constraint_referenced_ids="location_submit_button,edit_description_layout,edit_title_layout"
+        app:constraint_referenced_ids="location_submit_button,location_edit_description_layout,edit_title_layout, location_edit_transport_layout"
         app:layout_constraintEnd_toStartOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        tools:visibility="gone" />
+        tools:visibility="visible" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -22,6 +22,8 @@ public class Location {
 	private String endTime;
 	@ColumnInfo(name = "duration")
 	private String duration;
+	@ColumnInfo(name = "transport")
+	private String transport;
 	@ColumnInfo(name = "dayId")
 	private long dayId;
 
@@ -96,5 +98,13 @@ public class Location {
 
 	public void setDayId(long dayId) {
 		this.dayId = dayId;
+	}
+
+	public String getTransport() {
+		return transport;
+	}
+
+	public void setTransport(String transport) {
+		this.transport = transport;
 	}
 }

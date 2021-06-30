@@ -6,6 +6,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -40,8 +41,9 @@ public class CreateActivity extends UpButtonActivity {
 	private Location location = new Location();
 
 	private TextInputLayout nameLayout;
-	private TextInputEditText nameEdit;
-	private TextInputEditText descriptionEdit;
+	private EditText nameEdit;
+	private EditText descriptionEdit;
+	private EditText transportEdit;
 	private ImageButton chooseImage;
 	private TextView durationDate;
 	private Button selectDurationDate;
@@ -71,6 +73,7 @@ public class CreateActivity extends UpButtonActivity {
 		nameLayout = findViewById(R.id.add_title_layout);
 		nameEdit = findViewById(R.id.add_title);
 		descriptionEdit = findViewById(R.id.add_description);
+		transportEdit = findViewById(R.id.add_transport);
 		chooseImage = findViewById(R.id.create_place_holder_image);
 		durationDate = findViewById(R.id.duration_date);
 		selectDurationDate = findViewById(R.id.select_duration_date);
@@ -97,6 +100,8 @@ public class CreateActivity extends UpButtonActivity {
 		} else {
 			cityDuration.setVisibility(View.GONE);
 			locationDuration.setVisibility(View.GONE);
+			findViewById(R.id.add_transport_layout).setVisibility(View.GONE);
+
 		}
 		create.setOnClickListener(v -> startIntentOrShowError());
 		chooseImage.setOnClickListener(v -> ImagePicker.with(this).crop().start());
@@ -255,6 +260,12 @@ public class CreateActivity extends UpButtonActivity {
 		city.setDescription(descriptionEdit.getText().toString());
 		intent.putExtra(Const.CITY_DESCRIPTION, city.getDescription());
 
+		if (transportEdit.getText() == null) {
+			transportEdit.setText("");
+		}
+		trip.setTransport(transportEdit.getText().toString());
+		intent.putExtra(Const.TRANSPORT, trip.getTransport());
+
 		intent.putExtra(Const.START_DATE, startDate);
 		intent.putExtra(Const.END_DATE, endDate);
 
@@ -279,6 +290,12 @@ public class CreateActivity extends UpButtonActivity {
 		}
 		location.setDescription(descriptionEdit.getText().toString());
 		intent.putExtra(Const.LOCATION_DESCRIPTION, location.getDescription());
+
+		if (transportEdit.getText() == null) {
+			transportEdit.setText("");
+		}
+		trip.setTransport(transportEdit.getText().toString());
+		intent.putExtra(Const.TRANSPORT, trip.getTransport());
 
 		intent.putExtra(Const.START_TIME, startTime);
 		intent.putExtra(Const.END_TIME, endTime);

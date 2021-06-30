@@ -2,6 +2,8 @@
 <resources>
     <string name="app_name">Swift-Travel</string>
 
+    <string name="transport">Enter Transportmittel</string>
+    <string name="transport_hint">Gib ein (das Transportmittel) wie du angekommen bist</string>
     <string name="name_hint">Name eingeben</string>
     <string name="description_hint">Beschreibung eingeben</string>
     <string name="create">Erstellen</string>
@@ -58,4 +60,5 @@
     <string name="location_duration">Länge des Aufenthaltes im Ort</string>
     <string name="select_location_duration">Länge des Aufenthaltes an diesem Ort wählen</string>
     <string name="create_location_title">Ort erstellen</string>
+    <string name="add_location">Ort hinzufügen</string>
 </resources>

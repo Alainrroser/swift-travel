@@ -28,6 +28,8 @@ public class City {
 	private String endDate;
 	@ColumnInfo(name = "duration")
 	private long duration;
+	@ColumnInfo(name = "transport")
+	private String transport;
 	@ColumnInfo(name = "countryId")
 	private long countryId;
 
@@ -102,6 +104,14 @@ public class City {
 
 	public void setDuration(long duration) {
 		this.duration = duration;
+	}
+
+	public String getTransport() {
+		return transport;
+	}
+
+	public void setTransport(String transport) {
+		this.transport = transport;
 	}
 
 	public List<Day> getDays() {

@@ -249,7 +249,7 @@ public class TripDetailsActivity extends UpButtonActivity implements SearchView.
 
 	private void refreshContent() {
 		LayoutUtils.setEditableTitleText(titleText, editTitle, selected.getName());
-		LayoutUtils.setEditableDescriptionText(descriptionText, editDescription, selected.getDescription());
+		LayoutUtils.setEditableText(descriptionText, editDescription, selected.getDescription());
 		String duration;
 		if (getTripDuration() == 1) {
 			duration = getTripDuration() + " " + getString(R.string.day);

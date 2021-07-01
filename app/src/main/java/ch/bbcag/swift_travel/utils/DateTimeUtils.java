@@ -1,7 +1,6 @@
 package ch.bbcag.swift_travel.utils;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;

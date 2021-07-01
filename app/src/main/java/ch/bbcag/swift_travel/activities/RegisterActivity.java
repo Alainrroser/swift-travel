@@ -15,6 +15,7 @@ import com.google.firebase.auth.FirebaseAuth;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 import ch.bbcag.swift_travel.R;
 import ch.bbcag.swift_travel.utils.ValidationUtils;
@@ -92,7 +93,7 @@ public class RegisterActivity extends UpButtonActivity {
 				String passwordStr = password.getText().toString();
 				firebaseAuth.createUserWithEmailAndPassword(emailStr, passwordStr).addOnCompleteListener(RegisterActivity.this, task -> {
 					if (!task.isSuccessful()) {
-						RegisterActivity.this.generateMessageDialog(getString(R.string.login_unsuccessful_title), task.getException().getMessage());
+						RegisterActivity.this.generateMessageDialog(getString(R.string.login_unsuccessful_title), Objects.requireNonNull(task.getException()).getMessage());
 					} else {
 						Intent intent = new Intent(getApplicationContext(), UserActivity.class);
 						startActivity(intent);

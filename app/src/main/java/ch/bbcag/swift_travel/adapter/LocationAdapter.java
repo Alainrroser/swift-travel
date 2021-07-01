@@ -53,7 +53,8 @@ public class LocationAdapter extends ArrayAdapter<Location> {
 		viewHolder.delete.setOnClickListener(v -> generateConfirmDialog(location));
 
 		viewHolder.name.setText(location.getName());
-		viewHolder.duration.setText(location.getDuration());
+		String duration = location.getDuration() + ", " + location.getStartTime() + "-" + location.getEndTime();
+		viewHolder.duration.setText(duration);
 		if (location.getImageURI() != null) {
 			LayoutUtils.setImageURIOnImageView(viewHolder.image, location.getImageURI());
 		} else {

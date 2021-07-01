@@ -33,7 +33,6 @@ import ch.bbcag.swift_travel.adapter.LocationAdapter;
 import ch.bbcag.swift_travel.dal.DayDao;
 import ch.bbcag.swift_travel.dal.LocationDao;
 import ch.bbcag.swift_travel.dal.SwiftTravelDatabase;
-import ch.bbcag.swift_travel.entities.City;
 import ch.bbcag.swift_travel.entities.Day;
 import ch.bbcag.swift_travel.entities.Location;
 import ch.bbcag.swift_travel.utils.Const;
@@ -206,6 +205,7 @@ public class DayDetailsActivity extends UpButtonActivity implements SearchView.O
 	public void addLocationsToClickableList() {
 		ListView locations = findViewById(R.id.locations);
 		locations.setAdapter(adapter);
+		adapter.sort(this::compareLocationStartTimes);
 
 		AdapterView.OnItemClickListener mListClickedHandler = (parent, v, position, id) -> {
 			Intent intent = new Intent(getApplicationContext(), LocationDetailsActivity.class);
@@ -218,6 +218,12 @@ public class DayDetailsActivity extends UpButtonActivity implements SearchView.O
 		getProgressBar().setVisibility(View.GONE);
 
 		locations.setOnItemClickListener(mListClickedHandler);
+	}
+
+	private int compareLocationStartTimes(Location locationOne, Location locationTwo) {
+		long locationOneStartTime = DateTimeUtils.parseTimeToMilliseconds(locationOne.getStartTime());
+		long locationTwoStartTime = DateTimeUtils.parseTimeToMilliseconds(locationTwo.getEndTime());
+		return Long.compare(locationOneStartTime, locationTwoStartTime);
 	}
 
 	private void createLocationFromIntent() {
@@ -258,6 +264,7 @@ public class DayDetailsActivity extends UpButtonActivity implements SearchView.O
 			location.setId(id);
 
 			adapter.add(location);
+			adapter.sort(this::compareLocationStartTimes);
 		} else {
 			generateMessageDialog(getString(R.string.duration_overlap_error_title), getString(R.string.duration_overlap_error_text));
 		}

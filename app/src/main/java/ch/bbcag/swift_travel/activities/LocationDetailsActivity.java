@@ -99,8 +99,14 @@ public class LocationDetailsActivity extends UpButtonActivity {
 
 		imageGrid.setAdapter(imageAdapter);
 		imageGrid.setOnItemClickListener((parent, view, position, id1) -> {
+			Intent intent = new Intent(getApplicationContext(), ImageDetailsActivity.class);
+			intent.putExtra(Const.IMAGE_URI, imageAdapter.getItem(position).getImageURI());
+			startActivity(intent);
+		});
+		imageGrid.setOnItemLongClickListener((parent, view, position, id1) -> {
 			ImagePicker.with(this).crop().start(Const.REPLACE_IMAGE_REQUEST_CODE);
 			clickedImage = imageAdapter.getItem(position);
+			return true;
 		});
 
 		editTitle.setText(selected.getName());
@@ -162,7 +168,7 @@ public class LocationDetailsActivity extends UpButtonActivity {
 		LayoutUtils.setEditableTitleText(titleText, editTitle, selected.getName());
 		LayoutUtils.setEditableText(descriptionText, editDescription, selected.getDescription(), getString(R.string.description_hint));
 		LayoutUtils.setEditableText(transportText, editTransport, selected.getTransport(), getString(R.string.transport_hint));
-		LayoutUtils.setTextOnTextView(durationText, selected.getDuration());
+		LayoutUtils.setTextOnTextView(durationText, selected.getDuration() + ", " + selected.getStartTime() + "-" + selected.getEndTime());
 		if (selected.getImageURI() != null && !selected.getImageURI().isEmpty()) {
 			LayoutUtils.setImageURIOnImageView(locationImage, selected.getImageURI());
 		}

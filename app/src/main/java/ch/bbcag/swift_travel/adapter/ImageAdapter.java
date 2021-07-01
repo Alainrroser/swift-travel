@@ -1,6 +1,5 @@
 package ch.bbcag.swift_travel.adapter;
 
-import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,7 +13,6 @@ import ch.bbcag.swift_travel.R;
 import ch.bbcag.swift_travel.activities.LocationDetailsActivity;
 import ch.bbcag.swift_travel.dal.SwiftTravelDatabase;
 import ch.bbcag.swift_travel.entities.Image;
-import ch.bbcag.swift_travel.entities.Location;
 import ch.bbcag.swift_travel.utils.LayoutUtils;
 
 public class ImageAdapter extends ArrayAdapter<Image> {

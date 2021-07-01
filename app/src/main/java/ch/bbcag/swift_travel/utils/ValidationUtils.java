@@ -4,13 +4,19 @@ import android.app.Activity;
 import android.widget.EditText;
 
 import com.google.android.material.textfield.TextInputLayout;
+import com.google.firebase.auth.AuthCredential;
+import com.google.firebase.auth.EmailAuthProvider;
+import com.google.firebase.auth.FirebaseUser;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 import ch.bbcag.swift_travel.R;
 
 public class ValidationUtils {
+	private static boolean isPasswordValid = false;
+
 	public static boolean areInputsEmpty(Activity context, List<TextInputLayout> textInputLayouts, List<EditText> editTexts) {
 		List<String> strings = new ArrayList<>();
 		for (EditText text : editTexts) {
@@ -43,6 +49,31 @@ public class ValidationUtils {
 			TIL2.setError(context.getString(R.string.passwords_do_not_match));
 			TIL2.requestFocus();
 			return false;
+		}
+	}
+
+	public static boolean isPasswordCorrect(Activity context, FirebaseUser currentUser, TextInputLayout textInputLayout, EditText editText) {
+		AuthCredential credential = EmailAuthProvider.getCredential(Objects.requireNonNull(currentUser.getEmail()), editText.getText().toString());
+		currentUser.reauthenticate(credential).addOnCompleteListener(task -> {
+			if (task.isSuccessful()) {
+				isPasswordValid = true;
+			} else {
+				isPasswordValid = false;
+				textInputLayout.setError(context.getString(R.string.password_does_not_match));
+			}
+		});
+		return isPasswordValid;
+	}
+
+	public static boolean doesNewPasswordNotEqualOldPassword(Activity context, TextInputLayout oldPasswordLayout, EditText oldPassword, TextInputLayout newPasswordLayout, EditText newPassword) {
+		if (oldPassword.getText().toString().equals(newPassword.getText().toString())) {
+			oldPasswordLayout.setError(context.getString(R.string.passwords_cannot_be_the_same));
+			oldPasswordLayout.requestFocus();
+			newPasswordLayout.setError(context.getString(R.string.passwords_cannot_be_the_same));
+			newPasswordLayout.requestFocus();
+			return false;
+		} else {
+			return true;
 		}
 	}
 }

@@ -64,21 +64,35 @@
     <string name="images">Bilder</string>
     <string name="add_image">Bild hinzufügen</string>
 
-    <string name="email_hint">Gib deine E-Mail ein</string>
-    <string name="password_hint">Gib dein Passwort ein</string>
+    <string name="email_hint">Geben Sie Ihre E-Mail ein</string>
+    <string name="password_hint">Geben Sie Ihr Passwort ein</string>
+    <string name="password_confirm_hint">Passwort bestätigen</string>
+    <string name="password_new_hint">Geben Sie ein neues Passwort ein</string>
+    <string name="password_new_confirm_hint">Neues Passwort bestätigen</string>
+
     <string name="login">Anmelden</string>
+    <string name="google_login">Mit google anmelden</string>
+    <string name="login_error">Sie müssen Ihre E-Mail und Ihr Passwort eingeben</string>
+    <string name="login_unsuccessful">Bitte prüfen Sie Ihre Eingaben und versuche es erneut</string>
+    <string name="login_unsuccessful_title">Sie konnten nicht eingeloggt werden</string>
+
     <string name="register">Registrieren</string>
     <string name="registered_yet">Noch nicht registriert?</string>
-    <string name="already_registered">Bist du bereits registriert?</string>
-    <string name="password_confirm_hint">Passwort bestätigen</string>
-    <string name="email_empty">Gib eine E-Mail ein</string>
-    <string name="password_empty">Gib ein Passwort ein</string>
-    <string name="login_error">Du musst deine E-Mail und dein Passwort eingeben</string>
-    <string name="login_unsuccessful">Bitte prüfe deine Eingaben und versuche es erneut</string>
-    <string name="login_unsuccessful_title">Du konntest nicht eingeloggt werden</string>
+    <string name="already_registered">Bereits registriert?</string>
+
     <string name="please">Bitte</string>
+    <string name="email_empty">Sie müssene eine E-Mail eingeben</string>
+    <string name="password_empty">Sie müssene ein Passwort eingeben</string>
+
+    <string name="change_password">Passwort wechseln</string>
+    <string name="success">Erfolg</string>
+    <string name="password_changed">Ihr Passwort wurde geändert</string>
+    <string name="password_does_not_match">Das Passwort muss mit dem Alten übereinstimmen</string>
     <string name="passwords_do_not_match">Die Passwörter stimmen nicht überein</string>
+    <string name="passwords_cannot_be_the_same">Das alte und das neue Passwort dürfen nicht übereinstimmen</string>
+
     <string name="user_title">Benutzer</string>
     <string name="settings">Einstellungen</string>
     <string name="auto_safe">Daten online speichern?</string>
+    <string name="logout">Ausloggen</string>
 </resources>

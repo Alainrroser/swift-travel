@@ -10,6 +10,9 @@ import android.widget.EditText;
 
 import androidx.annotation.NonNull;
 
+import com.google.android.gms.auth.api.signin.GoogleSignIn;
+import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
+import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.material.textfield.TextInputLayout;
 import com.google.firebase.auth.FirebaseAuth;
@@ -27,7 +30,7 @@ public class LoginActivity extends UpButtonActivity {
 	private TextInputLayout emailLayout, passwordLayout;
 	private EditText email, password;
 	private FirebaseAuth mAuth;
-	private GoogleSignInOptions gso;
+	private GoogleSignInClient mGoogleSignInClient;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -44,6 +47,13 @@ public class LoginActivity extends UpButtonActivity {
 		password = findViewById(R.id.login_password);
 		loginButton = findViewById(R.id.login_button);
 		loginWithGoogle = findViewById(R.id.login_with_google);
+
+		GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+				.requestIdToken(getString(R.string.default_web_client_id))
+				.requestEmail()
+				.build();
+
+		mGoogleSignInClient = GoogleSignIn.getClient(this, gso);
 	}
 
 	@Override
@@ -52,7 +62,7 @@ public class LoginActivity extends UpButtonActivity {
 		getProgressBar().setVisibility(View.GONE);
 
 		FirebaseUser currentUser = mAuth.getCurrentUser();
-		if(currentUser != null){
+		if (currentUser != null) {
 			Intent intent = new Intent(getApplicationContext(), UserActivity.class);
 			startActivity(intent);
 		}
@@ -115,14 +125,10 @@ public class LoginActivity extends UpButtonActivity {
 		});
 	}
 
-	private void onLoginWithGoogleClick(){
+	private void onLoginWithGoogleClick() {
 		loginWithGoogle.setOnClickListener(v -> {
-			gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-					.requestIdToken(getString(R.string.default_web_client_id))
-					.requestEmail()
-					.build();
-
-			// TODO
+			Intent signInIntent = mGoogleSignInClient.getSignInIntent();
+			startActivityForResult(signInIntent, RC_SIGN_IN);
 		});
 	}
 }

@@ -88,13 +88,14 @@ public class UserActivity extends UpButtonActivity {
 	}
 
 	private void onChangePasswordClick() {
-		changePasswordButton.setOnClickListener(v -> {
-			toggleForm();
-		});
+		changePasswordButton.setOnClickListener(v -> toggleForm());
 	}
 
 	private void onSubmitButtonClick() {
 		submitButton.setOnClickListener(v -> {
+			TextInputLayout passwordLayout = findViewById(R.id.user_password_input);
+			EditText password = findViewById(R.id.user_password);
+
 			TextInputLayout newPasswordLayout = findViewById(R.id.user_new_password_input);
 			EditText newPassword = findViewById(R.id.user_new_password);
 
@@ -104,25 +105,27 @@ public class UserActivity extends UpButtonActivity {
 			List<TextInputLayout> layouts = new ArrayList<>();
 			List<EditText> editTexts = new ArrayList<>();
 
-			layouts.add(findViewById(R.id.user_password_input));
+			layouts.add(passwordLayout);
 			layouts.add(newPasswordLayout);
 			layouts.add(newPasswordConfirmLayout);
 
-			editTexts.add(findViewById(R.id.user_password));
+			editTexts.add(password);
 			editTexts.add(newPassword);
 			editTexts.add(newPasswordConfirm);
 
 
 			if (ValidationUtils.areInputsEmpty(UserActivity.this, layouts, editTexts)
+			    && ValidationUtils.isPasswordCorrect(this, currentUser, passwordLayout, password)
+			    && ValidationUtils.doesNewPasswordNotEqualOldPassword(this, newPasswordLayout, password, newPasswordLayout, newPassword)
 			    && ValidationUtils.areInputsEqual(UserActivity.this, newPasswordLayout, newPassword, newPasswordConfirmLayout, newPasswordConfirm)) {
-				currentUser.updatePassword(newPassword.getText().toString())
-				           .addOnCompleteListener(task -> {
-					           if (!task.isSuccessful()) {
-						           generateMessageDialog(getString(R.string.default_error_title), Objects.requireNonNull(task.getException()).getMessage());
-					           } else {
-						           generateMessageDialog(getString(R.string.success), getString(R.string.password_changed));
-					           }
-				           });
+				currentUser.updatePassword(newPassword.getText().toString()).addOnCompleteListener(task -> {
+					if (!task.isSuccessful()) {
+						generateMessageDialog(getString(R.string.default_error_title), Objects.requireNonNull(task.getException()).getMessage());
+					} else {
+						generateMessageDialog(getString(R.string.success), getString(R.string.password_changed));
+						toggleForm();
+					}
+				});
 			}
 		});
 	}

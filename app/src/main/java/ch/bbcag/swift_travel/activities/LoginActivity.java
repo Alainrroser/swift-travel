@@ -16,6 +16,7 @@ import com.google.firebase.auth.FirebaseUser;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 import ch.bbcag.swift_travel.R;
 import ch.bbcag.swift_travel.utils.ValidationUtils;
@@ -24,8 +25,7 @@ public class LoginActivity extends UpButtonActivity {
 	private Button registerButton, loginButton;
 	private TextInputLayout emailLayout, passwordLayout;
 	private EditText email, password;
-	private FirebaseAuth firebaseAuth;
-	private FirebaseAuth.AuthStateListener authStateListener;
+	private FirebaseAuth mAuth;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -35,26 +35,24 @@ public class LoginActivity extends UpButtonActivity {
 
 		registerButton = findViewById(R.id.login_register_button);
 
-		firebaseAuth = FirebaseAuth.getInstance();
+		mAuth = FirebaseAuth.getInstance();
 		emailLayout = findViewById(R.id.login_email_input);
 		email = findViewById(R.id.login_email);
 		passwordLayout = findViewById(R.id.login_password_input);
 		password = findViewById(R.id.login_password);
 		loginButton = findViewById(R.id.login_button);
-
-		authStateListener = firebaseAuth -> {
-			FirebaseUser firebaseUser = firebaseAuth.getCurrentUser();
-			if (firebaseUser != null) {
-				Intent intent = new Intent(getApplicationContext(), UserActivity.class);
-				startActivity(intent);
-			}
-		};
 	}
 
 	@Override
 	protected void onStart() {
 		super.onStart();
 		getProgressBar().setVisibility(View.GONE);
+
+		FirebaseUser currentUser = mAuth.getCurrentUser();
+		if(currentUser != null){
+			Intent intent = new Intent(getApplicationContext(), UserActivity.class);
+			startActivity(intent);
+		}
 
 		onRegisterButtonClick();
 		onLoginButtonClick();
@@ -94,9 +92,9 @@ public class LoginActivity extends UpButtonActivity {
 			if (ValidationUtils.areInputsEmpty(LoginActivity.this, inputLayouts, editTexts)) {
 				String emailStr = email.getText().toString();
 				String passwordStr = password.getText().toString();
-				firebaseAuth.signInWithEmailAndPassword(emailStr, passwordStr).addOnCompleteListener(LoginActivity.this, task -> {
+				mAuth.signInWithEmailAndPassword(emailStr, passwordStr).addOnCompleteListener(LoginActivity.this, task -> {
 					if (!task.isSuccessful()) {
-						LoginActivity.this.generateMessageDialog(getString(R.string.default_error_title), getString(R.string.login_error));
+						LoginActivity.this.generateMessageDialog(getString(R.string.login_unsuccessful_title), Objects.requireNonNull(task.getException()).getMessage());
 					} else {
 						Intent intent = new Intent(getApplicationContext(), UserActivity.class);
 						startActivity(intent);

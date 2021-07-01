@@ -102,7 +102,6 @@ public class LocationDetailsActivity extends UpButtonActivity {
 			ImagePicker.with(this).crop().start(Const.REPLACE_IMAGE_REQUEST_CODE);
 			clickedImage = imageAdapter.getItem(position);
 		});
-		getProgressBar().setVisibility(View.GONE);
 
 		editTitle.setText(selected.getName());
 		editDescription.setText(selected.getDescription());

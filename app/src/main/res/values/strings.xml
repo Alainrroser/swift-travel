@@ -86,4 +86,5 @@
     <string name="password_new_confirm_hint">Confirm your new password</string>
     <string name="success">Success!</string>
     <string name="password_changed">Your password has been changed.</string>
+    <string name="google_login">Login with google</string>
 </resources>

@@ -10,6 +10,7 @@ import android.widget.EditText;
 
 import androidx.annotation.NonNull;
 
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.material.textfield.TextInputLayout;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -22,10 +23,11 @@ import ch.bbcag.swift_travel.R;
 import ch.bbcag.swift_travel.utils.ValidationUtils;
 
 public class LoginActivity extends UpButtonActivity {
-	private Button registerButton, loginButton;
+	private Button registerButton, loginButton, loginWithGoogle;
 	private TextInputLayout emailLayout, passwordLayout;
 	private EditText email, password;
 	private FirebaseAuth mAuth;
+	private GoogleSignInOptions gso;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -41,6 +43,7 @@ public class LoginActivity extends UpButtonActivity {
 		passwordLayout = findViewById(R.id.login_password_input);
 		password = findViewById(R.id.login_password);
 		loginButton = findViewById(R.id.login_button);
+		loginWithGoogle = findViewById(R.id.login_with_google);
 	}
 
 	@Override
@@ -56,6 +59,7 @@ public class LoginActivity extends UpButtonActivity {
 
 		onRegisterButtonClick();
 		onLoginButtonClick();
+		onLoginWithGoogleClick();
 	}
 
 	@Override
@@ -108,6 +112,17 @@ public class LoginActivity extends UpButtonActivity {
 		registerButton.setOnClickListener(v -> {
 			Intent intent = new Intent(getApplicationContext(), RegisterActivity.class);
 			startActivity(intent);
+		});
+	}
+
+	private void onLoginWithGoogleClick(){
+		loginWithGoogle.setOnClickListener(v -> {
+			gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+					.requestIdToken(getString(R.string.default_web_client_id))
+					.requestEmail()
+					.build();
+
+			// TODO
 		});
 	}
 }

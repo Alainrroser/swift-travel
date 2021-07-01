@@ -15,10 +15,9 @@ import com.google.android.material.textfield.TextInputLayout;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
-import org.w3c.dom.Text;
-
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 import ch.bbcag.swift_travel.R;
 import ch.bbcag.swift_travel.utils.ValidationUtils;
@@ -115,15 +114,15 @@ public class UserActivity extends UpButtonActivity {
 
 
 			if (ValidationUtils.areInputsEmpty(UserActivity.this, layouts, editTexts)
-			&& ValidationUtils.areInputsEqual(UserActivity.this, newPasswordLayout, newPassword, newPasswordConfirmLayout, newPasswordConfirm)){
-			currentUser.updatePassword(newPassword.getText().toString())
-			           .addOnCompleteListener(task -> {
-				           if (!task.isSuccessful()) {
-								generateMessageDialog(getString(R.string.default_error_title), task.getException().getMessage());
-				           } else {
-					           generateMessageDialog(getString(R.string.success), getString(R.string.password_changed));
-				           }
-			           });
+			    && ValidationUtils.areInputsEqual(UserActivity.this, newPasswordLayout, newPassword, newPasswordConfirmLayout, newPasswordConfirm)) {
+				currentUser.updatePassword(newPassword.getText().toString())
+				           .addOnCompleteListener(task -> {
+					           if (!task.isSuccessful()) {
+						           generateMessageDialog(getString(R.string.default_error_title), Objects.requireNonNull(task.getException()).getMessage());
+					           } else {
+						           generateMessageDialog(getString(R.string.success), getString(R.string.password_changed));
+					           }
+				           });
 			}
 		});
 	}

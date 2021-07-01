@@ -64,20 +64,6 @@
         tools:visibility="visible" />
 
     <TextView
-        android:id="@+id/day_transport"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginEnd="16dp"
-        android:layout_marginBottom="16dp"
-        android:text="@string/transport"
-        app:layout_constraintBottom_toTopOf="@id/locations_title"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/day_description"
-        tools:visibility="visible" />
-
-    <TextView
         android:id="@+id/day_description"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
@@ -88,7 +74,7 @@
         android:maxHeight="150dp"
         android:scrollbars="vertical"
         android:text="@string/description_hint"
-        app:layout_constraintBottom_toTopOf="@id/day_transport"
+        app:layout_constraintBottom_toTopOf="@id/locations_title"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/day_image"
@@ -129,7 +115,7 @@
         android:gravity="start|top"
         android:hint="@string/description_hint"
         android:importantForAutofill="no"
-        app:layout_constraintBottom_toTopOf="@id/day_edit_transport_layout"
+        app:layout_constraintBottom_toTopOf="@id/day_submit_button"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/day_image">
@@ -141,30 +127,6 @@
             android:hint="@string/description_hint"
             android:inputType="textMultiLine"
             android:maxHeight="200dp"
-            android:textAppearance="@style/TextAppearance.AppCompat.Small" />
-    </com.google.android.material.textfield.TextInputLayout>
-
-    <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/day_edit_transport_layout"
-        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginEnd="16dp"
-        android:gravity="start|top"
-        android:hint="@string/transport_hint"
-        android:importantForAutofill="no"
-        app:layout_constraintBottom_toTopOf="@id/day_submit_button"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/day_edit_description_layout">
-
-        <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/day_edit_transport"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:inputType="textMultiLine"
             android:textAppearance="@style/TextAppearance.AppCompat.Small" />
     </com.google.android.material.textfield.TextInputLayout>
 
@@ -181,13 +143,13 @@
         app:layout_constraintBottom_toTopOf="@id/locations_title"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/day_edit_transport_layout" />
+        app:layout_constraintTop_toBottomOf="@id/day_edit_description_layout" />
 
     <androidx.constraintlayout.widget.Group
         android:id="@+id/day_form"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:constraint_referenced_ids="day_submit_button, day_edit_description_layout, day_edit_title_layout, day_edit_transport_layout"
+        app:constraint_referenced_ids="day_submit_button, day_edit_description_layout, day_edit_title_layout"
         app:layout_constraintEnd_toStartOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
@@ -197,7 +159,7 @@
         android:id="@+id/day_content"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:constraint_referenced_ids="day_description, day_title, day_transport"
+        app:constraint_referenced_ids="day_description, day_title"
         app:layout_constraintEnd_toStartOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
@@ -227,7 +189,7 @@
         app:layout_constraintBottom_toTopOf="@id/locations"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/day_transport" />
+        app:layout_constraintTop_toBottomOf="@id/day_description" />
 
     <View
         android:id="@+id/divider_day_details"

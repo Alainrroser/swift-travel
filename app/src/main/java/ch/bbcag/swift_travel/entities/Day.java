@@ -24,8 +24,6 @@ public class Day {
 	private long cityId;
 	@ColumnInfo(name = "date")
 	private String date;
-	@ColumnInfo(name = "transport")
-	private String transport;
 	@Ignore
 	private List<Location> locationList = new ArrayList<>();
 
@@ -84,14 +82,6 @@ public class Day {
 
 	public void setDate(String date) {
 		this.date = date;
-	}
-
-	public String getTransport() {
-		return transport;
-	}
-
-	public void setTransport(String transport) {
-		this.transport = transport;
 	}
 
 	public List<Location> getLocationList() {

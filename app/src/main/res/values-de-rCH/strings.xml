@@ -61,7 +61,9 @@
     <string name="create_location_title">Ort erstellen</string>
     <string name="add_location">Ort hinzufügen</string>
 
-    <string name="locations_pictures">Bilder</string>
+    <string name="images">Bilder</string>
+    <string name="add_image">Bild hinzufügen</string>
+
     <string name="email_hint">Gib deine E-Mail ein</string>
     <string name="password_hint">Gib dein Passwort ein</string>
     <string name="login">Anmelden</string>
@@ -71,4 +73,12 @@
     <string name="password_confirm_hint">Passwort bestätigen</string>
     <string name="email_empty">Gib eine E-Mail ein</string>
     <string name="password_empty">Gib ein Passwort ein</string>
+    <string name="login_error">Du musst deine E-Mail und dein Passwort eingeben</string>
+    <string name="login_unsuccessful">Bitte prüfe deine Eingaben und versuche es erneut</string>
+    <string name="login_unsuccessful_title">Du konntest nicht eingeloggt werden</string>
+    <string name="please">Bitte</string>
+    <string name="passwords_do_not_match">Die Passwörter stimmen nicht überein</string>
+    <string name="user_title">Benutzer</string>
+    <string name="settings">Einstellungen</string>
+    <string name="auto_safe">Daten online speichern?</string>
 </resources>

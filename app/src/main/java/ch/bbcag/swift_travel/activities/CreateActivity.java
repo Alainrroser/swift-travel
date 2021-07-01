@@ -262,8 +262,8 @@ public class CreateActivity extends UpButtonActivity {
 		if (transportEdit.getText() == null) {
 			transportEdit.setText("");
 		}
-		trip.setTransport(transportEdit.getText().toString());
-		intent.putExtra(Const.TRANSPORT, trip.getTransport());
+		city.setTransport(transportEdit.getText().toString());
+		intent.putExtra(Const.TRANSPORT, city.getTransport());
 
 		intent.putExtra(Const.START_DATE, startDate);
 		intent.putExtra(Const.END_DATE, endDate);
@@ -293,8 +293,8 @@ public class CreateActivity extends UpButtonActivity {
 		if (transportEdit.getText() == null) {
 			transportEdit.setText("");
 		}
-		trip.setTransport(transportEdit.getText().toString());
-		intent.putExtra(Const.TRANSPORT, trip.getTransport());
+		location.setTransport(transportEdit.getText().toString());
+		intent.putExtra(Const.TRANSPORT, location.getTransport());
 
 		intent.putExtra(Const.START_TIME, startTime);
 		intent.putExtra(Const.END_TIME, endTime);

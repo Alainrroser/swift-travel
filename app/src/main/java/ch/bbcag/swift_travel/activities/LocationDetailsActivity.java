@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.GridView;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -15,13 +16,18 @@ import androidx.annotation.Nullable;
 import androidx.constraintlayout.widget.Group;
 
 import com.github.dhaval2404.imagepicker.ImagePicker;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.textfield.TextInputLayout;
 
+import java.util.List;
 import java.util.Objects;
 
 import ch.bbcag.swift_travel.R;
+import ch.bbcag.swift_travel.adapter.ImageAdapter;
+import ch.bbcag.swift_travel.dal.ImageDao;
 import ch.bbcag.swift_travel.dal.LocationDao;
 import ch.bbcag.swift_travel.dal.SwiftTravelDatabase;
+import ch.bbcag.swift_travel.entities.Image;
 import ch.bbcag.swift_travel.entities.Location;
 import ch.bbcag.swift_travel.utils.Const;
 import ch.bbcag.swift_travel.utils.LayoutUtils;
@@ -39,9 +45,15 @@ public class LocationDetailsActivity extends UpButtonActivity {
 	private EditText editTransport;
 	private ImageView locationImage;
 
+	private FloatingActionButton floatingActionButton;
+	private GridView imageGrid;
+	private ImageAdapter imageAdapter;
+
 	private Location selected;
+	private Image clickedImage;
 
 	private LocationDao locationDao;
+	private ImageDao imageDao;
 
 	private boolean nameValidated = false;
 
@@ -55,6 +67,7 @@ public class LocationDetailsActivity extends UpButtonActivity {
 		setTitle(name);
 
 		locationDao = SwiftTravelDatabase.getInstance(getApplicationContext()).getLocationDao();
+		imageDao = SwiftTravelDatabase.getInstance(getApplicationContext()).getImageDao();
 
 		titleText = findViewById(R.id.location_title);
 		durationText = findViewById(R.id.location_duration);
@@ -65,7 +78,10 @@ public class LocationDetailsActivity extends UpButtonActivity {
 		editTransport = findViewById(R.id.location_edit_transport);
 		locationImage = findViewById(R.id.location_image);
 
+		imageGrid = findViewById(R.id.location_images);
+
 		submitButton = findViewById(R.id.location_submit_button);
+		floatingActionButton = findViewById(R.id.floating_action_button_location_details);
 		editDescriptionButton = findViewById(R.id.edit_button);
 	}
 
@@ -77,6 +93,16 @@ public class LocationDetailsActivity extends UpButtonActivity {
 		if (id != -1) {
 			selected = locationDao.getById(id);
 		}
+
+		List<Image> images = imageDao.getAllFromLocation(selected.getId());
+		imageAdapter = new ImageAdapter(this, images);
+
+		imageGrid.setAdapter(imageAdapter);
+		imageGrid.setOnItemClickListener((parent, view, position, id1) -> {
+			ImagePicker.with(this).crop().start(Const.REPLACE_IMAGE_REQUEST_CODE);
+			clickedImage = imageAdapter.getItem(position);
+		});
+		getProgressBar().setVisibility(View.GONE);
 
 		editTitle.setText(selected.getName());
 		editDescription.setText(selected.getDescription());
@@ -90,18 +116,35 @@ public class LocationDetailsActivity extends UpButtonActivity {
 		getProgressBar().setVisibility(View.GONE);
 
 		editDescriptionButton.setOnClickListener(v -> toggleForm());
-		locationImage.setOnClickListener(v -> ImagePicker.with(this).crop().start());
+		locationImage.setOnClickListener(v -> ImagePicker.with(this).crop().start(Const.LOCATION_IMAGE_REQUEST_CODE));
+		floatingActionButton.setOnClickListener(v -> ImagePicker.with(this).crop().start(Const.ADD_IMAGE_REQUEST_CODE));
+
 		onSubmitButtonClick();
 	}
 
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
 		super.onActivityResult(requestCode, resultCode, data);
-		if (resultCode == Activity.RESULT_OK && data != null) {
+		if (requestCode == Const.LOCATION_IMAGE_REQUEST_CODE && resultCode == Activity.RESULT_OK && data != null) {
 			Uri imageURI = data.getData();
 			selected.setImageURI(imageURI.toString());
 			locationDao.update(selected);
 			locationImage.setImageURI(imageURI);
+		} else if (requestCode == Const.ADD_IMAGE_REQUEST_CODE && resultCode == Activity.RESULT_OK && data != null) {
+			Uri imageURI = data.getData();
+			Image image = new Image();
+			image.setImageURI(imageURI.toString());
+			image.setLocationId(selected.getId());
+			long id = imageDao.insert(image);
+			image.setId(id);
+			imageAdapter.add(image);
+		} else if (requestCode == Const.REPLACE_IMAGE_REQUEST_CODE && resultCode == Activity.RESULT_OK && data != null) {
+			Uri imageURI = data.getData();
+			clickedImage.setImageURI(imageURI.toString());
+			imageDao.update(clickedImage);
+			imageAdapter.clear();
+			List<Image> images = imageDao.getAllFromLocation(selected.getId());
+			imageAdapter.addAll(images);
 		}
 	}
 

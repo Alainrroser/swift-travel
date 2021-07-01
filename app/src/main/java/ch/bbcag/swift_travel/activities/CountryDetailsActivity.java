@@ -51,9 +51,7 @@ public class CountryDetailsActivity extends UpButtonActivity implements SearchVi
 	private TextView titleText;
 	private TextView durationText;
 	private TextView descriptionText;
-	private TextView transportText;
 	private EditText editDescription;
-	private EditText editTransport;
 	private ImageView countryImage;
 
 	private CityAdapter adapter;
@@ -82,9 +80,7 @@ public class CountryDetailsActivity extends UpButtonActivity implements SearchVi
 		titleText = findViewById(R.id.country_title);
 		durationText = findViewById(R.id.country_duration);
 		descriptionText = findViewById(R.id.country_description);
-		transportText = findViewById(R.id.country_transport);
 		editDescription = findViewById(R.id.country_edit_description);
-		editTransport = findViewById(R.id.country_edit_transport);
 		countryImage = findViewById(R.id.country_image);
 
 		submitButton = findViewById(R.id.country_submit_button);
@@ -108,7 +104,6 @@ public class CountryDetailsActivity extends UpButtonActivity implements SearchVi
 		addCitiesToClickableList();
 
 		editDescription.setText(selected.getDescription());
-		editTransport.setText(selected.getTransport());
 
 		refreshContent();
 
@@ -298,7 +293,6 @@ public class CountryDetailsActivity extends UpButtonActivity implements SearchVi
 	private void onSubmitButtonClick() {
 		submitButton.setOnClickListener(v -> {
 			editDescription();
-			editTransport();
 			countryDao.update(selected);
 			refreshContent();
 			toggleForm();
@@ -314,7 +308,6 @@ public class CountryDetailsActivity extends UpButtonActivity implements SearchVi
 			content.setVisibility(View.VISIBLE);
 		} else {
 			editDescription.setText(selected.getDescription());
-			editTransport.setText(selected.getTransport());
 			form.setVisibility(View.VISIBLE);
 			content.setVisibility(View.GONE);
 		}
@@ -326,16 +319,10 @@ public class CountryDetailsActivity extends UpButtonActivity implements SearchVi
 		}
 	}
 
-	private void editTransport() {
-		if (editTransport.getText() != null && !editTransport.getText().toString().isEmpty()) {
-			selected.setTransport(editTransport.getText().toString());
-		}
-	}
 
 	public void refreshContent() {
 		LayoutUtils.setTitleText(titleText, selected.getName());
 		LayoutUtils.setEditableText(descriptionText, editDescription, selected.getDescription(), getString(R.string.description_hint));
-		LayoutUtils.setEditableText(transportText, editTransport, selected.getTransport(), getString(R.string.transport_hint));
 		String duration;
 		if (getCountryDuration() == 1) {
 			duration = getCountryDuration() + " " + getString(R.string.day);

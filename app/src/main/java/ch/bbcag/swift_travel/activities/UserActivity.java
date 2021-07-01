@@ -5,7 +5,7 @@ import android.view.View;
 
 import ch.bbcag.swift_travel.R;
 
-public class UserActivity extends UpButtonActivity{
+public class UserActivity extends UpButtonActivity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);

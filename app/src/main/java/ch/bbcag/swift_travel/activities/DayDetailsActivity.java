@@ -50,10 +50,8 @@ public class DayDetailsActivity extends UpButtonActivity implements SearchView.O
 	private TextView titleText;
 	private TextView dateText;
 	private TextView descriptionText;
-	private TextView transportText;
 	private EditText editTitle;
 	private EditText editDescription;
-	private EditText editTransport;
 	private ImageView dayImage;
 
 	private Day selected;
@@ -78,10 +76,8 @@ public class DayDetailsActivity extends UpButtonActivity implements SearchView.O
 		titleText = findViewById(R.id.day_title);
 		dateText = findViewById(R.id.day_date);
 		descriptionText = findViewById(R.id.day_description);
-		transportText = findViewById(R.id.day_transport);
 		editTitle = findViewById(R.id.day_edit_title);
 		editDescription = findViewById(R.id.day_edit_description);
-		editTransport = findViewById(R.id.day_edit_transport);
 		dayImage = findViewById(R.id.day_image);
 
 		submitButton = findViewById(R.id.day_submit_button);
@@ -106,7 +102,6 @@ public class DayDetailsActivity extends UpButtonActivity implements SearchView.O
 
 		editTitle.setText(selected.getName());
 		editDescription.setText(selected.getDescription());
-		editTransport.setText(selected.getTransport());
 
 		refreshContent();
 
@@ -254,7 +249,6 @@ public class DayDetailsActivity extends UpButtonActivity implements SearchView.O
 		submitButton.setOnClickListener(v -> {
 			editName();
 			editDescription();
-			editTransport();
 			dayDao.update(selected);
 			refreshContent();
 			toggleForm();
@@ -264,7 +258,6 @@ public class DayDetailsActivity extends UpButtonActivity implements SearchView.O
 	public void refreshContent() {
 		LayoutUtils.setEditableTitleText(titleText, editTitle, selected.getName());
 		LayoutUtils.setEditableText(descriptionText, editDescription, selected.getDescription(), getString(R.string.description_hint));
-		LayoutUtils.setEditableText(transportText, editTransport, selected.getTransport(), getString(R.string.transport_hint));
 		LayoutUtils.setTextOnTextView(dateText, selected.getDate());
 		if (selected.getImageURI() != null && !selected.getImageURI().isEmpty()) {
 			LayoutUtils.setImageURIOnImageView(dayImage, selected.getImageURI());
@@ -289,12 +282,6 @@ public class DayDetailsActivity extends UpButtonActivity implements SearchView.O
 		}
 	}
 
-	private void editTransport() {
-		if (editTransport.getText() != null && !editTransport.getText().toString().isEmpty()) {
-			selected.setTransport(editTransport.getText().toString());
-		}
-	}
-
 	private void toggleForm() {
 		boolean notChanged = false;
 
@@ -311,7 +298,6 @@ public class DayDetailsActivity extends UpButtonActivity implements SearchView.O
 		} else {
 			editTitle.setText(selected.getName());
 			editDescription.setText(selected.getDescription());
-			editTransport.setText(selected.getTransport());
 			form.setVisibility(View.VISIBLE);
 			content.setVisibility(View.GONE);
 		}

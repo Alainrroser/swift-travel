@@ -30,8 +30,6 @@ public class Trip {
 	private String endDate;
 	@ColumnInfo(name = "duration")
 	private long duration;
-	@ColumnInfo(name = "transport")
-	private String transport;
 	@Ignore
 	private List<Country> countries = new ArrayList<>();
 
@@ -123,13 +121,5 @@ public class Trip {
 
 	public void setImageURI(String imageURI) {
 		this.imageURI = imageURI;
-	}
-
-	public String getTransport() {
-		return transport;
-	}
-
-	public void setTransport(String transport) {
-		this.transport = transport;
 	}
 }

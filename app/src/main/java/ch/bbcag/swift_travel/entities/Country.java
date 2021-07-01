@@ -30,8 +30,6 @@ public class Country {
 	private String endDate;
 	@ColumnInfo(name = "duration")
 	private long duration;
-	@ColumnInfo(name = "transport")
-	private String transport;
 	@Ignore
 	private List<City> cityList = new ArrayList<>();
 
@@ -123,13 +121,5 @@ public class Country {
 
 	public void setDescription(String description) {
 		this.description = description;
-	}
-
-	public String getTransport() {
-		return transport;
-	}
-
-	public void setTransport(String transport) {
-		this.transport = transport;
 	}
 }

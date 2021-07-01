@@ -58,13 +58,16 @@
     <string name="location_duration">Duration at the location</string>
     <string name="select_location_duration">Select duration in Location</string>
     <string name="create_location_title">Create Location</string>
-    <string name="locations_pictures">Pictures</string>
+    <string name="add_location">Add Location</string>
+
+    <string name="images">Images</string>
+    <string name="add_image">Add image</string>
+
     <string name="email_hint">Enter your email</string>
     <string name="password_hint">Enter your password</string>
     <string name="login">Login</string>
     <string name="register">Register</string>
     <string name="registered_yet">Not registered yet?</string>
-    <string name="add_location">Add Location</string>
     <string name="already_registered">Are you already registered?</string>
     <string name="password_confirm_hint">Confirm your password</string>
     <string name="email_empty">Please enter an email</string>

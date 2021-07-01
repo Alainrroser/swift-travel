@@ -1,3 +1,5 @@
+google-services.json
+
 # XML Files which don't get ignored
 /.idea/runConfigurations.xml
 /.idea/misc.xml

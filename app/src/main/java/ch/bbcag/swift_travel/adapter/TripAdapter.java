@@ -16,6 +16,7 @@ import ch.bbcag.swift_travel.dal.SwiftTravelDatabase;
 import ch.bbcag.swift_travel.entities.City;
 import ch.bbcag.swift_travel.entities.Country;
 import ch.bbcag.swift_travel.entities.Day;
+import ch.bbcag.swift_travel.entities.Image;
 import ch.bbcag.swift_travel.entities.Location;
 import ch.bbcag.swift_travel.entities.Trip;
 import ch.bbcag.swift_travel.utils.LayoutUtils;
@@ -115,7 +116,15 @@ public class TripAdapter extends ArrayAdapter<Trip> {
 	private void deleteLocations(Day day) {
 		List<Location> locations = SwiftTravelDatabase.getInstance(mainActivity.getApplicationContext()).getLocationDao().getAllFromDay(day.getId());
 		for (Location location : locations) {
+			deleteImages(location);
 			SwiftTravelDatabase.getInstance(mainActivity.getApplicationContext()).getLocationDao().deleteById(location.getId());
+		}
+	}
+
+	private void deleteImages(Location location) {
+		List<Image> images = SwiftTravelDatabase.getInstance(mainActivity.getApplicationContext()).getImageDao().getAllFromLocation(location.getId());
+		for (Image image : images) {
+			SwiftTravelDatabase.getInstance(mainActivity.getApplicationContext()).getImageDao().deleteById(image.getId());
 		}
 	}
 

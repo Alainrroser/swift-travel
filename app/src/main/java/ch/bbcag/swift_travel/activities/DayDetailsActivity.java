@@ -33,10 +33,15 @@ import ch.bbcag.swift_travel.adapter.LocationAdapter;
 import ch.bbcag.swift_travel.dal.DayDao;
 import ch.bbcag.swift_travel.dal.LocationDao;
 import ch.bbcag.swift_travel.dal.SwiftTravelDatabase;
+import ch.bbcag.swift_travel.entities.City;
 import ch.bbcag.swift_travel.entities.Day;
 import ch.bbcag.swift_travel.entities.Location;
 import ch.bbcag.swift_travel.utils.Const;
+import ch.bbcag.swift_travel.utils.DateTimeUtils;
 import ch.bbcag.swift_travel.utils.LayoutUtils;
+
+import static java.lang.Math.max;
+import static java.lang.Math.min;
 
 public class DayDetailsActivity extends UpButtonActivity implements SearchView.OnQueryTextListener, SearchView.OnCloseListener {
 	private SearchView searchView;
@@ -60,6 +65,7 @@ public class DayDetailsActivity extends UpButtonActivity implements SearchView.O
 	private LocationDao locationDao;
 
 	private boolean nameValidated = false;
+	private boolean durationOverlaps = false;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -219,7 +225,27 @@ public class DayDetailsActivity extends UpButtonActivity implements SearchView.O
 		Location location = new Location();
 		if (intent.getStringExtra(Const.LOCATION_NAME) != null && intent.getBooleanExtra(Const.ADD_LOCATION, false)) {
 			intent.removeExtra(Const.ADD_LOCATION);
+			checkIfDurationOverlaps(intent);
+			addLocationIfNotOverlaps(location, intent);
 
+		}
+	}
+
+	private void checkIfDurationOverlaps(Intent intent) {
+		for (Location existingLocation : locationDao.getAllFromDay(selected.getId())) {
+			long startTimeExisting = DateTimeUtils.parseTimeToMilliseconds(existingLocation.getStartTime());
+			long startTimeNew = DateTimeUtils.parseTimeToMilliseconds(intent.getStringExtra(Const.START_TIME));
+			long endTimeExisting = DateTimeUtils.parseTimeToMilliseconds(existingLocation.getEndTime());
+			long endTimeNew = DateTimeUtils.parseTimeToMilliseconds(intent.getStringExtra(Const.END_TIME));
+			if (max(startTimeNew, startTimeExisting) < min(endTimeNew, endTimeExisting)) {
+				durationOverlaps = true;
+				break;
+			}
+		}
+	}
+
+	private void addLocationIfNotOverlaps(Location location, Intent intent) {
+		if (!durationOverlaps) {
 			location.setName(intent.getStringExtra(Const.LOCATION_NAME));
 			location.setDescription(intent.getStringExtra(Const.LOCATION_DESCRIPTION));
 			location.setTransport(intent.getStringExtra(Const.TRANSPORT));
@@ -232,6 +258,8 @@ public class DayDetailsActivity extends UpButtonActivity implements SearchView.O
 			location.setId(id);
 
 			adapter.add(location);
+		} else {
+			generateMessageDialog(getString(R.string.duration_overlap_error_title), getString(R.string.duration_overlap_error_text));
 		}
 	}
 

@@ -1,6 +1,8 @@
 package ch.bbcag.swift_travel.utils;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 
@@ -9,6 +11,11 @@ public class DateTimeUtils {
 		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy");
 		// Subtract a day so you can be at two locations in one day
 		return LocalDate.parse(dateString, formatter).atStartOfDay().atZone(ZoneId.systemDefault()).toInstant().toEpochMilli() - (24 * 60 * 60 * 1000);
+	}
+
+	public static long parseTimeToMilliseconds(String timeString) {
+		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm");
+		return LocalTime.parse(timeString, formatter).atDate(LocalDate.now(ZoneId.systemDefault())).atZone(ZoneId.systemDefault()).toInstant().toEpochMilli();
 	}
 
 	public static long getDaysCountFromTimeSpan(long startDate, long endDate) {

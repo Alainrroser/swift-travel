@@ -212,7 +212,7 @@ public class CountryDetailsActivity extends UpButtonActivity implements SearchVi
 			intent.removeExtra(Const.ADD_CITY);
 
 			checkIfDurationOverlaps(intent);
-			addCityIfNotExists(intent, city);
+			addCityIfNotOverlaps(intent, city);
 		}
 	}
 
@@ -229,7 +229,7 @@ public class CountryDetailsActivity extends UpButtonActivity implements SearchVi
 		}
 	}
 
-	private void addCityIfNotExists(Intent intent, City city) {
+	private void addCityIfNotOverlaps(Intent intent, City city) {
 		if (!durationOverlaps) {
 			city.setName(intent.getStringExtra(Const.CITY_NAME));
 			city.setDescription(intent.getStringExtra(Const.CITY_DESCRIPTION));

@@ -15,6 +15,7 @@ import ch.bbcag.swift_travel.activities.CountryDetailsActivity;
 import ch.bbcag.swift_travel.dal.SwiftTravelDatabase;
 import ch.bbcag.swift_travel.entities.City;
 import ch.bbcag.swift_travel.entities.Day;
+import ch.bbcag.swift_travel.entities.Image;
 import ch.bbcag.swift_travel.entities.Location;
 import ch.bbcag.swift_travel.utils.LayoutUtils;
 
@@ -84,7 +85,15 @@ public class CityAdapter extends ArrayAdapter<City> {
 	private void deleteLocations(Day day) {
 		List<Location> locations = SwiftTravelDatabase.getInstance(countryDetailsActivity.getApplicationContext()).getLocationDao().getAllFromDay(day.getId());
 		for (Location location : locations) {
+			deleteImages(location);
 			SwiftTravelDatabase.getInstance(countryDetailsActivity.getApplicationContext()).getLocationDao().deleteById(location.getId());
+		}
+	}
+
+	private void deleteImages(Location location) {
+		List<Image> images = SwiftTravelDatabase.getInstance(countryDetailsActivity.getApplicationContext()).getImageDao().getAllFromLocation(location.getId());
+		for (Image image : images) {
+			SwiftTravelDatabase.getInstance(countryDetailsActivity.getApplicationContext()).getImageDao().deleteById(image.getId());
 		}
 	}
 

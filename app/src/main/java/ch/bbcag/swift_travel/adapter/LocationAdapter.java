@@ -13,6 +13,7 @@ import java.util.List;
 import ch.bbcag.swift_travel.R;
 import ch.bbcag.swift_travel.activities.DayDetailsActivity;
 import ch.bbcag.swift_travel.dal.SwiftTravelDatabase;
+import ch.bbcag.swift_travel.entities.Image;
 import ch.bbcag.swift_travel.entities.Location;
 import ch.bbcag.swift_travel.utils.LayoutUtils;
 
@@ -64,8 +65,16 @@ public class LocationAdapter extends ArrayAdapter<Location> {
 		dayDetailsActivity.generateConfirmDialog(dayDetailsActivity.getString(R.string.delete_entry_title), dayDetailsActivity.getString(R.string.delete_entry_text), () -> {
 			remove(location);
 			notifyDataSetChanged();
+			deleteImages(location);
 			SwiftTravelDatabase.getInstance(dayDetailsActivity.getApplicationContext()).getLocationDao().deleteById(location.getId());
 		});
+	}
+
+	private void deleteImages(Location location) {
+		List<Image> images = SwiftTravelDatabase.getInstance(dayDetailsActivity.getApplicationContext()).getImageDao().getAllFromLocation(location.getId());
+		for (Image image : images) {
+			SwiftTravelDatabase.getInstance(dayDetailsActivity.getApplicationContext()).getImageDao().deleteById(image.getId());
+		}
 	}
 
 	public static class LocationAdapterViewHolder {

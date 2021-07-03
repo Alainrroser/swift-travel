@@ -57,9 +57,11 @@ public class ValidationUtils {
 		currentUser.reauthenticate(credential).addOnCompleteListener(task -> {
 			if (task.isSuccessful()) {
 				isPasswordValid = true;
+				textInputLayout.setError(null);
 			} else {
 				isPasswordValid = false;
 				textInputLayout.setError(context.getString(R.string.password_does_not_match));
+				textInputLayout.requestFocus();
 			}
 		});
 		return isPasswordValid;
@@ -73,6 +75,8 @@ public class ValidationUtils {
 			newPasswordLayout.requestFocus();
 			return false;
 		} else {
+			oldPasswordLayout.setError(null);
+			newPasswordLayout.setError(null);
 			return true;
 		}
 	}

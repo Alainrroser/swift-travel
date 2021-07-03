@@ -38,8 +38,8 @@
         android:layout_marginTop="16dp"
         android:text="@string/settings"
         android:textAppearance="@style/TextAppearance.AppCompat.Large"
-        app:layout_constraintStart_toStartOf="@id/user_logout"
-        app:layout_constraintTop_toBottomOf="@id/user_logout" />
+        app:layout_constraintStart_toStartOf="@id/user_delete_account"
+        app:layout_constraintTop_toBottomOf="@id/user_delete_account" />
 
     <com.google.android.material.switchmaterial.SwitchMaterial
         android:id="@+id/auto_safe_switch"
@@ -70,9 +70,19 @@
         android:layout_marginEnd="56dp"
         android:text="@string/logout"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/user_change_password" />
+
+    <Button
+        android:id="@+id/user_delete_account"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="56dp"
+        android:layout_marginEnd="56dp"
+        android:text="@string/delete_account"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/user_logout" />
 
     <androidx.constraintlayout.widget.Group
         android:id="@+id/user_change_password_group"
@@ -89,6 +99,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
         android:importantForAutofill="no"
+        app:endIconMode="password_toggle"
         app:layout_constraintEnd_toEndOf="@+id/user_change_password"
         app:layout_constraintStart_toStartOf="@+id/user_change_password"
         app:layout_constraintTop_toBottomOf="@+id/user_change_password">
@@ -110,6 +121,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
         android:importantForAutofill="no"
+        app:endIconMode="password_toggle"
         app:layout_constraintEnd_toEndOf="@id/user_password_input"
         app:layout_constraintStart_toStartOf="@id/user_password_input"
         app:layout_constraintTop_toBottomOf="@id/user_password_input">
@@ -131,6 +143,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
         android:importantForAutofill="no"
+        app:endIconMode="password_toggle"
         app:layout_constraintEnd_toEndOf="@id/user_new_password_input"
         app:layout_constraintStart_toStartOf="@id/user_new_password_input"
         app:layout_constraintTop_toBottomOf="@id/user_new_password_input">
@@ -150,7 +163,7 @@
         android:id="@+id/user_content"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:constraint_referenced_ids="user_logout, settings, auto_safe_switch"
+        app:constraint_referenced_ids="user_logout, settings, auto_safe_switch, user_delete_account"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         tools:visibility="gone" />

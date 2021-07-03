@@ -93,5 +93,9 @@
     <string name="user_title">User</string>
     <string name="settings">Settings</string>
     <string name="auto_safe">Safe data online</string>
+
     <string name="logout">Logout</string>
+    <string name="delete_account">Delete account</string>
+    <string name="delete_account_title">Delete account</string>
+    <string name="delete_account_text">Do you really want to delete your account?</string>
 </resources>

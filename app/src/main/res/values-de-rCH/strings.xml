@@ -94,5 +94,9 @@
     <string name="user_title">Benutzer</string>
     <string name="settings">Einstellungen</string>
     <string name="auto_safe">Daten online speichern?</string>
+
     <string name="logout">Ausloggen</string>
+    <string name="delete_account">Account löschen</string>
+    <string name="delete_account_title">Account löschen</string>
+    <string name="delete_account_text">Wollen Sie Ihren Account wirklich löschen?</string>
 </resources>

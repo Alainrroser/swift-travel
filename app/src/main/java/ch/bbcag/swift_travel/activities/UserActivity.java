@@ -26,7 +26,7 @@ public class UserActivity extends UpButtonActivity {
 	FirebaseAuth mAuth;
 	FirebaseUser currentUser;
 	TextView userEmail;
-	Button changePasswordButton, logoutButton, submitButton;
+	Button changePasswordButton, logoutButton, deleteButton, submitButton;
 	Group form, content;
 
 	@Override
@@ -36,6 +36,7 @@ public class UserActivity extends UpButtonActivity {
 
 		changePasswordButton = findViewById(R.id.user_change_password);
 		logoutButton = findViewById(R.id.user_logout);
+		deleteButton = findViewById(R.id.user_delete_account);
 		submitButton = findViewById(R.id.user_change_password_submit);
 
 		form = findViewById(R.id.user_change_password_group);
@@ -49,6 +50,7 @@ public class UserActivity extends UpButtonActivity {
 	protected void onStart() {
 		super.onStart();
 
+		System.out.println("hi");
 		currentUser = mAuth.getCurrentUser();
 		if (currentUser == null) {
 			Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
@@ -65,6 +67,7 @@ public class UserActivity extends UpButtonActivity {
 		onChangePasswordClick();
 		onSubmitButtonClick();
 		onLogoutButtonClick();
+		onDeleteButtonClick();
 	}
 
 	@Override
@@ -131,11 +134,20 @@ public class UserActivity extends UpButtonActivity {
 	}
 
 	private void onLogoutButtonClick() {
-		logoutButton.setOnClickListener(v -> {
-			mAuth.signOut();
-			Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
-			startActivity(intent);
-		});
+		logoutButton.setOnClickListener(v -> logout());
 	}
 
+	private void logout() {
+		mAuth.signOut();
+		Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
+		startActivity(intent);
+	}
+
+	private void onDeleteButtonClick() {
+		deleteButton.setOnClickListener(v -> generateConfirmDialog(getString(R.string.delete_account_title), getString(R.string.delete_account_text), () -> {
+			currentUser.delete();
+			currentUser = null;
+			logout();
+		}));
+	}
 }

@@ -42,10 +42,11 @@
         app:layout_constraintTop_toBottomOf="@id/user_delete_account" />
 
     <com.google.android.material.switchmaterial.SwitchMaterial
-        android:id="@+id/auto_safe_switch"
+        android:id="@+id/safe_online_switch"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
+        android:checked="true"
         android:text="@string/auto_safe"
         app:layout_constraintStart_toStartOf="@id/settings"
         app:layout_constraintTop_toBottomOf="@id/settings" />
@@ -91,7 +92,7 @@
         app:constraint_referenced_ids="user_password_input, user_new_password_input, user_new_password_confirm_input,user_change_password_submit"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        tools:visibility="visible" />
+        tools:visibility="gone" />
 
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/user_password_input"
@@ -163,10 +164,10 @@
         android:id="@+id/user_content"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:constraint_referenced_ids="user_logout, settings, auto_safe_switch, user_delete_account"
+        app:constraint_referenced_ids="user_logout, settings, safe_online_switch, user_delete_account"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        tools:visibility="gone" />
+        tools:visibility="visible" />
 
     <Button
         android:id="@+id/user_change_password_submit"

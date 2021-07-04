@@ -48,7 +48,12 @@ public class RegisterActivity extends UpButtonActivity {
 	@Override
 	protected void onStart() {
 		super.onStart();
+
 		getProgressBar().setVisibility(View.GONE);
+
+		email.setText("");
+		password.setText("");
+		passwordConfirm.setText("");
 
 		onLoginButtonClick();
 		onRegisterButtonClick();

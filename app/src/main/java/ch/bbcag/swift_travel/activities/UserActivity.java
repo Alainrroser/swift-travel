@@ -1,5 +1,6 @@
 package ch.bbcag.swift_travel.activities;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.MenuItem;
@@ -11,6 +12,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.constraintlayout.widget.Group;
 
+import com.google.android.material.switchmaterial.SwitchMaterial;
 import com.google.android.material.textfield.TextInputLayout;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -20,14 +22,31 @@ import java.util.List;
 import java.util.Objects;
 
 import ch.bbcag.swift_travel.R;
+import ch.bbcag.swift_travel.utils.Const;
 import ch.bbcag.swift_travel.utils.ValidationUtils;
 
 public class UserActivity extends UpButtonActivity {
-	FirebaseAuth mAuth;
-	FirebaseUser currentUser;
-	TextView userEmail;
-	Button changePasswordButton, logoutButton, deleteButton, submitButton;
-	Group form, content;
+	private FirebaseAuth mAuth;
+	private FirebaseUser currentUser;
+
+	private TextView userEmail;
+
+	private Button changePasswordButton;
+	private Button logoutButton;
+	private Button deleteButton;
+	private Button submitButton;
+
+	private Group form;
+	private Group content;
+
+	private TextInputLayout passwordLayout;
+	private EditText password;
+	private TextInputLayout newPasswordLayout;
+	private EditText newPassword;
+	private TextInputLayout newPasswordConfirmLayout;
+	private EditText newPasswordConfirm;
+
+	private SwitchMaterial safeOnlineSwitch;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -44,13 +63,21 @@ public class UserActivity extends UpButtonActivity {
 
 		userEmail = findViewById(R.id.user_email);
 		mAuth = FirebaseAuth.getInstance();
+
+		passwordLayout = findViewById(R.id.user_password_input);
+		password = findViewById(R.id.user_password);
+		newPasswordLayout = findViewById(R.id.user_new_password_input);
+		newPassword = findViewById(R.id.user_new_password);
+		newPasswordConfirmLayout = findViewById(R.id.user_new_password_confirm_input);
+		newPasswordConfirm = findViewById(R.id.user_new_password_confirm);
+
+		safeOnlineSwitch = findViewById(R.id.safe_online_switch);
 	}
 
 	@Override
 	protected void onStart() {
 		super.onStart();
 
-		System.out.println("hi");
 		currentUser = mAuth.getCurrentUser();
 		if (currentUser == null) {
 			Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
@@ -60,10 +87,13 @@ public class UserActivity extends UpButtonActivity {
 		setTitle(currentUser.getEmail());
 		userEmail.setText(currentUser.getEmail());
 
+		setSafeOnlineSwitchState();
+
 		form.setVisibility(View.GONE);
 
 		getProgressBar().setVisibility(View.GONE);
 
+		onSafeOnlineSwitchToggle();
 		onChangePasswordClick();
 		onSubmitButtonClick();
 		onLogoutButtonClick();
@@ -87,24 +117,33 @@ public class UserActivity extends UpButtonActivity {
 		} else {
 			form.setVisibility(View.VISIBLE);
 			content.setVisibility(View.GONE);
+
 		}
 	}
 
+	private void onSafeOnlineSwitchToggle() {
+		safeOnlineSwitch.setOnCheckedChangeListener((compoundButton, b) -> {
+			getPreferences(Context.MODE_PRIVATE).edit().putBoolean(Const.SAFE_ONLINE_SWITCH_TOGGLE_STATE, safeOnlineSwitch.isChecked()).apply();
+			setSafeOnlineSwitchState();
+		});
+	}
+
+	private void setSafeOnlineSwitchState() {
+		boolean safeOnlineSwitchState = getPreferences(Context.MODE_PRIVATE).getBoolean(Const.SAFE_ONLINE_SWITCH_TOGGLE_STATE, safeOnlineSwitch.isChecked());
+		safeOnlineSwitch.setChecked(safeOnlineSwitchState);
+	}
+
 	private void onChangePasswordClick() {
-		changePasswordButton.setOnClickListener(v -> toggleForm());
+		changePasswordButton.setOnClickListener(v -> {
+			password.setText("");
+			newPassword.setText("");
+			newPasswordConfirm.setText("");
+			toggleForm();
+		});
 	}
 
 	private void onSubmitButtonClick() {
 		submitButton.setOnClickListener(v -> {
-			TextInputLayout passwordLayout = findViewById(R.id.user_password_input);
-			EditText password = findViewById(R.id.user_password);
-
-			TextInputLayout newPasswordLayout = findViewById(R.id.user_new_password_input);
-			EditText newPassword = findViewById(R.id.user_new_password);
-
-			TextInputLayout newPasswordConfirmLayout = findViewById(R.id.user_new_password_confirm_input);
-			EditText newPasswordConfirm = findViewById(R.id.user_new_password_confirm);
-
 			List<TextInputLayout> layouts = new ArrayList<>();
 			List<EditText> editTexts = new ArrayList<>();
 

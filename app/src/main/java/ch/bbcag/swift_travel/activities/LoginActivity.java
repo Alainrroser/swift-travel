@@ -78,6 +78,9 @@ public class LoginActivity extends UpButtonActivity {
 			startActivity(intent);
 		}
 
+		email.setText("");
+		password.setText("");
+
 		onRegisterButtonClick();
 		onLoginButtonClick();
 		onLoginWithGoogleClick();

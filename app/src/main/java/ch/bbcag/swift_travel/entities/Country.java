@@ -3,11 +3,7 @@ package ch.bbcag.swift_travel.entities;
 import androidx.annotation.NonNull;
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
-import androidx.room.Ignore;
 import androidx.room.PrimaryKey;
-
-import java.util.ArrayList;
-import java.util.List;
 
 @Entity(tableName = "countries")
 public class Country {
@@ -24,14 +20,16 @@ public class Country {
 	private String imageURI;
 	@ColumnInfo(name = "tripId")
 	private long tripId;
+	@ColumnInfo(name = "origin")
+	private String origin;
+	@ColumnInfo(name = "destination")
+	private String destination;
 	@ColumnInfo(name = "startDate")
 	private String startDate;
 	@ColumnInfo(name = "endDate")
 	private String endDate;
 	@ColumnInfo(name = "duration")
 	private long duration;
-	@Ignore
-	private List<City> cityList = new ArrayList<>();
 
 	public Country() {
 
@@ -107,19 +105,27 @@ public class Country {
 		this.tripId = tripId;
 	}
 
-	public List<City> getCityList() {
-		return cityList;
-	}
-
-	public void setCityList(List<City> cityList) {
-		this.cityList = cityList;
-	}
-
 	public String getDescription() {
 		return description;
 	}
 
 	public void setDescription(String description) {
 		this.description = description;
+	}
+
+	public String getOrigin() {
+		return origin;
+	}
+
+	public void setOrigin(String origin) {
+		this.origin = origin;
+	}
+
+	public String getDestination() {
+		return destination;
+	}
+
+	public void setDestination(String destination) {
+		this.destination = destination;
 	}
 }

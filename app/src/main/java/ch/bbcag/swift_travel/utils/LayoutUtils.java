@@ -7,6 +7,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.github.twocoffeesoneteam.glidetovectoryou.GlideToVectorYou;
 
 import ch.bbcag.swift_travel.R;
@@ -56,7 +57,11 @@ public class LayoutUtils {
 		iv.setImageURI(Uri.parse(URI));
 	}
 
-	public static void setOnlineImageURIOnImageView(Context context, ImageView iv, String URI) {
+	public static void setFlagImageURIOnImageView(Context context, ImageView iv, String URI) {
 		GlideToVectorYou.init().with(context).setPlaceHolder(R.drawable.flag_placeholder, R.drawable.flag_placeholder).load(Uri.parse(URI), iv);
+	}
+
+	public static void setOnlineImageURIOnImageView(Context context, ImageView iv, Uri URI) {
+		Glide.with(context).load(URI).into(iv);
 	}
 }

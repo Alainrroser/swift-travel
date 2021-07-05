@@ -63,7 +63,7 @@ public class CountryAdapter extends ArrayAdapter<Country> {
 			duration = country.getDuration() + " " + tripDetailsActivity.getString(R.string.days);
 		}
 		viewHolder.duration.setText(duration);
-		LayoutUtils.setOnlineImageURIOnImageView(getContext(), viewHolder.image, country.getImageURI());
+		LayoutUtils.setFlagImageURIOnImageView(getContext(), viewHolder.image, country.getImageURI());
 	}
 
 	private void generateConfirmDialog(Country country) {

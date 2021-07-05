@@ -3,7 +3,6 @@ package ch.bbcag.swift_travel.activities;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
@@ -31,6 +30,7 @@ import java.util.List;
 import java.util.Objects;
 
 import ch.bbcag.swift_travel.R;
+import ch.bbcag.swift_travel.utils.Const;
 import ch.bbcag.swift_travel.utils.ValidationUtils;
 
 public class LoginActivity extends UpButtonActivity {
@@ -60,7 +60,6 @@ public class LoginActivity extends UpButtonActivity {
 		loginButton = findViewById(R.id.login_button);
 		loginWithGoogle = findViewById(R.id.login_with_google);
 
-
 		GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN).requestIdToken(getString(R.string.default_web_client_id)).requestEmail().build();
 		mGoogleSignInClient = GoogleSignIn.getClient(this, gso);
 
@@ -83,23 +82,13 @@ public class LoginActivity extends UpButtonActivity {
 
 		onRegisterButtonClick();
 		onLoginButtonClick();
-		onLoginWithGoogleClick();
-	}
-
-	@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
-		getMenuInflater().inflate(R.menu.home_menu, menu);
-
-		return super.onCreateOptionsMenu(menu);
+		onLoginWithGoogleButtonClick();
 	}
 
 	@Override
 	public boolean onOptionsItemSelected(@NonNull MenuItem item) {
 		int itemId = item.getItemId();
 		if (itemId == android.R.id.home) {
-			onBackPressed();
-			return true;
-		} else if (itemId == R.id.back_home) {
 			Intent intent = new Intent(getApplicationContext(), MainActivity.class);
 			startActivity(intent);
 		}
@@ -119,20 +108,21 @@ public class LoginActivity extends UpButtonActivity {
 	private void handleGoogleLoginResult(Task<GoogleSignInAccount> task) {
 		try {
 			GoogleSignInAccount account = task.getResult(ApiException.class);
-			loginWithGoogle(Objects.requireNonNull(account));
+			loginWithGoogle(Objects.requireNonNull(account).getIdToken());
 		} catch (ApiException e) {
-			e.printStackTrace();
+			generateMessageDialog(getString(R.string.google_login_unsuccessful_title), getString(R.string.google_login_unsuccessful_text));
 		}
 	}
 
-	private void loginWithGoogle(GoogleSignInAccount account) {
-		AuthCredential credential = GoogleAuthProvider.getCredential(account.getIdToken(), null);
+	private void loginWithGoogle(String idToken) {
+		AuthCredential credential = GoogleAuthProvider.getCredential(idToken, null);
 		mAuth.signInWithCredential(credential).addOnCompleteListener(this, this::checkIfTaskWasSuccessful);
 	}
 
 	private void checkIfTaskWasSuccessful(Task<AuthResult> task) {
 		if (task.isSuccessful()) {
 			Intent intent = new Intent(getApplicationContext(), UserActivity.class);
+			intent.putExtra(Const.SAFE_ONLINE, true);
 			startActivity(intent);
 		} else {
 			generateMessageDialog(getString(R.string.login_unsuccessful_title), Objects.requireNonNull(task.getException()).getMessage());
@@ -169,7 +159,7 @@ public class LoginActivity extends UpButtonActivity {
 		});
 	}
 
-	private void onLoginWithGoogleClick() {
+	private void onLoginWithGoogleButtonClick() {
 		loginWithGoogle.setOnClickListener(v -> {
 			Intent intent = mGoogleSignInClient.getSignInIntent();
 			googleLoginActivityResultLauncher.launch(intent);

@@ -14,10 +14,12 @@ import android.widget.SearchView;
 import androidx.annotation.NonNull;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.firebase.auth.FirebaseAuth;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
+import java.util.Objects;
 
 import ch.bbcag.swift_travel.R;
 import ch.bbcag.swift_travel.adapter.TripAdapter;
@@ -30,6 +32,7 @@ import ch.bbcag.swift_travel.entities.Country;
 import ch.bbcag.swift_travel.entities.Trip;
 import ch.bbcag.swift_travel.utils.Const;
 import ch.bbcag.swift_travel.utils.DateTimeUtils;
+import ch.bbcag.swift_travel.utils.LayoutUtils;
 
 public class MainActivity extends BaseActivity implements SearchView.OnQueryTextListener, SearchView.OnCloseListener {
 	private SearchView searchView;
@@ -38,7 +41,7 @@ public class MainActivity extends BaseActivity implements SearchView.OnQueryText
 	private FloatingActionButton floatingActionButton;
 	private ImageButton loginButton;
 	private TripAdapter adapter;
-	private ListView allTrips;
+	private ListView trips;
 
 	private TripDao tripDao;
 	private CountryDao countryDao;
@@ -56,7 +59,7 @@ public class MainActivity extends BaseActivity implements SearchView.OnQueryText
 
 		floatingActionButton = findViewById(R.id.floating_action_button_main);
 		loginButton = findViewById(R.id.login_button);
-		allTrips = findViewById(R.id.trips);
+		trips = findViewById(R.id.trips);
 	}
 
 	@Override
@@ -64,6 +67,11 @@ public class MainActivity extends BaseActivity implements SearchView.OnQueryText
 		super.onStart();
 		List<Trip> trips = tripDao.getAll();
 		adapter = new TripAdapter(this, trips);
+
+		if (FirebaseAuth.getInstance().getCurrentUser() != null && Objects.requireNonNull(FirebaseAuth.getInstance().getCurrentUser()).getPhotoUrl() != null) {
+			loginButton.setImageTintList(null);
+			LayoutUtils.setOnlineImageURIOnImageView(getApplicationContext(), loginButton, FirebaseAuth.getInstance().getCurrentUser().getPhotoUrl());
+		}
 
 		createTripFromIntent();
 		addTripsToClickableList(trips);
@@ -155,6 +163,7 @@ public class MainActivity extends BaseActivity implements SearchView.OnQueryText
 			trip.setImageURI(intent.getStringExtra(Const.IMAGE_URI));
 			long id = tripDao.insert(trip);
 			trip.setId(id);
+
 			adapter.add(trip);
 		}
 	}
@@ -206,10 +215,10 @@ public class MainActivity extends BaseActivity implements SearchView.OnQueryText
 		return localDate;
 	}
 
-	private void addTripsToClickableList(List<Trip> trips) {
-		allTrips.setAdapter(adapter);
+	private void addTripsToClickableList(List<Trip> tripsList) {
+		trips.setAdapter(adapter);
 		adapter.sort(this::compareTripStartDates);
-		for (Trip trip : trips) {
+		for (Trip trip : tripsList) {
 			updateDestinationAndOrigin(trip, LocalDate.parse("01.01.2200", DateTimeFormatter.ofPattern("dd.MM.yyyy")), true);
 			updateDestinationAndOrigin(trip, LocalDate.parse("01.01.1800", DateTimeFormatter.ofPattern("dd.MM.yyyy")), false);
 		}
@@ -221,7 +230,7 @@ public class MainActivity extends BaseActivity implements SearchView.OnQueryText
 			intent.putExtra(Const.TRIP_NAME, selected.getName());
 			startActivity(intent);
 		};
-		allTrips.setOnItemClickListener(onItemClickListener);
+		trips.setOnItemClickListener(onItemClickListener);
 	}
 
 	private void onFloatingActionButtonClick() {

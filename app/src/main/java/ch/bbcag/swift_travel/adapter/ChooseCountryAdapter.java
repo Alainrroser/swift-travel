@@ -46,7 +46,7 @@ public class ChooseCountryAdapter extends ArrayAdapter<Country> {
 
 	private void addInformationToAdapter(ChooseCountryAdapterViewHolder viewHolder, Country country) {
 		viewHolder.name.setText(country.getName());
-		LayoutUtils.setOnlineImageURIOnImageView(getContext(), viewHolder.image, country.getImageURI());
+		LayoutUtils.setFlagImageURIOnImageView(getContext(), viewHolder.image, country.getImageURI());
 	}
 
 	public static class ChooseCountryAdapterViewHolder {

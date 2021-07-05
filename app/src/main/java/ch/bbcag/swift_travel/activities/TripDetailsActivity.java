@@ -25,14 +25,18 @@ import com.github.dhaval2404.imagepicker.ImagePicker;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.textfield.TextInputLayout;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Objects;
 
 import ch.bbcag.swift_travel.R;
 import ch.bbcag.swift_travel.adapter.CountryAdapter;
+import ch.bbcag.swift_travel.dal.CityDao;
 import ch.bbcag.swift_travel.dal.CountryDao;
 import ch.bbcag.swift_travel.dal.SwiftTravelDatabase;
 import ch.bbcag.swift_travel.dal.TripDao;
+import ch.bbcag.swift_travel.entities.City;
 import ch.bbcag.swift_travel.entities.Country;
 import ch.bbcag.swift_travel.entities.Trip;
 import ch.bbcag.swift_travel.utils.Const;
@@ -61,6 +65,7 @@ public class TripDetailsActivity extends UpButtonActivity implements SearchView.
 
 	private TripDao tripDao;
 	private CountryDao countryDao;
+	private CityDao cityDao;
 
 	private boolean nameValidated = false;
 
@@ -75,6 +80,7 @@ public class TripDetailsActivity extends UpButtonActivity implements SearchView.
 
 		tripDao = SwiftTravelDatabase.getInstance(getApplicationContext()).getTripDao();
 		countryDao = SwiftTravelDatabase.getInstance(getApplicationContext()).getCountryDao();
+		cityDao = SwiftTravelDatabase.getInstance(getApplicationContext()).getCityDao();
 
 		floatingActionButton = findViewById(R.id.floating_action_button_trip_details);
 		countries = findViewById(R.id.countries);
@@ -109,7 +115,7 @@ public class TripDetailsActivity extends UpButtonActivity implements SearchView.
 		}
 
 		createCountryFromIntent();
-		addCountriesToClickableList();
+		addCountriesToClickableList(countriesList);
 
 		editTitle.setText(selected.getName());
 		editDescription.setText(selected.getDescription());
@@ -233,9 +239,13 @@ public class TripDetailsActivity extends UpButtonActivity implements SearchView.
 		return 0;
 	}
 
-	private void addCountriesToClickableList() {
+	private void addCountriesToClickableList(List<Country> countriesList) {
 		countries.setAdapter(adapter);
 		adapter.sort(this::compareCountryStartDates);
+		for (Country country : countriesList) {
+			updateDestinationAndOrigin(country, LocalDate.parse("01.01.2200", DateTimeFormatter.ofPattern("dd.MM.yyyy")), true);
+			updateDestinationAndOrigin(country, LocalDate.parse("01.01.1800", DateTimeFormatter.ofPattern("dd.MM.yyyy")), false);
+		}
 
 		AdapterView.OnItemClickListener mListClickedHandler = (parent, v, position, id) -> {
 			Intent intent = new Intent(getApplicationContext(), CountryDetailsActivity.class);
@@ -330,5 +340,36 @@ public class TripDetailsActivity extends UpButtonActivity implements SearchView.
 		selected.setDuration(duration);
 		tripDao.update(selected);
 		return duration;
+	}
+
+	private void updateDestinationAndOrigin(Country country, LocalDate localDate, boolean updateOrigin) {
+		for (City city : cityDao.getAllFromCountry(country.getId())) {
+			localDate = updateOriginOrDestination(country, city, localDate, updateOrigin);
+		}
+	}
+
+	private LocalDate updateOriginOrDestination(Country country, City city, LocalDate localDate, boolean updateOrigin) {
+		if (updateOrigin) {
+			localDate = updateOrigin(country, city, localDate);
+		} else {
+			localDate = updateDestination(country, city, localDate);
+		}
+		return localDate;
+	}
+
+	private LocalDate updateOrigin(Country country, City city, LocalDate localDate) {
+		if (localDate.compareTo(LocalDate.parse(city.getStartDate(), DateTimeFormatter.ofPattern("dd.MM.yyyy"))) > 0) {
+			localDate = LocalDate.parse(city.getStartDate(), DateTimeFormatter.ofPattern("dd.MM.yyyy"));
+			country.setOrigin(city.getName());
+		}
+		return localDate;
+	}
+
+	private LocalDate updateDestination(Country country, City city, LocalDate localDate) {
+		if (localDate.compareTo(LocalDate.parse(city.getStartDate(), DateTimeFormatter.ofPattern("dd.MM.yyyy"))) < 0) {
+			localDate = LocalDate.parse(city.getStartDate(), DateTimeFormatter.ofPattern("dd.MM.yyyy"));
+			country.setDestination(city.getName());
+		}
+		return localDate;
 	}
 }

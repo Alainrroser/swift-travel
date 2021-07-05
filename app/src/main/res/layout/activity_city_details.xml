@@ -84,7 +84,7 @@
         android:layout_marginTop="16dp"
         android:layout_marginEnd="8dp"
         android:text="@string/city_name"
-        android:textColor="@color/text_color"
+        android:textColor="@color/text_and_icons"
         android:textSize="24sp"
         app:layout_constraintEnd_toStartOf="@id/city_edit_button"
         app:layout_constraintStart_toEndOf="@id/city_image"

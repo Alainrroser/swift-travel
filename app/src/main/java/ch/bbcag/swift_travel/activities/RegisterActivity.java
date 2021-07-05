@@ -2,7 +2,6 @@ package ch.bbcag.swift_travel.activities;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
@@ -60,21 +59,11 @@ public class RegisterActivity extends UpButtonActivity {
 	}
 
 	@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
-		getMenuInflater().inflate(R.menu.home_menu, menu);
-
-		return super.onCreateOptionsMenu(menu);
-	}
-
-	@Override
 	public boolean onOptionsItemSelected(@NonNull MenuItem item) {
 		int itemId = item.getItemId();
 		if (itemId == android.R.id.home) {
 			onBackPressed();
 			return true;
-		} else if (itemId == R.id.back_home) {
-			Intent intent = new Intent(getApplicationContext(), MainActivity.class);
-			startActivity(intent);
 		}
 		return super.onOptionsItemSelected(item);
 	}

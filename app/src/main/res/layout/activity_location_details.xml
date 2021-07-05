@@ -33,7 +33,7 @@
         android:layout_marginTop="16dp"
         android:layout_marginEnd="8dp"
         android:text="@string/location_name"
-        android:textColor="@color/text_color"
+        android:textColor="@color/text_and_icons"
         android:textSize="24sp"
         app:layout_constraintEnd_toStartOf="@id/edit_button"
         app:layout_constraintStart_toEndOf="@id/location_image"

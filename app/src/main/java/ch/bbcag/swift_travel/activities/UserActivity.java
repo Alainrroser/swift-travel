@@ -87,6 +87,11 @@ public class UserActivity extends UpButtonActivity {
 		setTitle(currentUser.getEmail());
 		userEmail.setText(currentUser.getEmail());
 
+		if (getIntent().getBooleanExtra(Const.SAFE_ONLINE, false)) {
+			getPreferences(Context.MODE_PRIVATE).edit().putBoolean(Const.SAFE_ONLINE_SWITCH_TOGGLE_STATE, true).apply();
+			safeOnlineSwitch.setChecked(true);
+		}
+
 		setSafeOnlineSwitchState();
 
 		form.setVisibility(View.GONE);

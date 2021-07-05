@@ -42,6 +42,7 @@ public class Const {
 	public static final String LOCATION_DESCRIPTION = "locationDescription";
 	public static final String ADD_LOCATION = "addLocation";
 
+	public static final String SAFE_ONLINE = "safeOnline";
 	public static final String SAFE_ONLINE_SWITCH_TOGGLE_STATE = "safeOnlineSwitchToggleState";
 
 	public static final int LOCATION_IMAGE_REQUEST_CODE = 1;

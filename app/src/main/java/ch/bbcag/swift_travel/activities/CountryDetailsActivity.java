@@ -331,7 +331,7 @@ public class CountryDetailsActivity extends UpButtonActivity implements SearchVi
 		}
 		LayoutUtils.setTextOnTextView(durationText, duration);
 		if (selected.getImageURI() != null && !selected.getImageURI().isEmpty()) {
-			LayoutUtils.setOnlineImageURIOnImageView(getApplicationContext(), countryImage, selected.getImageURI());
+			LayoutUtils.setFlagImageURIOnImageView(getApplicationContext(), countryImage, selected.getImageURI());
 		}
 	}
 

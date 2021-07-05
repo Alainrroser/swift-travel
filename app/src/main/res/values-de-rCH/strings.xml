@@ -71,10 +71,13 @@
     <string name="password_new_confirm_hint">Neues Passwort bestätigen</string>
 
     <string name="login">Anmelden</string>
-    <string name="google_login">Mit google anmelden</string>
     <string name="login_error">Sie müssen Ihre E-Mail und Ihr Passwort eingeben</string>
-    <string name="login_unsuccessful">Bitte prüfen Sie Ihre Eingaben und versuche es erneut</string>
-    <string name="login_unsuccessful_title">Sie konnten nicht eingeloggt werden</string>
+    <string name="login_unsuccessful_title">Login</string>
+    <string name="login_unsuccessful_text">Sie konnten nicht eingeloggt werden, bitte prüfen Sie Ihre Eingaben und versuche es erneut</string>
+
+    <string name="google_login">Mit google anmelden</string>
+    <string name="google_login_unsuccessful_title">Google Login</string>
+    <string name="google_login_unsuccessful_text">Sie konnten nicht mit Google eingeloggt werden, versuchen Sie es später erneut</string>
 
     <string name="register">Registrieren</string>
     <string name="registered_yet">Noch nicht registriert?</string>
@@ -92,6 +95,7 @@
     <string name="passwords_cannot_be_the_same">Das alte und das neue Passwort dürfen nicht übereinstimmen</string>
 
     <string name="user_title">Benutzer</string>
+    <string name="profile_image">Profilbild</string>
     <string name="settings">Einstellungen</string>
     <string name="auto_safe">Daten online speichern?</string>
 

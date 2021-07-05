@@ -30,7 +30,7 @@
         android:layout_marginStart="8dp"
         android:layout_marginTop="16dp"
         android:text="@string/day"
-        android:textColor="@color/text_and_icons"
+        android:textColor="@color/standard_text_and_icons"
         android:textSize="24sp"
         app:layout_constraintEnd_toStartOf="@+id/day_edit_button"
         app:layout_constraintStart_toEndOf="@id/day_image"

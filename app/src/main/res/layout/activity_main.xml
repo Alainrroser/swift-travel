@@ -97,6 +97,6 @@
         app:layout_constraintBottom_toTopOf="@id/trips"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@id/trips_image"
-        app:tint="@color/text_and_icons" />
+        app:tint="@color/standard_text_and_icons" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

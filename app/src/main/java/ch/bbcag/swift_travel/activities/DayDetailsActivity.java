@@ -262,6 +262,7 @@ public class DayDetailsActivity extends UpButtonActivity implements SearchView.O
 			location.setEndTime(intent.getStringExtra(Const.END_TIME));
 			location.setDuration(intent.getStringExtra(Const.TIME_DURATION));
 			location.setDayId(selected.getId());
+			location.setCategory(intent.getIntExtra(Const.CATEGORY, -1));
 			long id = locationDao.insert(location);
 			location.setId(id);
 

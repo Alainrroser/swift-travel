@@ -3,6 +3,11 @@ package ch.bbcag.swift_travel.utils;
 public class Const {
 	public static final int TITLE_LENGTH = 40;
 
+	public static final String CATEGORY = "Category";
+	public static final int CATEGORY_HOTEL = 0;
+	public static final int CATEGORY_RESTAURANT = 1;
+	public static final int CATEGORY_PLACE = 2;
+
 	public static final String NAME = "name";
 	public static final String IMAGE_URI = "imageURI";
 	public static final String START_DATE = "startDate";

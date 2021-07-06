@@ -103,4 +103,9 @@
     <string name="delete_account">Account löschen</string>
     <string name="delete_account_title">Account löschen</string>
     <string name="delete_account_text">Wollen Sie Ihren Account wirklich löschen?</string>
+    <string name="timeline_image">Timeline-Bild</string>
+
+    <string name="category_hotel">Hotel</string>
+    <string name="category_restaurant">Restaurant</string>
+    <string name="category_place">Ort</string>
 </resources>

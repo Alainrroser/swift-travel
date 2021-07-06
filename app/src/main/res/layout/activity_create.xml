@@ -104,6 +104,18 @@
                 android:inputType="text" />
         </com.google.android.material.textfield.TextInputLayout>
 
+        <Spinner
+            android:id="@+id/category_spinner"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="16dp"
+            app:layout_constraintBottom_toTopOf="@id/duration_date"
+            app:layout_constraintEnd_toEndOf="@id/add_transport_layout"
+            app:layout_constraintStart_toStartOf="@id/add_transport_layout"
+            app:layout_constraintTop_toBottomOf="@id/add_transport_layout" />
+
         <TextView
             android:id="@+id/duration_date"
             android:layout_width="192dp"
@@ -114,9 +126,9 @@
             android:focusable="true"
             android:focusableInTouchMode="true"
             android:text="@string/select_city_duration"
-            app:layout_constraintEnd_toStartOf="@+id/parent"
+            app:layout_constraintEnd_toStartOf="@id/parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/add_transport_layout" />
+            app:layout_constraintTop_toBottomOf="@id/category_spinner" />
 
         <Button
             android:id="@+id/select_duration_date"

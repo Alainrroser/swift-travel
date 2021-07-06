@@ -5,10 +5,13 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.Spinner;
 import android.widget.TextView;
 
 import androidx.annotation.Nullable;
@@ -33,7 +36,7 @@ import ch.bbcag.swift_travel.utils.DateTimeUtils;
 import zion830.com.range_picker_dialog.TimeRange;
 import zion830.com.range_picker_dialog.TimeRangePickerDialog;
 
-public class CreateActivity extends UpButtonActivity {
+public class CreateActivity extends UpButtonActivity implements AdapterView.OnItemSelectedListener {
 	TimeRangePickerDialog timeRangePickerDialog = new TimeRangePickerDialog();
 	private Trip trip = new Trip();
 	private City city = new City();
@@ -48,6 +51,7 @@ public class CreateActivity extends UpButtonActivity {
 	private Button selectDurationDate;
 	private TextView durationTime;
 	private Button selectDurationTime;
+	private Spinner categorySpinner;
 	private Button create;
 	private MaterialDatePicker<Pair<Long, Long>> materialDatePicker;
 	private String startDate;
@@ -78,6 +82,7 @@ public class CreateActivity extends UpButtonActivity {
 		selectDurationDate = findViewById(R.id.select_duration_date);
 		durationTime = findViewById(R.id.duration_time);
 		selectDurationTime = findViewById(R.id.select_duration_time);
+		categorySpinner = findViewById(R.id.category_spinner);
 		create = findViewById(R.id.create);
 	}
 
@@ -91,16 +96,19 @@ public class CreateActivity extends UpButtonActivity {
 		if (getIntent().getBooleanExtra(Const.ADD_CITY, false)) {
 			cityDuration.setVisibility(View.VISIBLE);
 			locationDuration.setVisibility(View.GONE);
+			categorySpinner.setVisibility(View.GONE);
 			setDatePicker();
 		} else if (getIntent().getBooleanExtra(Const.ADD_LOCATION, false)) {
 			cityDuration.setVisibility(View.GONE);
+			categorySpinner.setVisibility(View.VISIBLE);
 			locationDuration.setVisibility(View.VISIBLE);
+			setCategorySpinner();
 			setTimePicker();
 		} else {
 			cityDuration.setVisibility(View.GONE);
 			locationDuration.setVisibility(View.GONE);
+			categorySpinner.setVisibility(View.GONE);
 			findViewById(R.id.add_transport_layout).setVisibility(View.GONE);
-
 		}
 		create.setOnClickListener(v -> startIntentOrShowError());
 		chooseImage.setOnClickListener(v -> ImagePicker.with(this).crop().start());
@@ -155,6 +163,42 @@ public class CreateActivity extends UpButtonActivity {
 			durationTime.setText(timeRangeString);
 			timeSelected = true;
 		});
+	}
+
+	private void setCategorySpinner() {
+		final String[] categories = {getString(R.string.category_hotel),
+		                       getString(R.string.category_restaurant),
+		                       getString(R.string.category_place)
+		};
+		ArrayAdapter<String> adapter = new ArrayAdapter<>(CreateActivity.this,
+		                                                  android.R.layout.simple_spinner_item,
+		                                                  categories);
+		adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+		categorySpinner.setAdapter(adapter);
+		categorySpinner.setOnItemSelectedListener(this);
+	}
+
+	@Override
+	public void onItemSelected(AdapterView<?> parent, View v, int position, long id) {
+		switch (position) {
+			case 0:
+				location.setCategory(Const.CATEGORY_HOTEL);
+				break;
+			case 1:
+				location.setCategory(Const.CATEGORY_RESTAURANT);
+				System.out.println(location.getCategory());
+				break;
+			case 2:
+				location.setCategory(Const.CATEGORY_PLACE);
+				break;
+			default:
+				break;
+		}
+	}
+
+	@Override
+	public void onNothingSelected(AdapterView<?> parent) {
+		// TODO Auto-generated method stub
 	}
 
 	private String getDuration(TimeRange timeRange) {
@@ -295,6 +339,8 @@ public class CreateActivity extends UpButtonActivity {
 		}
 		location.setTransport(transportEdit.getText().toString());
 		intent.putExtra(Const.TRANSPORT, location.getTransport());
+
+		intent.putExtra(Const.CATEGORY, location.getCategory());
 
 		intent.putExtra(Const.START_TIME, startTime);
 		intent.putExtra(Const.END_TIME, endTime);

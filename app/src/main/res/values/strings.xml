@@ -102,4 +102,9 @@
     <string name="delete_account">Delete account</string>
     <string name="delete_account_title">Delete account</string>
     <string name="delete_account_text">Do you really want to delete your account?</string>
+    <string name="timeline_image">image of the timeline</string>
+
+    <string name="category_hotel">Hotel</string>
+    <string name="category_restaurant">Restaurant</string>
+    <string name="category_place">Place</string>
 </resources>

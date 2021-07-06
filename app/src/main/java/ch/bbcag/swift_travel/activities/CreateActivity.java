@@ -13,6 +13,7 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.constraintlayout.widget.Group;
@@ -166,13 +167,9 @@ public class CreateActivity extends UpButtonActivity implements AdapterView.OnIt
 	}
 
 	private void setCategorySpinner() {
-		final String[] categories = {getString(R.string.category_hotel),
-		                       getString(R.string.category_restaurant),
-		                       getString(R.string.category_place)
-		};
 		ArrayAdapter<String> adapter = new ArrayAdapter<>(CreateActivity.this,
 		                                                  android.R.layout.simple_spinner_item,
-		                                                  categories);
+		                                                  getResources().getStringArray(R.array.location_categories));
 		adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 		categorySpinner.setAdapter(adapter);
 		categorySpinner.setOnItemSelectedListener(this);
@@ -198,7 +195,8 @@ public class CreateActivity extends UpButtonActivity implements AdapterView.OnIt
 
 	@Override
 	public void onNothingSelected(AdapterView<?> parent) {
-		// TODO Auto-generated method stub
+		// Callback method to be invoked when the selection disappears from this view.
+		Toast.makeText(this, getString(R.string.category_error), Toast.LENGTH_SHORT).show();
 	}
 
 	private String getDuration(TimeRange timeRange) {

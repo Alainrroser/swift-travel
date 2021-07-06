@@ -82,7 +82,7 @@
         android:backgroundTint="@android:color/transparent"
         android:clickable="true"
         android:contentDescription="@string/edit"
-        android:src="@drawable/edit_20"
+        android:src="@drawable/edit_24"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -99,6 +99,16 @@
         app:layout_constraintTop_toBottomOf="@id/location_title"
         tools:visibility="visible" />
 
+    <Spinner
+        android:id="@+id/location_category_spinner"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        app:layout_constraintEnd_toEndOf="@id/location_edit_transport_layout"
+        app:layout_constraintStart_toStartOf="@id/location_edit_transport_layout"
+        app:layout_constraintTop_toBottomOf="@id/location_edit_transport_layout"
+        />
+
     <Button
         android:id="@+id/location_submit_button"
         android:layout_width="0dp"
@@ -112,7 +122,7 @@
         app:layout_constraintBottom_toTopOf="@id/images_title"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/location_edit_transport_layout" />
+        app:layout_constraintTop_toBottomOf="@+id/location_category_spinner" />
 
     <Space
         android:id="@+id/duration_space"
@@ -174,14 +184,14 @@
         style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:maxHeight="150dp"
         android:layout_marginStart="16dp"
         android:layout_marginTop="8dp"
         android:layout_marginEnd="16dp"
         android:gravity="start|top"
         android:hint="@string/transport_hint"
         android:importantForAutofill="no"
-        android:maxHeight="150dp"
-        app:layout_constraintBottom_toTopOf="@id/location_submit_button"
+        app:layout_constraintBottom_toTopOf="@id/location_category_spinner"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/location_edit_description_layout">
@@ -208,7 +218,7 @@
         android:id="@+id/location_form"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:constraint_referenced_ids="location_submit_button,location_edit_description_layout,edit_title_layout, location_edit_transport_layout"
+        app:constraint_referenced_ids="location_submit_button,location_edit_description_layout,edit_title_layout, location_edit_transport_layout,location_category_spinner"
         app:layout_constraintEnd_toStartOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"

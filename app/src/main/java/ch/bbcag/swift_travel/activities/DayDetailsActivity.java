@@ -235,7 +235,6 @@ public class DayDetailsActivity extends UpButtonActivity implements SearchView.O
 			intent.removeExtra(Const.ADD_LOCATION);
 			checkIfDurationOverlaps(intent);
 			addLocationIfNotOverlaps(location, intent);
-
 		}
 	}
 

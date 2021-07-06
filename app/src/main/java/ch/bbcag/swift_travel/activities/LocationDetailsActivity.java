@@ -5,12 +5,16 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.GridView;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.constraintlayout.widget.Group;
@@ -33,9 +37,11 @@ import ch.bbcag.swift_travel.utils.Const;
 import ch.bbcag.swift_travel.utils.LayoutUtils;
 import ch.bbcag.swift_travel.utils.OnlineDatabaseUtils;
 
-public class LocationDetailsActivity extends UpButtonActivity {
+public class LocationDetailsActivity extends UpButtonActivity implements AdapterView.OnItemSelectedListener {
 	private ImageButton editDescriptionButton;
 	private Button submitButton;
+
+	private Spinner categorySpinner;
 
 	private TextView titleText;
 	private TextView durationText;
@@ -78,6 +84,8 @@ public class LocationDetailsActivity extends UpButtonActivity {
 		editDescription = findViewById(R.id.location_edit_description);
 		editTransport = findViewById(R.id.location_edit_transport);
 		locationImage = findViewById(R.id.location_image);
+
+		categorySpinner = findViewById(R.id.location_category_spinner);
 
 		imageGrid = findViewById(R.id.location_images);
 
@@ -124,7 +132,7 @@ public class LocationDetailsActivity extends UpButtonActivity {
 		editDescriptionButton.setOnClickListener(v -> toggleForm());
 		locationImage.setOnClickListener(v -> ImagePicker.with(this).crop().start(Const.LOCATION_IMAGE_REQUEST_CODE));
 		floatingActionButton.setOnClickListener(v -> ImagePicker.with(this).crop().start(Const.ADD_IMAGE_REQUEST_CODE));
-
+		setCategorySpinner();
 		onSubmitButtonClick();
 	}
 
@@ -157,6 +165,41 @@ public class LocationDetailsActivity extends UpButtonActivity {
 			List<Image> images = imageDao.getAllFromLocation(selected.getId());
 			imageAdapter.addAll(images);
 		}
+	}
+
+	private void setCategorySpinner() {
+		ArrayAdapter<String> adapter = new ArrayAdapter<>(LocationDetailsActivity.this,
+		                                                  android.R.layout.simple_spinner_item,
+		                                                  getResources().getStringArray(R.array.location_categories));
+		adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+		categorySpinner.setAdapter(adapter);
+		categorySpinner.setOnItemSelectedListener(this);
+	}
+
+	@Override
+	public void onItemSelected(AdapterView<?> parent, View v, int position, long id) {
+		switch (position) {
+			case 0:
+				selected.setCategory(Const.CATEGORY_HOTEL);
+				break;
+			case 1:
+				selected.setCategory(Const.CATEGORY_RESTAURANT);
+				System.out.println(selected.getCategory());
+				break;
+			case 2:
+				selected.setCategory(Const.CATEGORY_PLACE);
+				break;
+			default:
+				break;
+		}
+
+		locationDao.update(selected);
+	}
+
+	@Override
+	public void onNothingSelected(AdapterView<?> parent) {
+		// Callback method to be invoked when the selection disappears from this view.
+		Toast.makeText(this, getString(R.string.category_error), Toast.LENGTH_SHORT).show();
 	}
 
 	private void onSubmitButtonClick() {

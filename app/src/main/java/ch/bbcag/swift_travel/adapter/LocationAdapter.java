@@ -21,13 +21,21 @@ import ch.bbcag.swift_travel.utils.Const;
 import ch.bbcag.swift_travel.utils.LayoutUtils;
 import ch.bbcag.swift_travel.utils.OnlineDatabaseUtils;
 
-import static ch.bbcag.swift_travel.R.drawable.*;
+import static ch.bbcag.swift_travel.R.drawable.ic_baseline_hotel_24;
+import static ch.bbcag.swift_travel.R.drawable.ic_baseline_location_on_24;
+import static ch.bbcag.swift_travel.R.drawable.ic_baseline_restaurant_24;
+import static ch.bbcag.swift_travel.R.drawable.line_bg_bottom;
+import static ch.bbcag.swift_travel.R.drawable.line_bg_middle;
+import static ch.bbcag.swift_travel.R.drawable.line_bg_single;
+import static ch.bbcag.swift_travel.R.drawable.line_bg_top;
+import static ch.bbcag.swift_travel.R.drawable.trip_placeholder;
 
 public class LocationAdapter extends ArrayAdapter<Location> {
 	private DayDetailsActivity dayDetailsActivity;
 	private static final int VIEW_TYPE_TOP = 0;
 	private static final int VIEW_TYPE_MIDDLE = 1;
 	private static final int VIEW_TYPE_BOTTOM = 2;
+	private static final int VIEW_TYPE_SINGLE = 3;
 	private FrameLayout itemLine;
 	private List<Location> locations;
 
@@ -41,7 +49,6 @@ public class LocationAdapter extends ArrayAdapter<Location> {
 	public View getView(int position, View convertView, ViewGroup parent) {
 		final Location location = getItem(position);
 		final LocationAdapterViewHolder viewHolder;
-
 		if (convertView == null) {
 			viewHolder = new LocationAdapterViewHolder();
 			LayoutInflater inflater = LayoutInflater.from(dayDetailsActivity);
@@ -63,7 +70,7 @@ public class LocationAdapter extends ArrayAdapter<Location> {
 
 	@SuppressLint("UseCompatLoadingForDrawables")
 	private void addInformationToAdapter(LocationAdapterViewHolder viewHolder, Location location) {
-		switch(getItemViewType(location)) {
+		switch (getItemViewType(location)) {
 			case VIEW_TYPE_TOP:
 				itemLine.setBackground(dayDetailsActivity.getDrawable(line_bg_top));
 				break;
@@ -72,6 +79,9 @@ public class LocationAdapter extends ArrayAdapter<Location> {
 				break;
 			case VIEW_TYPE_BOTTOM:
 				itemLine.setBackground(dayDetailsActivity.getDrawable(line_bg_bottom));
+				break;
+			case VIEW_TYPE_SINGLE:
+				itemLine.setBackground(dayDetailsActivity.getDrawable(line_bg_single));
 				break;
 		}
 		viewHolder.delete.setOnClickListener(v -> generateConfirmDialog(location));
@@ -83,7 +93,7 @@ public class LocationAdapter extends ArrayAdapter<Location> {
 			LayoutUtils.setImageURIOnImageView(viewHolder.image, location.getImageURI());
 		} else {
 			System.out.println(location.getCategory());
-			switch(location.getCategory()){
+			switch (location.getCategory()) {
 				case Const.CATEGORY_HOTEL:
 					viewHolder.image.setImageResource(ic_baseline_hotel_24);
 					break;
@@ -107,6 +117,7 @@ public class LocationAdapter extends ArrayAdapter<Location> {
 			deleteImages(location);
 			SwiftTravelDatabase.getInstance(dayDetailsActivity.getApplicationContext()).getLocationDao().deleteById(location.getId());
 			OnlineDatabaseUtils.delete(Const.LOCATIONS, location.getId(), dayDetailsActivity.isSaveOnline());
+			notifyDataSetChanged();
 		});
 	}
 
@@ -126,10 +137,12 @@ public class LocationAdapter extends ArrayAdapter<Location> {
 	}
 
 	public int getItemViewType(Location location) {
-		if (locations.indexOf(location) == 0) {
+		if (locations.indexOf(location) == 0 && !(locations.size() <= 1)) {
 			return VIEW_TYPE_TOP;
-		} else if (locations.indexOf(location) == locations.size() - 1) {
+		} else if (locations.indexOf(location) == locations.size() - 1 && !(locations.size() <= 1)) {
 			return VIEW_TYPE_BOTTOM;
+		} else if (locations.size() <= 1) {
+			return VIEW_TYPE_SINGLE;
 		}
 		return VIEW_TYPE_MIDDLE;
 	}

@@ -40,10 +40,10 @@
             android:layout_height="128dp"
             android:layout_marginStart="16dp"
             android:layout_marginTop="32dp"
+            android:background="@drawable/rounded_button"
             android:backgroundTint="@android:color/darker_gray"
             android:contentDescription="@string/place_holder_image"
             android:scaleType="center"
-            android:background="@drawable/rounded_button"
             android:src="@drawable/image_placeholder"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/create_title" />

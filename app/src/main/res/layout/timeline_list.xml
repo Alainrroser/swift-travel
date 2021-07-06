@@ -17,7 +17,7 @@
         android:src="@drawable/delete_24"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:tint="@color/standard_text_and_icons"/>
+        app:tint="@color/standard_text_and_icons" />
 
     <FrameLayout
         android:id="@+id/item_line"

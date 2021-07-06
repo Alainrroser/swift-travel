@@ -18,6 +18,7 @@ import com.google.firebase.auth.FirebaseAuth;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
@@ -33,6 +34,7 @@ import ch.bbcag.swift_travel.entities.Trip;
 import ch.bbcag.swift_travel.utils.Const;
 import ch.bbcag.swift_travel.utils.DateTimeUtils;
 import ch.bbcag.swift_travel.utils.LayoutUtils;
+import ch.bbcag.swift_travel.utils.OnlineDatabaseUtils;
 
 public class MainActivity extends BaseActivity implements SearchView.OnQueryTextListener, SearchView.OnCloseListener {
 	private SearchView searchView;
@@ -46,6 +48,8 @@ public class MainActivity extends BaseActivity implements SearchView.OnQueryText
 	private TripDao tripDao;
 	private CountryDao countryDao;
 	private CityDao cityDao;
+
+	private List<Trip> tripList = new ArrayList<>();
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -65,8 +69,11 @@ public class MainActivity extends BaseActivity implements SearchView.OnQueryText
 	@Override
 	protected void onStart() {
 		super.onStart();
-		List<Trip> trips = tripDao.getAll();
-		adapter = new TripAdapter(this, trips);
+
+		tripList = tripDao.getAll();
+		adapter = new TripAdapter(this, tripList);
+
+		getProgressBar().setVisibility(View.GONE);
 
 		if (FirebaseAuth.getInstance().getCurrentUser() != null && Objects.requireNonNull(FirebaseAuth.getInstance().getCurrentUser()).getPhotoUrl() != null) {
 			loginButton.setImageTintList(null);
@@ -74,9 +81,7 @@ public class MainActivity extends BaseActivity implements SearchView.OnQueryText
 		}
 
 		createTripFromIntent();
-		addTripsToClickableList(trips);
-
-		getProgressBar().setVisibility(View.GONE);
+		addTripsToClickableList();
 
 		onFloatingActionButtonClick();
 		onLoginButtonClick();
@@ -161,8 +166,11 @@ public class MainActivity extends BaseActivity implements SearchView.OnQueryText
 			trip.setName(intent.getStringExtra(Const.TRIP_NAME));
 			trip.setDescription(intent.getStringExtra(Const.TRIP_DESCRIPTION));
 			trip.setImageURI(intent.getStringExtra(Const.IMAGE_URI));
+			trip.setUserId(Objects.requireNonNull(FirebaseAuth.getInstance().getCurrentUser()).getUid());
 			long id = tripDao.insert(trip);
 			trip.setId(id);
+
+			OnlineDatabaseUtils.add(Const.TRIPS, trip.getId(), trip, isSaveOnline());
 
 			adapter.add(trip);
 		}
@@ -203,6 +211,8 @@ public class MainActivity extends BaseActivity implements SearchView.OnQueryText
 		if (localDate.compareTo(LocalDate.parse(city.getStartDate(), DateTimeFormatter.ofPattern("dd.MM.yyyy"))) > 0) {
 			localDate = LocalDate.parse(city.getStartDate(), DateTimeFormatter.ofPattern("dd.MM.yyyy"));
 			trip.setOrigin(city.getName());
+			tripDao.update(trip);
+			OnlineDatabaseUtils.add(Const.TRIPS, trip.getId(), trip, isSaveOnline());
 		}
 		return localDate;
 	}
@@ -211,14 +221,16 @@ public class MainActivity extends BaseActivity implements SearchView.OnQueryText
 		if (localDate.compareTo(LocalDate.parse(city.getStartDate(), DateTimeFormatter.ofPattern("dd.MM.yyyy"))) < 0) {
 			localDate = LocalDate.parse(city.getStartDate(), DateTimeFormatter.ofPattern("dd.MM.yyyy"));
 			trip.setDestination(city.getName());
+			tripDao.update(trip);
+			OnlineDatabaseUtils.add(Const.TRIPS, trip.getId(), trip, isSaveOnline());
 		}
 		return localDate;
 	}
 
-	private void addTripsToClickableList(List<Trip> tripsList) {
+	private void addTripsToClickableList() {
 		trips.setAdapter(adapter);
 		adapter.sort(this::compareTripStartDates);
-		for (Trip trip : tripsList) {
+		for (Trip trip : tripList) {
 			updateDestinationAndOrigin(trip, LocalDate.parse("01.01.2200", DateTimeFormatter.ofPattern("dd.MM.yyyy")), true);
 			updateDestinationAndOrigin(trip, LocalDate.parse("01.01.1800", DateTimeFormatter.ofPattern("dd.MM.yyyy")), false);
 		}

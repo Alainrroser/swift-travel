@@ -42,6 +42,7 @@ import ch.bbcag.swift_travel.entities.Trip;
 import ch.bbcag.swift_travel.utils.Const;
 import ch.bbcag.swift_travel.utils.DateTimeUtils;
 import ch.bbcag.swift_travel.utils.LayoutUtils;
+import ch.bbcag.swift_travel.utils.OnlineDatabaseUtils;
 
 public class TripDetailsActivity extends UpButtonActivity implements SearchView.OnQueryTextListener, SearchView.OnCloseListener {
 	private SearchView searchView;
@@ -112,6 +113,7 @@ public class TripDetailsActivity extends UpButtonActivity implements SearchView.
 			selected.setStartDate(adapter.getItem(0).getStartDate());
 			selected.setEndDate(adapter.getItem(adapter.getCount() - 1).getEndDate());
 			tripDao.update(selected);
+			OnlineDatabaseUtils.add(Const.TRIPS, selected.getId(), selected, isSaveOnline());
 		}
 
 		createCountryFromIntent();
@@ -189,6 +191,7 @@ public class TripDetailsActivity extends UpButtonActivity implements SearchView.
 			Uri imageURI = data.getData();
 			selected.setImageURI(imageURI.toString());
 			tripDao.update(selected);
+			OnlineDatabaseUtils.add(Const.TRIPS, selected.getId(), selected, isSaveOnline());
 			tripImage.setImageURI(imageURI);
 		}
 	}
@@ -226,6 +229,7 @@ public class TripDetailsActivity extends UpButtonActivity implements SearchView.
 			long id = countryDao.insert(country);
 			country.setId(id);
 
+			OnlineDatabaseUtils.add(Const.COUNTRIES, country.getId(), country, isSaveOnline());
 			adapter.add(country);
 		}
 	}
@@ -309,6 +313,7 @@ public class TripDetailsActivity extends UpButtonActivity implements SearchView.
 			editName();
 			editDescription();
 			tripDao.update(selected);
+			OnlineDatabaseUtils.add(Const.TRIPS, selected.getId(), selected, isSaveOnline());
 			refreshContent();
 			toggleForm();
 		});
@@ -339,6 +344,7 @@ public class TripDetailsActivity extends UpButtonActivity implements SearchView.
 		}
 		selected.setDuration(duration);
 		tripDao.update(selected);
+		OnlineDatabaseUtils.add(Const.TRIPS, selected.getId(), selected, isSaveOnline());
 		return duration;
 	}
 
@@ -361,6 +367,8 @@ public class TripDetailsActivity extends UpButtonActivity implements SearchView.
 		if (localDate.compareTo(LocalDate.parse(city.getStartDate(), DateTimeFormatter.ofPattern("dd.MM.yyyy"))) > 0) {
 			localDate = LocalDate.parse(city.getStartDate(), DateTimeFormatter.ofPattern("dd.MM.yyyy"));
 			country.setOrigin(city.getName());
+			countryDao.update(country);
+			OnlineDatabaseUtils.add(Const.COUNTRIES, country.getId(), country, isSaveOnline());
 		}
 		return localDate;
 	}
@@ -369,6 +377,8 @@ public class TripDetailsActivity extends UpButtonActivity implements SearchView.
 		if (localDate.compareTo(LocalDate.parse(city.getStartDate(), DateTimeFormatter.ofPattern("dd.MM.yyyy"))) < 0) {
 			localDate = LocalDate.parse(city.getStartDate(), DateTimeFormatter.ofPattern("dd.MM.yyyy"));
 			country.setDestination(city.getName());
+			countryDao.update(country);
+			OnlineDatabaseUtils.add(Const.COUNTRIES, country.getId(), country, isSaveOnline());
 		}
 		return localDate;
 	}

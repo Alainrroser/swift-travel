@@ -7,13 +7,17 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 
+import com.google.firebase.firestore.FirebaseFirestore;
+
 import java.util.List;
 
 import ch.bbcag.swift_travel.R;
 import ch.bbcag.swift_travel.activities.LocationDetailsActivity;
 import ch.bbcag.swift_travel.dal.SwiftTravelDatabase;
 import ch.bbcag.swift_travel.entities.Image;
+import ch.bbcag.swift_travel.utils.Const;
 import ch.bbcag.swift_travel.utils.LayoutUtils;
+import ch.bbcag.swift_travel.utils.OnlineDatabaseUtils;
 
 public class ImageAdapter extends ArrayAdapter<Image> {
 	private LocationDetailsActivity locationDetailsActivity;
@@ -57,6 +61,7 @@ public class ImageAdapter extends ArrayAdapter<Image> {
 			remove(image);
 			notifyDataSetChanged();
 			SwiftTravelDatabase.getInstance(locationDetailsActivity.getApplicationContext()).getImageDao().deleteById(image.getId());
+			OnlineDatabaseUtils.delete(Const.IMAGES, image.getId(), locationDetailsActivity.isSaveOnline());
 		});
 	}
 

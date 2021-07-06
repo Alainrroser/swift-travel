@@ -91,7 +91,6 @@ public class UserActivity extends UpButtonActivity {
 			getPreferences(Context.MODE_PRIVATE).edit().putBoolean(Const.SAFE_ONLINE_SWITCH_TOGGLE_STATE, true).apply();
 			safeOnlineSwitch.setChecked(true);
 		}
-
 		setSafeOnlineSwitchState();
 
 		form.setVisibility(View.GONE);
@@ -134,8 +133,8 @@ public class UserActivity extends UpButtonActivity {
 	}
 
 	private void setSafeOnlineSwitchState() {
-		boolean safeOnlineSwitchState = getPreferences(Context.MODE_PRIVATE).getBoolean(Const.SAFE_ONLINE_SWITCH_TOGGLE_STATE, safeOnlineSwitch.isChecked());
-		safeOnlineSwitch.setChecked(safeOnlineSwitchState);
+		boolean saveOnline = getPreferences(Context.MODE_PRIVATE).getBoolean(Const.SAFE_ONLINE_SWITCH_TOGGLE_STATE, safeOnlineSwitch.isChecked());
+		safeOnlineSwitch.setChecked(saveOnline);
 	}
 
 	private void onChangePasswordClick() {

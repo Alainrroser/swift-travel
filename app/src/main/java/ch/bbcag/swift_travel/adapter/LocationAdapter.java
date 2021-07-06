@@ -8,6 +8,8 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.google.firebase.firestore.FirebaseFirestore;
+
 import java.util.List;
 
 import ch.bbcag.swift_travel.R;
@@ -15,7 +17,9 @@ import ch.bbcag.swift_travel.activities.DayDetailsActivity;
 import ch.bbcag.swift_travel.dal.SwiftTravelDatabase;
 import ch.bbcag.swift_travel.entities.Image;
 import ch.bbcag.swift_travel.entities.Location;
+import ch.bbcag.swift_travel.utils.Const;
 import ch.bbcag.swift_travel.utils.LayoutUtils;
+import ch.bbcag.swift_travel.utils.OnlineDatabaseUtils;
 
 public class LocationAdapter extends ArrayAdapter<Location> {
 	private DayDetailsActivity dayDetailsActivity;
@@ -68,6 +72,7 @@ public class LocationAdapter extends ArrayAdapter<Location> {
 			notifyDataSetChanged();
 			deleteImages(location);
 			SwiftTravelDatabase.getInstance(dayDetailsActivity.getApplicationContext()).getLocationDao().deleteById(location.getId());
+			OnlineDatabaseUtils.delete(Const.LOCATIONS, location.getId(), dayDetailsActivity.isSaveOnline());
 		});
 	}
 
@@ -75,6 +80,7 @@ public class LocationAdapter extends ArrayAdapter<Location> {
 		List<Image> images = SwiftTravelDatabase.getInstance(dayDetailsActivity.getApplicationContext()).getImageDao().getAllFromLocation(location.getId());
 		for (Image image : images) {
 			SwiftTravelDatabase.getInstance(dayDetailsActivity.getApplicationContext()).getImageDao().deleteById(image.getId());
+			OnlineDatabaseUtils.delete(Const.IMAGES, image.getId(), dayDetailsActivity.isSaveOnline());
 		}
 	}
 

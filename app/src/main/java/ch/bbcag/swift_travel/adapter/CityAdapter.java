@@ -17,7 +17,9 @@ import ch.bbcag.swift_travel.entities.City;
 import ch.bbcag.swift_travel.entities.Day;
 import ch.bbcag.swift_travel.entities.Image;
 import ch.bbcag.swift_travel.entities.Location;
+import ch.bbcag.swift_travel.utils.Const;
 import ch.bbcag.swift_travel.utils.LayoutUtils;
+import ch.bbcag.swift_travel.utils.OnlineDatabaseUtils;
 
 public class CityAdapter extends ArrayAdapter<City> {
 	private CountryDetailsActivity countryDetailsActivity;
@@ -70,7 +72,7 @@ public class CityAdapter extends ArrayAdapter<City> {
 			notifyDataSetChanged();
 			deleteDays(city);
 			SwiftTravelDatabase.getInstance(countryDetailsActivity.getApplicationContext()).getCityDao().deleteById(city.getId());
-			countryDetailsActivity.refreshContent();
+			OnlineDatabaseUtils.delete(Const.CITIES, city.getId(), countryDetailsActivity.isSaveOnline());
 		});
 	}
 
@@ -79,6 +81,7 @@ public class CityAdapter extends ArrayAdapter<City> {
 		for (Day day : days) {
 			deleteLocations(day);
 			SwiftTravelDatabase.getInstance(countryDetailsActivity.getApplicationContext()).getDayDao().deleteById(day.getId());
+			OnlineDatabaseUtils.delete(Const.DAYS, day.getId(), countryDetailsActivity.isSaveOnline());
 		}
 	}
 
@@ -87,6 +90,7 @@ public class CityAdapter extends ArrayAdapter<City> {
 		for (Location location : locations) {
 			deleteImages(location);
 			SwiftTravelDatabase.getInstance(countryDetailsActivity.getApplicationContext()).getLocationDao().deleteById(location.getId());
+			OnlineDatabaseUtils.delete(Const.LOCATIONS, location.getId(), countryDetailsActivity.isSaveOnline());
 		}
 	}
 
@@ -94,6 +98,7 @@ public class CityAdapter extends ArrayAdapter<City> {
 		List<Image> images = SwiftTravelDatabase.getInstance(countryDetailsActivity.getApplicationContext()).getImageDao().getAllFromLocation(location.getId());
 		for (Image image : images) {
 			SwiftTravelDatabase.getInstance(countryDetailsActivity.getApplicationContext()).getImageDao().deleteById(image.getId());
+			OnlineDatabaseUtils.delete(Const.IMAGES, image.getId(), countryDetailsActivity.isSaveOnline());
 		}
 	}
 

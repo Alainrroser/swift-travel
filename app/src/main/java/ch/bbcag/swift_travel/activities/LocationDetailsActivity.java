@@ -31,6 +31,7 @@ import ch.bbcag.swift_travel.entities.Image;
 import ch.bbcag.swift_travel.entities.Location;
 import ch.bbcag.swift_travel.utils.Const;
 import ch.bbcag.swift_travel.utils.LayoutUtils;
+import ch.bbcag.swift_travel.utils.OnlineDatabaseUtils;
 
 public class LocationDetailsActivity extends UpButtonActivity {
 	private ImageButton editDescriptionButton;
@@ -134,6 +135,7 @@ public class LocationDetailsActivity extends UpButtonActivity {
 			Uri imageURI = data.getData();
 			selected.setImageURI(imageURI.toString());
 			locationDao.update(selected);
+			OnlineDatabaseUtils.add(Const.LOCATIONS, selected.getId(), selected, isSaveOnline());
 			locationImage.setImageURI(imageURI);
 		} else if (requestCode == Const.ADD_IMAGE_REQUEST_CODE && resultCode == Activity.RESULT_OK && data != null) {
 			Uri imageURI = data.getData();
@@ -142,11 +144,15 @@ public class LocationDetailsActivity extends UpButtonActivity {
 			image.setLocationId(selected.getId());
 			long id = imageDao.insert(image);
 			image.setId(id);
+
+			OnlineDatabaseUtils.add(Const.IMAGES, image.getId(), image, isSaveOnline());
+
 			imageAdapter.add(image);
 		} else if (requestCode == Const.REPLACE_IMAGE_REQUEST_CODE && resultCode == Activity.RESULT_OK && data != null) {
 			Uri imageURI = data.getData();
 			clickedImage.setImageURI(imageURI.toString());
 			imageDao.update(clickedImage);
+			OnlineDatabaseUtils.add(Const.IMAGES, clickedImage.getId(), clickedImage, isSaveOnline());
 			imageAdapter.clear();
 			List<Image> images = imageDao.getAllFromLocation(selected.getId());
 			imageAdapter.addAll(images);
@@ -159,6 +165,7 @@ public class LocationDetailsActivity extends UpButtonActivity {
 			editDescription();
 			editTransport();
 			locationDao.update(selected);
+			OnlineDatabaseUtils.add(Const.LOCATIONS, selected.getId(), selected, isSaveOnline());
 			refreshContent();
 			toggleForm();
 		});

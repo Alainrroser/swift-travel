@@ -18,7 +18,9 @@ import ch.bbcag.swift_travel.entities.Country;
 import ch.bbcag.swift_travel.entities.Day;
 import ch.bbcag.swift_travel.entities.Image;
 import ch.bbcag.swift_travel.entities.Location;
+import ch.bbcag.swift_travel.utils.Const;
 import ch.bbcag.swift_travel.utils.LayoutUtils;
+import ch.bbcag.swift_travel.utils.OnlineDatabaseUtils;
 
 public class CountryAdapter extends ArrayAdapter<Country> {
 	private TripDetailsActivity tripDetailsActivity;
@@ -72,6 +74,7 @@ public class CountryAdapter extends ArrayAdapter<Country> {
 			notifyDataSetChanged();
 			deleteCities(country);
 			SwiftTravelDatabase.getInstance(tripDetailsActivity.getApplicationContext()).getCountryDao().deleteById(country.getId());
+			OnlineDatabaseUtils.delete(Const.COUNTRIES, country.getId(), tripDetailsActivity.isSaveOnline());
 		});
 	}
 
@@ -80,6 +83,7 @@ public class CountryAdapter extends ArrayAdapter<Country> {
 		for (City city : cities) {
 			deleteDays(city);
 			SwiftTravelDatabase.getInstance(tripDetailsActivity.getApplicationContext()).getCityDao().deleteById(city.getId());
+			OnlineDatabaseUtils.delete(Const.CITIES, city.getId(), tripDetailsActivity.isSaveOnline());
 		}
 	}
 
@@ -88,6 +92,7 @@ public class CountryAdapter extends ArrayAdapter<Country> {
 		for (Day day : days) {
 			deleteLocations(day);
 			SwiftTravelDatabase.getInstance(tripDetailsActivity.getApplicationContext()).getDayDao().deleteById(day.getId());
+			OnlineDatabaseUtils.delete(Const.DAYS, day.getId(), tripDetailsActivity.isSaveOnline());
 		}
 	}
 
@@ -96,6 +101,7 @@ public class CountryAdapter extends ArrayAdapter<Country> {
 		for (Location location : locations) {
 			deleteImages(location);
 			SwiftTravelDatabase.getInstance(tripDetailsActivity.getApplicationContext()).getLocationDao().deleteById(location.getId());
+			OnlineDatabaseUtils.delete(Const.LOCATIONS, location.getId(), tripDetailsActivity.isSaveOnline());
 		}
 	}
 
@@ -103,6 +109,7 @@ public class CountryAdapter extends ArrayAdapter<Country> {
 		List<Image> images = SwiftTravelDatabase.getInstance(tripDetailsActivity.getApplicationContext()).getImageDao().getAllFromLocation(location.getId());
 		for (Image image : images) {
 			SwiftTravelDatabase.getInstance(tripDetailsActivity.getApplicationContext()).getImageDao().deleteById(image.getId());
+			OnlineDatabaseUtils.delete(Const.IMAGES, image.getId(), tripDetailsActivity.isSaveOnline());
 		}
 	}
 

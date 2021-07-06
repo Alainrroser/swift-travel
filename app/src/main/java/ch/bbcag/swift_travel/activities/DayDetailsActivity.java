@@ -38,6 +38,7 @@ import ch.bbcag.swift_travel.entities.Location;
 import ch.bbcag.swift_travel.utils.Const;
 import ch.bbcag.swift_travel.utils.DateTimeUtils;
 import ch.bbcag.swift_travel.utils.LayoutUtils;
+import ch.bbcag.swift_travel.utils.OnlineDatabaseUtils;
 
 import static java.lang.Math.max;
 import static java.lang.Math.min;
@@ -178,6 +179,7 @@ public class DayDetailsActivity extends UpButtonActivity implements SearchView.O
 			Uri imageURI = data.getData();
 			selected.setImageURI(imageURI.toString());
 			dayDao.update(selected);
+			OnlineDatabaseUtils.add(Const.DAYS, selected.getId(), selected, isSaveOnline());
 			dayImage.setImageURI(imageURI);
 		}
 	}
@@ -263,6 +265,8 @@ public class DayDetailsActivity extends UpButtonActivity implements SearchView.O
 			long id = locationDao.insert(location);
 			location.setId(id);
 
+			OnlineDatabaseUtils.add(Const.LOCATIONS, location.getId(), location, isSaveOnline());
+
 			adapter.add(location);
 			adapter.sort(this::compareLocationStartTimes);
 		} else {
@@ -285,6 +289,7 @@ public class DayDetailsActivity extends UpButtonActivity implements SearchView.O
 			editName();
 			editDescription();
 			dayDao.update(selected);
+			OnlineDatabaseUtils.add(Const.DAYS, selected.getId(), selected, isSaveOnline());
 			refreshContent();
 			toggleForm();
 		});

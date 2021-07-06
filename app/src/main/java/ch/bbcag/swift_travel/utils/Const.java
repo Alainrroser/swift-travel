@@ -15,11 +15,13 @@ public class Const {
 	public static final String CREATE_TITLE = "create";
 	public static final String CHOOSE_TITLE = "choose";
 
+	public static final String TRIPS = "trips";
 	public static final String TRIP = "trip";
 	public static final String TRIP_NAME = "tripName";
 	public static final String TRIP_DESCRIPTION = "tripDescription";
 	public static final String ADD_TRIP = "addTrip";
 
+	public static final String COUNTRIES = "countries";
 	public static final String COUNTRY = "country";
 	public static final String COUNTRY_NAME = "countryName";
 	public static final String COUNTRY_CODE = "countryCode";
@@ -29,18 +31,23 @@ public class Const {
 	public static final String FLAG = "flag";
 	public static final String FLAG_URI = "flagURI";
 
+	public static final String CITIES = "cities";
 	public static final String CITY = "city";
 	public static final String CITY_NAME = "cityName";
 	public static final String CITY_DESCRIPTION = "cityDescription";
 	public static final String ADD_CITY = "addCity";
 
+	public static final String DAYS = "days";
 	public static final String DAY = "day";
 	public static final String DAY_NAME = "dayName";
 
+	public static final String LOCATIONS = "locations";
 	public static final String LOCATION = "location";
 	public static final String LOCATION_NAME = "locationName";
 	public static final String LOCATION_DESCRIPTION = "locationDescription";
 	public static final String ADD_LOCATION = "addLocation";
+
+	public static final String IMAGES = "images";
 
 	public static final String SAFE_ONLINE = "safeOnline";
 	public static final String SAFE_ONLINE_SWITCH_TOGGLE_STATE = "safeOnlineSwitchToggleState";

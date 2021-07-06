@@ -99,7 +99,7 @@
         android:id="@+id/login_with_google"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:drawableLeft="@drawable/ic_google__g__logo"
+        android:drawableStart="@drawable/ic_google__g__logo"
         android:text="@string/google_login"
         app:layout_constraintEnd_toEndOf="@+id/login_button"
         app:layout_constraintStart_toStartOf="@+id/login_button"

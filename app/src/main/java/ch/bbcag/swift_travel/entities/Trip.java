@@ -3,6 +3,7 @@ package ch.bbcag.swift_travel.entities;
 import androidx.annotation.NonNull;
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
+import androidx.room.Ignore;
 import androidx.room.PrimaryKey;
 
 @Entity(tableName = "trips")
@@ -26,6 +27,8 @@ public class Trip {
 	private String endDate;
 	@ColumnInfo(name = "duration")
 	private long duration;
+	@Ignore
+	private String userId;
 
 	public Trip() {
 
@@ -107,5 +110,13 @@ public class Trip {
 
 	public void setImageURI(String imageURI) {
 		this.imageURI = imageURI;
+	}
+
+	public String getUserId() {
+		return userId;
+	}
+
+	public void setUserId(String userId) {
+		this.userId = userId;
 	}
 }

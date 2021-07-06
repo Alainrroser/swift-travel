@@ -36,6 +36,7 @@ import ch.bbcag.swift_travel.entities.City;
 import ch.bbcag.swift_travel.entities.Day;
 import ch.bbcag.swift_travel.utils.Const;
 import ch.bbcag.swift_travel.utils.LayoutUtils;
+import ch.bbcag.swift_travel.utils.OnlineDatabaseUtils;
 
 public class CityDetailsActivity extends UpButtonActivity implements SearchView.OnQueryTextListener, SearchView.OnCloseListener {
 
@@ -174,6 +175,7 @@ public class CityDetailsActivity extends UpButtonActivity implements SearchView.
 			Uri imageURI = data.getData();
 			selected.setImageURI(imageURI.toString());
 			cityDao.update(selected);
+			OnlineDatabaseUtils.add(Const.CITIES, selected.getId(), selected, isSaveOnline());
 			cityImage.setImageURI(imageURI);
 		}
 	}
@@ -220,6 +222,7 @@ public class CityDetailsActivity extends UpButtonActivity implements SearchView.
 			editDescription();
 			editTransport();
 			cityDao.update(selected);
+			OnlineDatabaseUtils.add(Const.CITIES, selected.getId(), selected, isSaveOnline());
 			refreshContent();
 			toggleForm();
 		});

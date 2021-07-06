@@ -36,6 +36,7 @@ import ch.bbcag.swift_travel.entities.Day;
 import ch.bbcag.swift_travel.utils.Const;
 import ch.bbcag.swift_travel.utils.DateTimeUtils;
 import ch.bbcag.swift_travel.utils.LayoutUtils;
+import ch.bbcag.swift_travel.utils.OnlineDatabaseUtils;
 
 import static java.lang.Math.max;
 import static java.lang.Math.min;
@@ -247,12 +248,15 @@ public class CountryDetailsActivity extends UpButtonActivity implements SearchVi
 			city.setId(id);
 			addDaysToCity(city);
 
+			OnlineDatabaseUtils.add(Const.CITIES, city.getId(), city, isSaveOnline());
+
 			adapter.add(city);
 			adapter.sort(this::compareCityStartDates);
 
 			selected.setStartDate(adapter.getItem(0).getStartDate());
 			selected.setEndDate(adapter.getItem(adapter.getCount() - 1).getEndDate());
 			countryDao.update(selected);
+			OnlineDatabaseUtils.add(Const.COUNTRIES, selected.getId(), selected, isSaveOnline());
 		} else {
 			generateMessageDialog(getString(R.string.duration_overlap_error_title), getString(R.string.duration_overlap_error_text));
 		}
@@ -269,6 +273,8 @@ public class CountryDetailsActivity extends UpButtonActivity implements SearchVi
 
 			long dayID = dayDao.insert(day);
 			day.setId(dayID);
+
+			OnlineDatabaseUtils.add(Const.DAYS, day.getId(), day, isSaveOnline());
 
 			city.addDay(day);
 		}
@@ -294,6 +300,7 @@ public class CountryDetailsActivity extends UpButtonActivity implements SearchVi
 		submitButton.setOnClickListener(v -> {
 			editDescription();
 			countryDao.update(selected);
+			OnlineDatabaseUtils.add(Const.COUNTRIES, selected.getId(), selected, isSaveOnline());
 			refreshContent();
 			toggleForm();
 		});
@@ -343,6 +350,7 @@ public class CountryDetailsActivity extends UpButtonActivity implements SearchVi
 		}
 		selected.setDuration(duration);
 		countryDao.update(selected);
+		OnlineDatabaseUtils.add(Const.COUNTRIES, selected.getId(), selected, isSaveOnline());
 		return duration;
 	}
 }

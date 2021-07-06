@@ -8,7 +8,13 @@ import android.widget.ProgressBar;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
+
+import java.util.List;
+import java.util.Objects;
 
 import ch.bbcag.swift_travel.R;
 import ch.bbcag.swift_travel.utils.Const;
@@ -28,7 +34,7 @@ public class BaseActivity extends AppCompatActivity {
 		super.onStart();
 
 		boolean defaultValue = false;
-		if(FirebaseAuth.getInstance().getCurrentUser() != null) {
+		if (FirebaseAuth.getInstance().getCurrentUser() != null) {
 			defaultValue = true;
 		}
 		saveOnline = getPreferences(Context.MODE_PRIVATE).getBoolean(Const.SAFE_ONLINE_SWITCH_TOGGLE_STATE, defaultValue);
@@ -68,11 +74,20 @@ public class BaseActivity extends AppCompatActivity {
 		dialog.show();
 	}
 
-	public ProgressBar getProgressBar() {
+	protected ProgressBar getProgressBar() {
 		return progressBar;
 	}
 
-	public boolean isSaveOnline() {
+	public boolean saveOnline() {
 		return saveOnline;
+	}
+
+	protected <T> void addToList(Task<QuerySnapshot> task, List<T> objects, Class<T> type) {
+		if (task.isSuccessful()) {
+			for (QueryDocumentSnapshot document : Objects.requireNonNull(task.getResult())) {
+				objects.add(document.toObject(type));
+			}
+			progressBar.setVisibility(View.GONE);
+		}
 	}
 }

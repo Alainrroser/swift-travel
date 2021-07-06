@@ -22,8 +22,11 @@ import androidx.annotation.Nullable;
 import androidx.constraintlayout.widget.Group;
 
 import com.github.dhaval2404.imagepicker.ImagePicker;
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.textfield.TextInputLayout;
+import com.google.firebase.firestore.DocumentSnapshot;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
@@ -61,6 +64,8 @@ public class CityDetailsActivity extends UpButtonActivity implements SearchView.
 	private CityDao cityDao;
 	private DayDao dayDao;
 
+	private List<Day> dayList = new ArrayList<>();
+
 	private boolean nameValidated = false;
 
 	@Override
@@ -94,28 +99,8 @@ public class CityDetailsActivity extends UpButtonActivity implements SearchView.
 
 		long id = getIntent().getLongExtra(Const.CITY, -1);
 		if (id != -1) {
-			selected = cityDao.getById(id);
+			checkIfSavingOnline(id);
 		}
-
-		List<Day> days = dayDao.getAllFromCity(selected.getId());
-		adapter = new DayAdapter(this, days);
-
-		addDaysToClickableList();
-
-		editTitle.setText(selected.getName());
-		editDescription.setText(selected.getDescription());
-		editTransport.setText(selected.getTransport());
-
-		refreshContent();
-
-		Group form = findViewById(R.id.city_form);
-		form.setVisibility(View.GONE);
-
-		getProgressBar().setVisibility(View.GONE);
-
-		editDescriptionButton.setOnClickListener(v -> toggleForm());
-		cityImage.setOnClickListener(v -> ImagePicker.with(this).crop().start());
-		onSubmitButtonClick();
 	}
 
 	@Override
@@ -175,7 +160,7 @@ public class CityDetailsActivity extends UpButtonActivity implements SearchView.
 			Uri imageURI = data.getData();
 			selected.setImageURI(imageURI.toString());
 			cityDao.update(selected);
-			OnlineDatabaseUtils.add(Const.CITIES, selected.getId(), selected, isSaveOnline());
+			OnlineDatabaseUtils.add(Const.CITIES, selected.getId(), selected, saveOnline());
 			cityImage.setImageURI(imageURI);
 		}
 	}
@@ -200,6 +185,48 @@ public class CityDetailsActivity extends UpButtonActivity implements SearchView.
 		adapter.getFilter().filter(searchText);
 	}
 
+	private void checkIfSavingOnline(long id) {
+		if (saveOnline()) {
+			OnlineDatabaseUtils.getById(Const.CITIES, id, this::checkIfSelectedTaskWasSuccessful);
+		} else {
+			selected = cityDao.getById(id);
+			onStartAfterSelectedInitialized();
+		}
+	}
+
+	private void checkIfSelectedTaskWasSuccessful(Task<DocumentSnapshot> selectedTask) {
+		if (selectedTask.isSuccessful()) {
+			selected = Objects.requireNonNull(selectedTask.getResult()).toObject(City.class);
+			onStartAfterSelectedInitialized();
+		}
+	}
+
+	private void onStartAfterSelectedInitialized() {
+		dayList = new ArrayList<>();
+		if (saveOnline()) {
+			OnlineDatabaseUtils.getAllFromParentId(Const.DAYS, Const.CITY_ID, selected.getId(), task -> addToList(task, dayList, Day.class));
+		} else {
+			dayList = dayDao.getAllFromCity(selected.getId());
+			getProgressBar().setVisibility(View.GONE);
+		}
+		adapter = new DayAdapter(this, dayList);
+
+		addDaysToClickableList();
+
+		editTitle.setText(selected.getName());
+		editDescription.setText(selected.getDescription());
+		editTransport.setText(selected.getTransport());
+
+		refreshContent();
+
+		Group form = findViewById(R.id.city_form);
+		form.setVisibility(View.GONE);
+
+		editDescriptionButton.setOnClickListener(v -> toggleForm());
+		cityImage.setOnClickListener(v -> ImagePicker.with(this).crop().start());
+		onSubmitButtonClick();
+	}
+
 	public void addDaysToClickableList() {
 		ListView days = findViewById(R.id.days);
 		days.setAdapter(adapter);
@@ -213,7 +240,6 @@ public class CityDetailsActivity extends UpButtonActivity implements SearchView.
 		};
 
 		days.setOnItemClickListener(mListClickedHandler);
-		getProgressBar().setVisibility(View.GONE);
 	}
 
 	private void onSubmitButtonClick() {
@@ -222,7 +248,7 @@ public class CityDetailsActivity extends UpButtonActivity implements SearchView.
 			editDescription();
 			editTransport();
 			cityDao.update(selected);
-			OnlineDatabaseUtils.add(Const.CITIES, selected.getId(), selected, isSaveOnline());
+			OnlineDatabaseUtils.add(Const.CITIES, selected.getId(), selected, saveOnline());
 			refreshContent();
 			toggleForm();
 		});

@@ -184,7 +184,7 @@ public class ChooseCountryActivity extends UpButtonActivity implements SearchVie
 		for (int position = 0; position < response.length(); position++) {
 			Country country = new Country();
 			country.setName(response.getJSONObject(position).getString(Const.NAME));
-			country.setCode(response.getJSONObject(position).getString(Const.CODE));
+			country.setCode(response.getJSONObject(position).getString(Const.ALPHA_2_CODE));
 			country.setImageURI(response.getJSONObject(position).getString(Const.FLAG));
 			checkIfCountryWasAdded(country);
 			if (!countryWasAdded) {

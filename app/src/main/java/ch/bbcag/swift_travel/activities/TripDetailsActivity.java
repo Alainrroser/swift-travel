@@ -22,11 +22,14 @@ import androidx.annotation.Nullable;
 import androidx.constraintlayout.widget.Group;
 
 import com.github.dhaval2404.imagepicker.ImagePicker;
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.textfield.TextInputLayout;
+import com.google.firebase.firestore.DocumentSnapshot;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
@@ -68,6 +71,8 @@ public class TripDetailsActivity extends UpButtonActivity implements SearchView.
 	private CountryDao countryDao;
 	private CityDao cityDao;
 
+	private List<Country> countryList;
+
 	private boolean nameValidated = false;
 
 	@Override
@@ -103,35 +108,8 @@ public class TripDetailsActivity extends UpButtonActivity implements SearchView.
 
 		long id = getIntent().getLongExtra(Const.TRIP, -1);
 		if (id != -1) {
-			selected = tripDao.getById(id);
+			checkIfSavingOnline(id);
 		}
-
-		List<Country> countriesList = countryDao.getAllFromTrip(selected.getId());
-		adapter = new CountryAdapter(this, countriesList);
-
-		if (adapter.getCount() > 0) {
-			selected.setStartDate(adapter.getItem(0).getStartDate());
-			selected.setEndDate(adapter.getItem(adapter.getCount() - 1).getEndDate());
-			tripDao.update(selected);
-			OnlineDatabaseUtils.add(Const.TRIPS, selected.getId(), selected, isSaveOnline());
-		}
-
-		createCountryFromIntent();
-		addCountriesToClickableList(countriesList);
-
-		editTitle.setText(selected.getName());
-		editDescription.setText(selected.getDescription());
-
-		Group form = findViewById(R.id.trip_form);
-		form.setVisibility(View.GONE);
-
-		refreshContent();
-		getProgressBar().setVisibility(View.GONE);
-
-		onFloatingActionButtonClick();
-		editDescriptionButton.setOnClickListener(v -> toggleForm());
-		tripImage.setOnClickListener(v -> ImagePicker.with(this).crop().start());
-		onSubmitButtonClick();
 	}
 
 	@Override
@@ -191,7 +169,7 @@ public class TripDetailsActivity extends UpButtonActivity implements SearchView.
 			Uri imageURI = data.getData();
 			selected.setImageURI(imageURI.toString());
 			tripDao.update(selected);
-			OnlineDatabaseUtils.add(Const.TRIPS, selected.getId(), selected, isSaveOnline());
+			OnlineDatabaseUtils.add(Const.TRIPS, selected.getId(), selected, saveOnline());
 			tripImage.setImageURI(imageURI);
 		}
 	}
@@ -216,6 +194,56 @@ public class TripDetailsActivity extends UpButtonActivity implements SearchView.
 		adapter.getFilter().filter(searchText);
 	}
 
+	private void checkIfSavingOnline(long id) {
+		if (saveOnline()) {
+			OnlineDatabaseUtils.getById(Const.TRIPS, id, this::checkIfSelectedTaskWasSuccessful);
+		} else {
+			selected = tripDao.getById(id);
+			onStartAfterSelectedInitialized();
+		}
+	}
+
+	private void checkIfSelectedTaskWasSuccessful(Task<DocumentSnapshot> selectedTask) {
+		if (selectedTask.isSuccessful()) {
+			selected = Objects.requireNonNull(selectedTask.getResult()).toObject(Trip.class);
+			onStartAfterSelectedInitialized();
+		}
+	}
+
+	private void onStartAfterSelectedInitialized() {
+		countryList = new ArrayList<>();
+		if (saveOnline()) {
+			OnlineDatabaseUtils.getAllFromParentId(Const.COUNTRIES, Const.TRIP_ID, selected.getId(), listTask -> addToList(listTask, countryList, Country.class));
+		} else {
+			countryList = countryDao.getAllFromTrip(selected.getId());
+			getProgressBar().setVisibility(View.GONE);
+		}
+		adapter = new CountryAdapter(this, countryList);
+
+		if (adapter.getCount() > 0) {
+			selected.setStartDate(adapter.getItem(0).getStartDate());
+			selected.setEndDate(adapter.getItem(adapter.getCount() - 1).getEndDate());
+			tripDao.update(selected);
+			OnlineDatabaseUtils.add(Const.TRIPS, selected.getId(), selected, saveOnline());
+		}
+
+		createCountryFromIntent();
+		addCountriesToClickableList();
+
+		editTitle.setText(selected.getName());
+		editDescription.setText(selected.getDescription());
+
+		Group form = findViewById(R.id.trip_form);
+		form.setVisibility(View.GONE);
+
+		refreshContent();
+
+		onFloatingActionButtonClick();
+		editDescriptionButton.setOnClickListener(v -> toggleForm());
+		tripImage.setOnClickListener(v -> ImagePicker.with(this).crop().start());
+		onSubmitButtonClick();
+	}
+
 	private void createCountryFromIntent() {
 		Intent intent = getIntent();
 		Country country = new Country();
@@ -229,8 +257,14 @@ public class TripDetailsActivity extends UpButtonActivity implements SearchView.
 			long id = countryDao.insert(country);
 			country.setId(id);
 
-			OnlineDatabaseUtils.add(Const.COUNTRIES, country.getId(), country, isSaveOnline());
+			OnlineDatabaseUtils.add(Const.COUNTRIES, country.getId(), country, saveOnline());
+
 			adapter.add(country);
+
+			selected.setStartDate(adapter.getItem(0).getStartDate());
+			selected.setEndDate(adapter.getItem(adapter.getCount() - 1).getEndDate());
+			tripDao.update(selected);
+			OnlineDatabaseUtils.add(Const.TRIPS, selected.getId(), selected, saveOnline());
 		}
 	}
 
@@ -243,10 +277,10 @@ public class TripDetailsActivity extends UpButtonActivity implements SearchView.
 		return 0;
 	}
 
-	private void addCountriesToClickableList(List<Country> countriesList) {
+	private void addCountriesToClickableList() {
 		countries.setAdapter(adapter);
 		adapter.sort(this::compareCountryStartDates);
-		for (Country country : countriesList) {
+		for (Country country : countryList) {
 			updateDestinationAndOrigin(country, LocalDate.parse("01.01.2200", DateTimeFormatter.ofPattern("dd.MM.yyyy")), true);
 			updateDestinationAndOrigin(country, LocalDate.parse("01.01.1800", DateTimeFormatter.ofPattern("dd.MM.yyyy")), false);
 		}
@@ -313,7 +347,7 @@ public class TripDetailsActivity extends UpButtonActivity implements SearchView.
 			editName();
 			editDescription();
 			tripDao.update(selected);
-			OnlineDatabaseUtils.add(Const.TRIPS, selected.getId(), selected, isSaveOnline());
+			OnlineDatabaseUtils.add(Const.TRIPS, selected.getId(), selected, saveOnline());
 			refreshContent();
 			toggleForm();
 		});
@@ -337,20 +371,27 @@ public class TripDetailsActivity extends UpButtonActivity implements SearchView.
 	}
 
 	private long getTripDuration() {
-		List<Country> countries = countryDao.getAllFromTrip(selected.getId());
 		long duration = 0;
-		for (int i = 0; i < countries.size(); i++) {
-			duration += countries.get(i).getDuration();
+		for (Country country : countryList) {
+			duration += country.getDuration();
 		}
 		selected.setDuration(duration);
 		tripDao.update(selected);
-		OnlineDatabaseUtils.add(Const.TRIPS, selected.getId(), selected, isSaveOnline());
+		OnlineDatabaseUtils.add(Const.TRIPS, selected.getId(), selected, saveOnline());
 		return duration;
 	}
 
 	private void updateDestinationAndOrigin(Country country, LocalDate localDate, boolean updateOrigin) {
-		for (City city : cityDao.getAllFromCountry(country.getId())) {
-			localDate = updateOriginOrDestination(country, city, localDate, updateOrigin);
+		if (saveOnline()) {
+			List<City> cityList = new ArrayList<>();
+			OnlineDatabaseUtils.getAllFromParentId(Const.CITIES, Const.COUNTRY_ID, country.getId(), task -> addToList(task, cityList, City.class));
+			for (City city : cityList) {
+				localDate = updateOriginOrDestination(country, city, localDate, updateOrigin);
+			}
+		} else {
+			for (City city : cityDao.getAllFromCountry(country.getId())) {
+				localDate = updateOriginOrDestination(country, city, localDate, updateOrigin);
+			}
 		}
 	}
 
@@ -368,7 +409,7 @@ public class TripDetailsActivity extends UpButtonActivity implements SearchView.
 			localDate = LocalDate.parse(city.getStartDate(), DateTimeFormatter.ofPattern("dd.MM.yyyy"));
 			country.setOrigin(city.getName());
 			countryDao.update(country);
-			OnlineDatabaseUtils.add(Const.COUNTRIES, country.getId(), country, isSaveOnline());
+			OnlineDatabaseUtils.add(Const.COUNTRIES, country.getId(), country, saveOnline());
 		}
 		return localDate;
 	}
@@ -378,7 +419,7 @@ public class TripDetailsActivity extends UpButtonActivity implements SearchView.
 			localDate = LocalDate.parse(city.getStartDate(), DateTimeFormatter.ofPattern("dd.MM.yyyy"));
 			country.setDestination(city.getName());
 			countryDao.update(country);
-			OnlineDatabaseUtils.add(Const.COUNTRIES, country.getId(), country, isSaveOnline());
+			OnlineDatabaseUtils.add(Const.COUNTRIES, country.getId(), country, saveOnline());
 		}
 		return localDate;
 	}

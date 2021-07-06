@@ -9,28 +9,30 @@ import androidx.room.PrimaryKey;
 import java.util.ArrayList;
 import java.util.List;
 
-@Entity(tableName = "cities")
+import ch.bbcag.swift_travel.utils.Const;
+
+@Entity(tableName = Const.CITIES)
 public class City {
 	@Ignore
 	List<Day> days = new ArrayList<>();
 	@PrimaryKey(autoGenerate = true)
-	@ColumnInfo(name = "id")
+	@ColumnInfo(name = Const.ID)
 	private long id;
-	@ColumnInfo(name = "name")
+	@ColumnInfo(name = Const.NAME)
 	private String name;
-	@ColumnInfo(name = "description")
+	@ColumnInfo(name = Const.DESCRIPTION)
 	private String description;
-	@ColumnInfo(name = "imageURI")
+	@ColumnInfo(name = Const.IMAGE_URI)
 	private String imageURI;
-	@ColumnInfo(name = "startDate")
+	@ColumnInfo(name = Const.START_DATE)
 	private String startDate;
-	@ColumnInfo(name = "endDate")
+	@ColumnInfo(name = Const.END_DATE)
 	private String endDate;
-	@ColumnInfo(name = "duration")
+	@ColumnInfo(name = Const.DATE_DURATION)
 	private long duration;
-	@ColumnInfo(name = "transport")
+	@ColumnInfo(name = Const.TRANSPORT)
 	private String transport;
-	@ColumnInfo(name = "countryId")
+	@ColumnInfo(name = Const.COUNTRY_ID)
 	private long countryId;
 
 	public City() {

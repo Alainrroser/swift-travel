@@ -7,8 +7,6 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 
-import com.google.firebase.firestore.FirebaseFirestore;
-
 import java.util.List;
 
 import ch.bbcag.swift_travel.R;
@@ -60,8 +58,8 @@ public class ImageAdapter extends ArrayAdapter<Image> {
 		locationDetailsActivity.generateConfirmDialog(locationDetailsActivity.getString(R.string.delete_entry_title), locationDetailsActivity.getString(R.string.delete_entry_text), () -> {
 			remove(image);
 			notifyDataSetChanged();
+			OnlineDatabaseUtils.delete(Const.IMAGES, image.getId(), locationDetailsActivity.saveOnline());
 			SwiftTravelDatabase.getInstance(locationDetailsActivity.getApplicationContext()).getImageDao().deleteById(image.getId());
-			OnlineDatabaseUtils.delete(Const.IMAGES, image.getId(), locationDetailsActivity.isSaveOnline());
 		});
 	}
 

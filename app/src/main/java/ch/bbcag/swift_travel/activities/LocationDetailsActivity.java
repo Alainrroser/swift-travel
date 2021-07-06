@@ -20,9 +20,12 @@ import androidx.annotation.Nullable;
 import androidx.constraintlayout.widget.Group;
 
 import com.github.dhaval2404.imagepicker.ImagePicker;
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.textfield.TextInputLayout;
+import com.google.firebase.firestore.DocumentSnapshot;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
@@ -62,6 +65,8 @@ public class LocationDetailsActivity extends UpButtonActivity implements Adapter
 	private LocationDao locationDao;
 	private ImageDao imageDao;
 
+	private List<Image> imageList;
+
 	private boolean nameValidated = false;
 
 	@Override
@@ -100,40 +105,8 @@ public class LocationDetailsActivity extends UpButtonActivity implements Adapter
 
 		long id = getIntent().getLongExtra(Const.LOCATION, -1);
 		if (id != -1) {
-			selected = locationDao.getById(id);
+			checkIfSavingOnline(id);
 		}
-
-		List<Image> images = imageDao.getAllFromLocation(selected.getId());
-		imageAdapter = new ImageAdapter(this, images);
-
-		imageGrid.setAdapter(imageAdapter);
-		imageGrid.setOnItemClickListener((parent, view, position, id1) -> {
-			Intent intent = new Intent(getApplicationContext(), ImageDetailsActivity.class);
-			intent.putExtra(Const.IMAGE_URI, imageAdapter.getItem(position).getImageURI());
-			startActivity(intent);
-		});
-		imageGrid.setOnItemLongClickListener((parent, view, position, id1) -> {
-			ImagePicker.with(this).crop().start(Const.REPLACE_IMAGE_REQUEST_CODE);
-			clickedImage = imageAdapter.getItem(position);
-			return true;
-		});
-
-		editTitle.setText(selected.getName());
-		editDescription.setText(selected.getDescription());
-		editTransport.setText(selected.getTransport());
-
-		refreshContent();
-
-		Group form = findViewById(R.id.location_form);
-		form.setVisibility(View.GONE);
-
-		getProgressBar().setVisibility(View.GONE);
-
-		editDescriptionButton.setOnClickListener(v -> toggleForm());
-		locationImage.setOnClickListener(v -> ImagePicker.with(this).crop().start(Const.LOCATION_IMAGE_REQUEST_CODE));
-		floatingActionButton.setOnClickListener(v -> ImagePicker.with(this).crop().start(Const.ADD_IMAGE_REQUEST_CODE));
-		setCategorySpinner();
-		onSubmitButtonClick();
 	}
 
 	@Override
@@ -143,7 +116,7 @@ public class LocationDetailsActivity extends UpButtonActivity implements Adapter
 			Uri imageURI = data.getData();
 			selected.setImageURI(imageURI.toString());
 			locationDao.update(selected);
-			OnlineDatabaseUtils.add(Const.LOCATIONS, selected.getId(), selected, isSaveOnline());
+			OnlineDatabaseUtils.add(Const.LOCATIONS, selected.getId(), selected, saveOnline());
 			locationImage.setImageURI(imageURI);
 		} else if (requestCode == Const.ADD_IMAGE_REQUEST_CODE && resultCode == Activity.RESULT_OK && data != null) {
 			Uri imageURI = data.getData();
@@ -153,14 +126,14 @@ public class LocationDetailsActivity extends UpButtonActivity implements Adapter
 			long id = imageDao.insert(image);
 			image.setId(id);
 
-			OnlineDatabaseUtils.add(Const.IMAGES, image.getId(), image, isSaveOnline());
+			OnlineDatabaseUtils.add(Const.IMAGES, image.getId(), image, saveOnline());
 
 			imageAdapter.add(image);
 		} else if (requestCode == Const.REPLACE_IMAGE_REQUEST_CODE && resultCode == Activity.RESULT_OK && data != null) {
 			Uri imageURI = data.getData();
 			clickedImage.setImageURI(imageURI.toString());
 			imageDao.update(clickedImage);
-			OnlineDatabaseUtils.add(Const.IMAGES, clickedImage.getId(), clickedImage, isSaveOnline());
+			OnlineDatabaseUtils.add(Const.IMAGES, clickedImage.getId(), clickedImage, saveOnline());
 			imageAdapter.clear();
 			List<Image> images = imageDao.getAllFromLocation(selected.getId());
 			imageAdapter.addAll(images);
@@ -168,9 +141,7 @@ public class LocationDetailsActivity extends UpButtonActivity implements Adapter
 	}
 
 	private void setCategorySpinner() {
-		ArrayAdapter<String> adapter = new ArrayAdapter<>(LocationDetailsActivity.this,
-		                                                  android.R.layout.simple_spinner_item,
-		                                                  getResources().getStringArray(R.array.location_categories));
+		ArrayAdapter<String> adapter = new ArrayAdapter<>(LocationDetailsActivity.this, android.R.layout.simple_spinner_item, getResources().getStringArray(R.array.location_categories));
 		adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 		categorySpinner.setAdapter(adapter);
 		categorySpinner.setOnItemSelectedListener(this);
@@ -202,13 +173,67 @@ public class LocationDetailsActivity extends UpButtonActivity implements Adapter
 		Toast.makeText(this, getString(R.string.category_error), Toast.LENGTH_SHORT).show();
 	}
 
+	private void checkIfSavingOnline(long id) {
+		if (saveOnline()) {
+			OnlineDatabaseUtils.getById(Const.LOCATIONS, id, this::checkIfSelectedTaskWasSuccessful);
+		} else {
+			selected = locationDao.getById(id);
+			onStartAfterSelectedInitialized();
+		}
+	}
+
+	private void checkIfSelectedTaskWasSuccessful(Task<DocumentSnapshot> selectedTask) {
+		if (selectedTask.isSuccessful()) {
+			selected = Objects.requireNonNull(selectedTask.getResult()).toObject(Location.class);
+			onStartAfterSelectedInitialized();
+		}
+	}
+
+	private void onStartAfterSelectedInitialized() {
+		imageList = new ArrayList<>();
+		if (saveOnline()) {
+			OnlineDatabaseUtils.getAllFromParentId(Const.IMAGES, Const.LOCATION_ID, selected.getId(), task -> addToList(task, imageList, Image.class));
+		} else {
+			imageList = imageDao.getAllFromLocation(selected.getId());
+			getProgressBar().setVisibility(View.GONE);
+		}
+		imageAdapter = new ImageAdapter(this, imageList);
+
+		imageGrid.setAdapter(imageAdapter);
+		imageGrid.setOnItemClickListener((parent, view, position, id1) -> {
+			Intent intent = new Intent(getApplicationContext(), ImageDetailsActivity.class);
+			intent.putExtra(Const.IMAGE_URI, imageAdapter.getItem(position).getImageURI());
+			startActivity(intent);
+		});
+		imageGrid.setOnItemLongClickListener((parent, view, position, id1) -> {
+			ImagePicker.with(this).crop().start(Const.REPLACE_IMAGE_REQUEST_CODE);
+			clickedImage = imageAdapter.getItem(position);
+			return true;
+		});
+
+		editTitle.setText(selected.getName());
+		editDescription.setText(selected.getDescription());
+		editTransport.setText(selected.getTransport());
+
+		refreshContent();
+
+		Group form = findViewById(R.id.location_form);
+		form.setVisibility(View.GONE);
+
+		editDescriptionButton.setOnClickListener(v -> toggleForm());
+		locationImage.setOnClickListener(v -> ImagePicker.with(this).crop().start(Const.LOCATION_IMAGE_REQUEST_CODE));
+		floatingActionButton.setOnClickListener(v -> ImagePicker.with(this).crop().start(Const.ADD_IMAGE_REQUEST_CODE));
+		setCategorySpinner();
+		onSubmitButtonClick();
+	}
+
 	private void onSubmitButtonClick() {
 		submitButton.setOnClickListener(v -> {
 			editName();
 			editDescription();
 			editTransport();
 			locationDao.update(selected);
-			OnlineDatabaseUtils.add(Const.LOCATIONS, selected.getId(), selected, isSaveOnline());
+			OnlineDatabaseUtils.add(Const.LOCATIONS, selected.getId(), selected, saveOnline());
 			refreshContent();
 			toggleForm();
 		});
@@ -235,7 +260,6 @@ public class LocationDetailsActivity extends UpButtonActivity implements Adapter
 			editTitleLayout.setError(getString(R.string.length_error));
 		}
 	}
-
 
 	private void editDescription() {
 		if (editDescription.getText() != null && !editDescription.getText().toString().isEmpty()) {

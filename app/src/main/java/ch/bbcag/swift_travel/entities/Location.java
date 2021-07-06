@@ -5,28 +5,30 @@ import androidx.room.ColumnInfo;
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
 
-@Entity(tableName = "locations")
+import ch.bbcag.swift_travel.utils.Const;
+
+@Entity(tableName = Const.LOCATIONS)
 public class Location {
 	@PrimaryKey(autoGenerate = true)
-	@ColumnInfo(name = "id")
+	@ColumnInfo(name = Const.ID)
 	private long id;
-	@ColumnInfo(name = "name")
+	@ColumnInfo(name = Const.NAME)
 	private String name;
-	@ColumnInfo(name = "description")
+	@ColumnInfo(name = Const.DESCRIPTION)
 	private String description;
-	@ColumnInfo(name = "imageURI")
+	@ColumnInfo(name = Const.IMAGE_URI)
 	private String imageURI;
-	@ColumnInfo(name = "startTime")
+	@ColumnInfo(name = Const.START_TIME)
 	private String startTime;
-	@ColumnInfo(name = "endTime")
+	@ColumnInfo(name = Const.END_TIME)
 	private String endTime;
-	@ColumnInfo(name = "duration")
+	@ColumnInfo(name = Const.TIME_DURATION)
 	private String duration;
-	@ColumnInfo(name = "transport")
+	@ColumnInfo(name = Const.TRANSPORT)
 	private String transport;
 	@ColumnInfo(name = "category")
 	private int category;
-	@ColumnInfo(name = "dayId")
+	@ColumnInfo(name = Const.DAY_ID)
 	private long dayId;
 
 	public Location() {

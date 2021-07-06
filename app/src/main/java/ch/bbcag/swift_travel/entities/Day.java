@@ -5,20 +5,22 @@ import androidx.room.ColumnInfo;
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
 
-@Entity(tableName = "days")
+import ch.bbcag.swift_travel.utils.Const;
+
+@Entity(tableName = Const.DAYS)
 public class Day {
 	@PrimaryKey(autoGenerate = true)
-	@ColumnInfo(name = "id")
+	@ColumnInfo(name = Const.ID)
 	private long id;
-	@ColumnInfo(name = "name")
+	@ColumnInfo(name = Const.NAME)
 	private String name;
-	@ColumnInfo(name = "description")
+	@ColumnInfo(name = Const.DESCRIPTION)
 	private String description;
-	@ColumnInfo(name = "imageURI")
+	@ColumnInfo(name = Const.IMAGE_URI)
 	private String imageURI;
-	@ColumnInfo(name = "cityId")
+	@ColumnInfo(name = Const.CITY_ID)
 	private long cityId;
-	@ColumnInfo(name = "date")
+	@ColumnInfo(name = Const.DATE)
 	private String date;
 
 	public Day() {

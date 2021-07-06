@@ -28,7 +28,8 @@
         android:contentDescription="@string/delete"
         android:src="@drawable/delete_24"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:tint="@color/standard_text_and_icons"/>
 
     <TextView
         android:id="@+id/name_three_line_list"

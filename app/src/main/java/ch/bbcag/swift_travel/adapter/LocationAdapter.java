@@ -32,11 +32,6 @@ import static ch.bbcag.swift_travel.R.drawable.trip_placeholder;
 
 public class LocationAdapter extends ArrayAdapter<Location> {
 	private DayDetailsActivity dayDetailsActivity;
-	private static final int VIEW_TYPE_TOP = 0;
-	private static final int VIEW_TYPE_MIDDLE = 1;
-	private static final int VIEW_TYPE_BOTTOM = 2;
-	private static final int VIEW_TYPE_SINGLE = 3;
-	private FrameLayout itemLine;
 	private List<Location> locations;
 
 	public LocationAdapter(DayDetailsActivity dayDetailsActivity, List<Location> locations) {
@@ -53,7 +48,7 @@ public class LocationAdapter extends ArrayAdapter<Location> {
 			viewHolder = new LocationAdapterViewHolder();
 			LayoutInflater inflater = LayoutInflater.from(dayDetailsActivity);
 			convertView = inflater.inflate(R.layout.timeline_list, parent, false);
-			itemLine = convertView.findViewById(R.id.item_line);
+			viewHolder.itemLine = convertView.findViewById(R.id.item_line);
 			viewHolder.name = convertView.findViewById(R.id.name_timeline_list);
 			viewHolder.duration = convertView.findViewById(R.id.duration_or_date_timeline_list);
 			viewHolder.image = convertView.findViewById(R.id.image_timeline_list);
@@ -68,22 +63,8 @@ public class LocationAdapter extends ArrayAdapter<Location> {
 		return convertView;
 	}
 
-	@SuppressLint("UseCompatLoadingForDrawables")
 	private void addInformationToAdapter(LocationAdapterViewHolder viewHolder, Location location) {
-		switch (getItemViewType(location)) {
-			case VIEW_TYPE_TOP:
-				itemLine.setBackground(dayDetailsActivity.getDrawable(line_bg_top));
-				break;
-			case VIEW_TYPE_MIDDLE:
-				itemLine.setBackground(dayDetailsActivity.getDrawable(line_bg_middle));
-				break;
-			case VIEW_TYPE_BOTTOM:
-				itemLine.setBackground(dayDetailsActivity.getDrawable(line_bg_bottom));
-				break;
-			case VIEW_TYPE_SINGLE:
-				itemLine.setBackground(dayDetailsActivity.getDrawable(line_bg_single));
-				break;
-		}
+		setItemLineBackground(viewHolder, location);
 		viewHolder.delete.setOnClickListener(v -> generateConfirmDialog(location));
 
 		viewHolder.name.setText(location.getName());
@@ -92,21 +73,42 @@ public class LocationAdapter extends ArrayAdapter<Location> {
 		if (location.getImageURI() != null) {
 			LayoutUtils.setImageURIOnImageView(viewHolder.image, location.getImageURI());
 		} else {
-			System.out.println(location.getCategory());
-			switch (location.getCategory()) {
-				case Const.CATEGORY_HOTEL:
-					viewHolder.image.setImageResource(ic_baseline_hotel_24);
-					break;
-				case Const.CATEGORY_RESTAURANT:
-					viewHolder.image.setImageResource(ic_baseline_restaurant_24);
-					break;
-				case Const.CATEGORY_PLACE:
-					viewHolder.image.setImageResource(ic_baseline_location_on_24);
-					break;
-				default:
-					viewHolder.image.setImageResource(trip_placeholder);
-					break;
-			}
+			setImage(viewHolder, location);
+		}
+	}
+
+	private void setImage(LocationAdapterViewHolder viewHolder, Location location) {
+		switch (location.getCategory()) {
+			case Const.CATEGORY_HOTEL:
+				viewHolder.image.setImageResource(ic_baseline_hotel_24);
+				break;
+			case Const.CATEGORY_RESTAURANT:
+				viewHolder.image.setImageResource(ic_baseline_restaurant_24);
+				break;
+			case Const.CATEGORY_PLACE:
+				viewHolder.image.setImageResource(ic_baseline_location_on_24);
+				break;
+			default:
+				viewHolder.image.setImageResource(trip_placeholder);
+				break;
+		}
+	}
+
+	@SuppressLint("UseCompatLoadingForDrawables")
+	private void setItemLineBackground(LocationAdapterViewHolder viewHolder, Location location) {
+		switch (getItemViewType(location)) {
+			case Const.VIEW_TYPE_TOP:
+				viewHolder.itemLine.setBackground(dayDetailsActivity.getDrawable(line_bg_top));
+				break;
+			case Const.VIEW_TYPE_MIDDLE:
+				viewHolder.itemLine.setBackground(dayDetailsActivity.getDrawable(line_bg_middle));
+				break;
+			case Const.VIEW_TYPE_BOTTOM:
+				viewHolder.itemLine.setBackground(dayDetailsActivity.getDrawable(line_bg_bottom));
+				break;
+			case Const.VIEW_TYPE_SINGLE:
+				viewHolder.itemLine.setBackground(dayDetailsActivity.getDrawable(line_bg_single));
+				break;
 		}
 	}
 
@@ -115,18 +117,28 @@ public class LocationAdapter extends ArrayAdapter<Location> {
 			remove(location);
 			notifyDataSetChanged();
 			deleteImages(location);
+			OnlineDatabaseUtils.delete(Const.LOCATIONS, location.getId(), dayDetailsActivity.saveOnline());
 			SwiftTravelDatabase.getInstance(dayDetailsActivity.getApplicationContext()).getLocationDao().deleteById(location.getId());
-			OnlineDatabaseUtils.delete(Const.LOCATIONS, location.getId(), dayDetailsActivity.isSaveOnline());
-			notifyDataSetChanged();
 		});
 	}
 
 	private void deleteImages(Location location) {
 		List<Image> images = SwiftTravelDatabase.getInstance(dayDetailsActivity.getApplicationContext()).getImageDao().getAllFromLocation(location.getId());
 		for (Image image : images) {
+			OnlineDatabaseUtils.delete(Const.IMAGES, image.getId(), dayDetailsActivity.saveOnline());
 			SwiftTravelDatabase.getInstance(dayDetailsActivity.getApplicationContext()).getImageDao().deleteById(image.getId());
-			OnlineDatabaseUtils.delete(Const.IMAGES, image.getId(), dayDetailsActivity.isSaveOnline());
 		}
+	}
+
+	public int getItemViewType(Location location) {
+		if (locations.indexOf(location) == 0 && !(locations.size() <= 1)) {
+			return Const.VIEW_TYPE_TOP;
+		} else if (locations.indexOf(location) == locations.size() - 1 && !(locations.size() <= 1)) {
+			return Const.VIEW_TYPE_BOTTOM;
+		} else if (locations.size() <= 1) {
+			return Const.VIEW_TYPE_SINGLE;
+		}
+		return Const.VIEW_TYPE_MIDDLE;
 	}
 
 	public static class LocationAdapterViewHolder {
@@ -134,16 +146,6 @@ public class LocationAdapter extends ArrayAdapter<Location> {
 		TextView duration;
 		ImageView image;
 		ImageButton delete;
-	}
-
-	public int getItemViewType(Location location) {
-		if (locations.indexOf(location) == 0 && !(locations.size() <= 1)) {
-			return VIEW_TYPE_TOP;
-		} else if (locations.indexOf(location) == locations.size() - 1 && !(locations.size() <= 1)) {
-			return VIEW_TYPE_BOTTOM;
-		} else if (locations.size() <= 1) {
-			return VIEW_TYPE_SINGLE;
-		}
-		return VIEW_TYPE_MIDDLE;
+		FrameLayout itemLine;
 	}
 }

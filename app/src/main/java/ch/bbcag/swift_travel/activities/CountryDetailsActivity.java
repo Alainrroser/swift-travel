@@ -18,11 +18,15 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.constraintlayout.widget.Group;
 
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.firebase.firestore.DocumentSnapshot;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 import ch.bbcag.swift_travel.R;
 import ch.bbcag.swift_travel.adapter.CityAdapter;
@@ -65,6 +69,8 @@ public class CountryDetailsActivity extends UpButtonActivity implements SearchVi
 
 	private boolean durationOverlaps = false;
 
+	private List<City> cityList;
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -95,27 +101,8 @@ public class CountryDetailsActivity extends UpButtonActivity implements SearchVi
 
 		long id = getIntent().getLongExtra(Const.COUNTRY, -1);
 		if (id != -1) {
-			selected = countryDao.getById(id);
+			checkIfSavingOnline(id);
 		}
-
-		List<City> cities = cityDao.getAllFromCountry(selected.getId());
-		adapter = new CityAdapter(this, cities);
-
-		createCityFromIntent();
-		addCitiesToClickableList();
-
-		editDescription.setText(selected.getDescription());
-
-		refreshContent();
-
-		Group form = findViewById(R.id.country_form);
-		form.setVisibility(View.GONE);
-
-		getProgressBar().setVisibility(View.GONE);
-
-		onFloatingActionButtonClick();
-		editDescriptionButton.setOnClickListener(v -> toggleForm());
-		onSubmitButtonClick();
 	}
 
 	@Override
@@ -188,12 +175,51 @@ public class CountryDetailsActivity extends UpButtonActivity implements SearchVi
 		adapter.getFilter().filter(searchText);
 	}
 
+	private void checkIfSavingOnline(long id) {
+		if (saveOnline()) {
+			OnlineDatabaseUtils.getById(Const.COUNTRIES, id, this::checkIfSelectedTaskWasSuccessful);
+		} else {
+			selected = countryDao.getById(id);
+			onStartAfterSelectedInitialized();
+		}
+	}
+
+	private void checkIfSelectedTaskWasSuccessful(Task<DocumentSnapshot> selectedTask) {
+		if (selectedTask.isSuccessful()) {
+			selected = Objects.requireNonNull(selectedTask.getResult()).toObject(Country.class);
+			onStartAfterSelectedInitialized();
+		}
+	}
+
+	private void onStartAfterSelectedInitialized() {
+		cityList = new ArrayList<>();
+		if (saveOnline()) {
+			OnlineDatabaseUtils.getAllFromParentId(Const.CITIES, Const.COUNTRY_ID, selected.getId(), task -> addToList(task, cityList, City.class));
+		} else {
+			cityList = cityDao.getAllFromCountry(selected.getId());
+			getProgressBar().setVisibility(View.GONE);
+		}
+		adapter = new CityAdapter(this, cityList);
+
+		createCityFromIntent();
+		addCitiesToClickableList();
+
+		editDescription.setText(selected.getDescription());
+
+		refreshContent();
+
+		Group form = findViewById(R.id.country_form);
+		form.setVisibility(View.GONE);
+
+		onFloatingActionButtonClick();
+		editDescriptionButton.setOnClickListener(v -> toggleForm());
+		onSubmitButtonClick();
+	}
+
 	public void addCitiesToClickableList() {
 		ListView cities = findViewById(R.id.cities);
 		cities.setAdapter(adapter);
 		adapter.sort(this::compareCityStartDates);
-
-		getProgressBar().setVisibility(View.GONE);
 
 		AdapterView.OnItemClickListener mListClickedHandler = (parent, v, position, id) -> {
 			Intent intent = new Intent(getApplicationContext(), CityDetailsActivity.class);
@@ -218,7 +244,7 @@ public class CountryDetailsActivity extends UpButtonActivity implements SearchVi
 	}
 
 	private void checkIfDurationOverlaps(Intent intent) {
-		for (City existingCity : cityDao.getAllFromCountry(selected.getId())) {
+		for (City existingCity : cityList) {
 			long startDateExisting = DateTimeUtils.parseDateToMilliseconds(existingCity.getStartDate());
 			long startDateNew = DateTimeUtils.parseDateToMilliseconds(intent.getStringExtra(Const.START_DATE));
 			long endDateExisting = DateTimeUtils.parseDateToMilliseconds(existingCity.getEndDate());
@@ -248,7 +274,7 @@ public class CountryDetailsActivity extends UpButtonActivity implements SearchVi
 			city.setId(id);
 			addDaysToCity(city);
 
-			OnlineDatabaseUtils.add(Const.CITIES, city.getId(), city, isSaveOnline());
+			OnlineDatabaseUtils.add(Const.CITIES, city.getId(), city, saveOnline());
 
 			adapter.add(city);
 			adapter.sort(this::compareCityStartDates);
@@ -256,7 +282,7 @@ public class CountryDetailsActivity extends UpButtonActivity implements SearchVi
 			selected.setStartDate(adapter.getItem(0).getStartDate());
 			selected.setEndDate(adapter.getItem(adapter.getCount() - 1).getEndDate());
 			countryDao.update(selected);
-			OnlineDatabaseUtils.add(Const.COUNTRIES, selected.getId(), selected, isSaveOnline());
+			OnlineDatabaseUtils.add(Const.COUNTRIES, selected.getId(), selected, saveOnline());
 		} else {
 			generateMessageDialog(getString(R.string.duration_overlap_error_title), getString(R.string.duration_overlap_error_text));
 		}
@@ -274,7 +300,7 @@ public class CountryDetailsActivity extends UpButtonActivity implements SearchVi
 			long dayID = dayDao.insert(day);
 			day.setId(dayID);
 
-			OnlineDatabaseUtils.add(Const.DAYS, day.getId(), day, isSaveOnline());
+			OnlineDatabaseUtils.add(Const.DAYS, day.getId(), day, saveOnline());
 
 			city.addDay(day);
 		}
@@ -300,7 +326,7 @@ public class CountryDetailsActivity extends UpButtonActivity implements SearchVi
 		submitButton.setOnClickListener(v -> {
 			editDescription();
 			countryDao.update(selected);
-			OnlineDatabaseUtils.add(Const.COUNTRIES, selected.getId(), selected, isSaveOnline());
+			OnlineDatabaseUtils.add(Const.COUNTRIES, selected.getId(), selected, saveOnline());
 			refreshContent();
 			toggleForm();
 		});
@@ -343,14 +369,13 @@ public class CountryDetailsActivity extends UpButtonActivity implements SearchVi
 	}
 
 	private long getCountryDuration() {
-		List<City> cities = cityDao.getAllFromCountry(selected.getId());
 		long duration = 0;
-		for (int i = 0; i < cities.size(); i++) {
-			duration += cities.get(i).getDuration();
+		for (int i = 0; i < cityList.size(); i++) {
+			duration += cityList.get(i).getDuration();
 		}
 		selected.setDuration(duration);
 		countryDao.update(selected);
-		OnlineDatabaseUtils.add(Const.COUNTRIES, selected.getId(), selected, isSaveOnline());
+		OnlineDatabaseUtils.add(Const.COUNTRIES, selected.getId(), selected, saveOnline());
 		return duration;
 	}
 }

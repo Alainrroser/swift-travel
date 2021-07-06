@@ -49,7 +49,7 @@ public class MainActivity extends BaseActivity implements SearchView.OnQueryText
 	private CountryDao countryDao;
 	private CityDao cityDao;
 
-	private List<Trip> tripList = new ArrayList<>();
+	private List<Trip> tripList;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -70,10 +70,14 @@ public class MainActivity extends BaseActivity implements SearchView.OnQueryText
 	protected void onStart() {
 		super.onStart();
 
-		tripList = tripDao.getAll();
+		tripList = new ArrayList<>();
+		if (saveOnline()) {
+			OnlineDatabaseUtils.getAllTripsFromUser(Const.TRIPS, Const.USER_ID, Objects.requireNonNull(FirebaseAuth.getInstance().getCurrentUser()).getUid(), task -> addToList(task, tripList, Trip.class));
+		} else {
+			tripList = tripDao.getAll();
+			getProgressBar().setVisibility(View.GONE);
+		}
 		adapter = new TripAdapter(this, tripList);
-
-		getProgressBar().setVisibility(View.GONE);
 
 		if (FirebaseAuth.getInstance().getCurrentUser() != null && Objects.requireNonNull(FirebaseAuth.getInstance().getCurrentUser()).getPhotoUrl() != null) {
 			loginButton.setImageTintList(null);
@@ -166,11 +170,13 @@ public class MainActivity extends BaseActivity implements SearchView.OnQueryText
 			trip.setName(intent.getStringExtra(Const.TRIP_NAME));
 			trip.setDescription(intent.getStringExtra(Const.TRIP_DESCRIPTION));
 			trip.setImageURI(intent.getStringExtra(Const.IMAGE_URI));
-			trip.setUserId(Objects.requireNonNull(FirebaseAuth.getInstance().getCurrentUser()).getUid());
+			if (FirebaseAuth.getInstance().getCurrentUser() != null) {
+				trip.setUserId(Objects.requireNonNull(FirebaseAuth.getInstance().getCurrentUser()).getUid());
+			}
 			long id = tripDao.insert(trip);
 			trip.setId(id);
 
-			OnlineDatabaseUtils.add(Const.TRIPS, trip.getId(), trip, isSaveOnline());
+			OnlineDatabaseUtils.add(Const.TRIPS, trip.getId(), trip, saveOnline());
 
 			adapter.add(trip);
 		}
@@ -186,14 +192,30 @@ public class MainActivity extends BaseActivity implements SearchView.OnQueryText
 	}
 
 	private void updateDestinationAndOrigin(Trip trip, LocalDate localDate, boolean updateOrigin) {
-		for (Country country : countryDao.getAllFromTrip(trip.getId())) {
-			localDate = loopThroughCities(trip, country, localDate, updateOrigin);
+		if (saveOnline()) {
+			List<Country> countryList = new ArrayList<>();
+			OnlineDatabaseUtils.getAllFromParentId(Const.COUNTRIES, Const.TRIP_ID, trip.getId(), task -> addToList(task, countryList, Country.class));
+			for (Country country : countryList) {
+				localDate = loopThroughCities(trip, country, localDate, updateOrigin);
+			}
+		} else {
+			for (Country country : countryDao.getAllFromTrip(trip.getId())) {
+				localDate = loopThroughCities(trip, country, localDate, updateOrigin);
+			}
 		}
 	}
 
 	private LocalDate loopThroughCities(Trip trip, Country country, LocalDate localDate, boolean updateOrigin) {
-		for (City city : cityDao.getAllFromCountry(country.getId())) {
-			localDate = updateOriginOrDestination(trip, city, localDate, updateOrigin);
+		if (saveOnline()) {
+			List<City> cityList = new ArrayList<>();
+			OnlineDatabaseUtils.getAllFromParentId(Const.CITIES, Const.COUNTRY_ID, country.getId(), task -> addToList(task, cityList, City.class));
+			for (City city : cityList) {
+				localDate = updateOriginOrDestination(trip, city, localDate, updateOrigin);
+			}
+		} else {
+			for (City city : cityDao.getAllFromCountry(country.getId())) {
+				localDate = updateOriginOrDestination(trip, city, localDate, updateOrigin);
+			}
 		}
 		return localDate;
 	}
@@ -212,7 +234,7 @@ public class MainActivity extends BaseActivity implements SearchView.OnQueryText
 			localDate = LocalDate.parse(city.getStartDate(), DateTimeFormatter.ofPattern("dd.MM.yyyy"));
 			trip.setOrigin(city.getName());
 			tripDao.update(trip);
-			OnlineDatabaseUtils.add(Const.TRIPS, trip.getId(), trip, isSaveOnline());
+			OnlineDatabaseUtils.add(Const.TRIPS, trip.getId(), trip, saveOnline());
 		}
 		return localDate;
 	}
@@ -222,7 +244,7 @@ public class MainActivity extends BaseActivity implements SearchView.OnQueryText
 			localDate = LocalDate.parse(city.getStartDate(), DateTimeFormatter.ofPattern("dd.MM.yyyy"));
 			trip.setDestination(city.getName());
 			tripDao.update(trip);
-			OnlineDatabaseUtils.add(Const.TRIPS, trip.getId(), trip, isSaveOnline());
+			OnlineDatabaseUtils.add(Const.TRIPS, trip.getId(), trip, saveOnline());
 		}
 		return localDate;
 	}

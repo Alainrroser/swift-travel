@@ -5,31 +5,33 @@ import androidx.room.ColumnInfo;
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
 
-@Entity(tableName = "countries")
+import ch.bbcag.swift_travel.utils.Const;
+
+@Entity(tableName = Const.COUNTRIES)
 public class Country {
 	@PrimaryKey(autoGenerate = true)
-	@ColumnInfo(name = "id")
+	@ColumnInfo(name = Const.ID)
 	private long id;
-	@ColumnInfo(name = "name")
+	@ColumnInfo(name = Const.NAME)
 	private String name;
-	@ColumnInfo(name = "code")
+	@ColumnInfo(name = Const.CODE)
 	private String code;
-	@ColumnInfo(name = "description")
+	@ColumnInfo(name = Const.DESCRIPTION)
 	private String description;
-	@ColumnInfo(name = "imageURI")
+	@ColumnInfo(name = Const.IMAGE_URI)
 	private String imageURI;
-	@ColumnInfo(name = "tripId")
-	private long tripId;
-	@ColumnInfo(name = "origin")
+	@ColumnInfo(name = Const.ORIGIN)
 	private String origin;
-	@ColumnInfo(name = "destination")
+	@ColumnInfo(name = Const.DESTINATION)
 	private String destination;
-	@ColumnInfo(name = "startDate")
+	@ColumnInfo(name = Const.START_DATE)
 	private String startDate;
-	@ColumnInfo(name = "endDate")
+	@ColumnInfo(name = Const.END_DATE)
 	private String endDate;
-	@ColumnInfo(name = "duration")
+	@ColumnInfo(name = Const.DATE_DURATION)
 	private long duration;
+	@ColumnInfo(name = Const.TRIP_ID)
+	private long tripId;
 
 	public Country() {
 

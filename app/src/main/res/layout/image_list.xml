@@ -23,6 +23,7 @@
         android:contentDescription="@string/delete"
         android:src="@drawable/delete_24"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
+        app:layout_constraintEnd_toEndOf="parent"
+        app:tint="@color/standard_text_and_icons" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

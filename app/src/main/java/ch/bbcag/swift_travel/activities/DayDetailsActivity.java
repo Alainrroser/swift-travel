@@ -22,9 +22,12 @@ import androidx.annotation.Nullable;
 import androidx.constraintlayout.widget.Group;
 
 import com.github.dhaval2404.imagepicker.ImagePicker;
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.textfield.TextInputLayout;
+import com.google.firebase.firestore.DocumentSnapshot;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
@@ -64,6 +67,8 @@ public class DayDetailsActivity extends UpButtonActivity implements SearchView.O
 	private DayDao dayDao;
 	private LocationDao locationDao;
 
+	private List<Location> locationList = new ArrayList<>();
+
 	private boolean nameValidated = false;
 	private boolean durationOverlaps = false;
 
@@ -97,29 +102,8 @@ public class DayDetailsActivity extends UpButtonActivity implements SearchView.O
 
 		long id = getIntent().getLongExtra(Const.DAY, -1);
 		if (id != -1) {
-			selected = dayDao.getById(id);
+			checkIfSavingOnline(id);
 		}
-
-		List<Location> locations = locationDao.getAllFromDay(selected.getId());
-		adapter = new LocationAdapter(this, locations);
-
-		createLocationFromIntent();
-		addLocationsToClickableList();
-
-		editTitle.setText(selected.getName());
-		editDescription.setText(selected.getDescription());
-
-		refreshContent();
-
-		Group form = findViewById(R.id.day_form);
-		form.setVisibility(View.GONE);
-
-		getProgressBar().setVisibility(View.GONE);
-
-		onFloatingActionButtonClick();
-		editDescriptionButton.setOnClickListener(v -> toggleForm());
-		dayImage.setOnClickListener(v -> ImagePicker.with(this).crop().start());
-		onSubmitButtonClick();
 	}
 
 	@Override
@@ -179,7 +163,7 @@ public class DayDetailsActivity extends UpButtonActivity implements SearchView.O
 			Uri imageURI = data.getData();
 			selected.setImageURI(imageURI.toString());
 			dayDao.update(selected);
-			OnlineDatabaseUtils.add(Const.DAYS, selected.getId(), selected, isSaveOnline());
+			OnlineDatabaseUtils.add(Const.DAYS, selected.getId(), selected, saveOnline());
 			dayImage.setImageURI(imageURI);
 		}
 	}
@@ -204,6 +188,49 @@ public class DayDetailsActivity extends UpButtonActivity implements SearchView.O
 		adapter.getFilter().filter(searchText);
 	}
 
+	private void checkIfSavingOnline(long id) {
+		if (saveOnline()) {
+			OnlineDatabaseUtils.getById(Const.DAYS, id, this::checkIfSelectedTaskWasSuccessful);
+		} else {
+			selected = dayDao.getById(id);
+			onStartAfterSelectedInitialized();
+		}
+	}
+
+	private void checkIfSelectedTaskWasSuccessful(Task<DocumentSnapshot> selectedTask) {
+		if (selectedTask.isSuccessful()) {
+			selected = Objects.requireNonNull(selectedTask.getResult()).toObject(Day.class);
+			onStartAfterSelectedInitialized();
+		}
+	}
+
+	private void onStartAfterSelectedInitialized() {
+		locationList = new ArrayList<>();
+		if (saveOnline()) {
+			OnlineDatabaseUtils.getAllFromParentId(Const.LOCATIONS, Const.DAY_ID, selected.getId(), task -> addToList(task, locationList, Location.class));
+		} else {
+			locationList = locationDao.getAllFromDay(selected.getId());
+			getProgressBar().setVisibility(View.GONE);
+		}
+		adapter = new LocationAdapter(this, locationList);
+
+		createLocationFromIntent();
+		addLocationsToClickableList();
+
+		editTitle.setText(selected.getName());
+		editDescription.setText(selected.getDescription());
+
+		refreshContent();
+
+		Group form = findViewById(R.id.day_form);
+		form.setVisibility(View.GONE);
+
+		onFloatingActionButtonClick();
+		editDescriptionButton.setOnClickListener(v -> toggleForm());
+		dayImage.setOnClickListener(v -> ImagePicker.with(this).crop().start());
+		onSubmitButtonClick();
+	}
+
 	public void addLocationsToClickableList() {
 		ListView locations = findViewById(R.id.locations);
 		locations.setAdapter(adapter);
@@ -216,8 +243,6 @@ public class DayDetailsActivity extends UpButtonActivity implements SearchView.O
 			intent.putExtra(Const.LOCATION, selected.getId());
 			startActivity(intent);
 		};
-
-		getProgressBar().setVisibility(View.GONE);
 
 		locations.setOnItemClickListener(mListClickedHandler);
 	}
@@ -239,7 +264,7 @@ public class DayDetailsActivity extends UpButtonActivity implements SearchView.O
 	}
 
 	private void checkIfDurationOverlaps(Intent intent) {
-		for (Location existingLocation : locationDao.getAllFromDay(selected.getId())) {
+		for (Location existingLocation : locationList) {
 			long startTimeExisting = DateTimeUtils.parseTimeToMilliseconds(existingLocation.getStartTime());
 			long startTimeNew = DateTimeUtils.parseTimeToMilliseconds(intent.getStringExtra(Const.START_TIME));
 			long endTimeExisting = DateTimeUtils.parseTimeToMilliseconds(existingLocation.getEndTime());
@@ -265,8 +290,9 @@ public class DayDetailsActivity extends UpButtonActivity implements SearchView.O
 			long id = locationDao.insert(location);
 			location.setId(id);
 
-			OnlineDatabaseUtils.add(Const.LOCATIONS, location.getId(), location, isSaveOnline());
+			OnlineDatabaseUtils.add(Const.LOCATIONS, location.getId(), location, saveOnline());
 
+			locationList.add(location);
 			adapter.add(location);
 			adapter.sort(this::compareLocationStartTimes);
 		} else {
@@ -289,7 +315,7 @@ public class DayDetailsActivity extends UpButtonActivity implements SearchView.O
 			editName();
 			editDescription();
 			dayDao.update(selected);
-			OnlineDatabaseUtils.add(Const.DAYS, selected.getId(), selected, isSaveOnline());
+			OnlineDatabaseUtils.add(Const.DAYS, selected.getId(), selected, saveOnline());
 			refreshContent();
 			toggleForm();
 		});

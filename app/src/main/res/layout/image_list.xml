@@ -21,7 +21,7 @@
         android:layout_height="36dp"
         android:backgroundTint="@android:color/transparent"
         android:contentDescription="@string/delete"
-        android:src="@drawable/delete_24"
+        android:src="@drawable/delete"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:tint="@color/standard_text_and_icons" />

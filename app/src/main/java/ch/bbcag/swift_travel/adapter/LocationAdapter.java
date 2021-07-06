@@ -21,13 +21,13 @@ import ch.bbcag.swift_travel.utils.Const;
 import ch.bbcag.swift_travel.utils.LayoutUtils;
 import ch.bbcag.swift_travel.utils.OnlineDatabaseUtils;
 
-import static ch.bbcag.swift_travel.R.drawable.ic_baseline_hotel_24;
-import static ch.bbcag.swift_travel.R.drawable.ic_baseline_location_on_24;
-import static ch.bbcag.swift_travel.R.drawable.ic_baseline_restaurant_24;
-import static ch.bbcag.swift_travel.R.drawable.line_bg_bottom;
-import static ch.bbcag.swift_travel.R.drawable.line_bg_middle;
-import static ch.bbcag.swift_travel.R.drawable.line_bg_single;
-import static ch.bbcag.swift_travel.R.drawable.line_bg_top;
+import static ch.bbcag.swift_travel.R.drawable.category_hotel;
+import static ch.bbcag.swift_travel.R.drawable.category_location;
+import static ch.bbcag.swift_travel.R.drawable.category_restaurant;
+import static ch.bbcag.swift_travel.R.drawable.timeline_bottom;
+import static ch.bbcag.swift_travel.R.drawable.timeline_middle;
+import static ch.bbcag.swift_travel.R.drawable.timeline_single;
+import static ch.bbcag.swift_travel.R.drawable.timeline_top;
 import static ch.bbcag.swift_travel.R.drawable.trip_placeholder;
 
 public class LocationAdapter extends ArrayAdapter<Location> {
@@ -80,13 +80,13 @@ public class LocationAdapter extends ArrayAdapter<Location> {
 	private void setImage(LocationAdapterViewHolder viewHolder, Location location) {
 		switch (location.getCategory()) {
 			case Const.CATEGORY_HOTEL:
-				viewHolder.image.setImageResource(ic_baseline_hotel_24);
+				viewHolder.image.setImageResource(category_hotel);
 				break;
 			case Const.CATEGORY_RESTAURANT:
-				viewHolder.image.setImageResource(ic_baseline_restaurant_24);
+				viewHolder.image.setImageResource(category_restaurant);
 				break;
 			case Const.CATEGORY_PLACE:
-				viewHolder.image.setImageResource(ic_baseline_location_on_24);
+				viewHolder.image.setImageResource(category_location);
 				break;
 			default:
 				viewHolder.image.setImageResource(trip_placeholder);
@@ -98,16 +98,16 @@ public class LocationAdapter extends ArrayAdapter<Location> {
 	private void setItemLineBackground(LocationAdapterViewHolder viewHolder, Location location) {
 		switch (getItemViewType(location)) {
 			case Const.VIEW_TYPE_TOP:
-				viewHolder.itemLine.setBackground(dayDetailsActivity.getDrawable(line_bg_top));
+				viewHolder.itemLine.setBackground(dayDetailsActivity.getDrawable(timeline_top));
 				break;
 			case Const.VIEW_TYPE_MIDDLE:
-				viewHolder.itemLine.setBackground(dayDetailsActivity.getDrawable(line_bg_middle));
+				viewHolder.itemLine.setBackground(dayDetailsActivity.getDrawable(timeline_middle));
 				break;
 			case Const.VIEW_TYPE_BOTTOM:
-				viewHolder.itemLine.setBackground(dayDetailsActivity.getDrawable(line_bg_bottom));
+				viewHolder.itemLine.setBackground(dayDetailsActivity.getDrawable(timeline_bottom));
 				break;
 			case Const.VIEW_TYPE_SINGLE:
-				viewHolder.itemLine.setBackground(dayDetailsActivity.getDrawable(line_bg_single));
+				viewHolder.itemLine.setBackground(dayDetailsActivity.getDrawable(timeline_single));
 				break;
 		}
 	}

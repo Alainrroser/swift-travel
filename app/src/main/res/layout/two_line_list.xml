@@ -13,7 +13,7 @@
         android:layout_marginEnd="16dp"
         android:backgroundTint="@android:color/transparent"
         android:contentDescription="@string/delete"
-        android:src="@drawable/delete_24"
+        android:src="@drawable/delete"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:tint="@color/standard_text_and_icons" />

@@ -52,8 +52,9 @@
 
     <Button
         android:id="@+id/user_change_password"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
+        android:layout_width="@dimen/standard_button_width"
+        android:layout_height="@dimen/standard_button_height"
+        android:background="@drawable/rounded_button"
         android:layout_marginStart="56dp"
         android:layout_marginTop="16dp"
         android:layout_marginEnd="56dp"
@@ -64,24 +65,24 @@
 
     <Button
         android:id="@+id/user_logout"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="56dp"
-        android:layout_marginEnd="56dp"
+        android:layout_width="@dimen/standard_button_width"
+        android:layout_height="@dimen/standard_button_height"
+        android:layout_marginTop="8dp"
+        android:background="@drawable/rounded_button"
         android:text="@string/logout"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="@+id/user_change_password"
+        app:layout_constraintStart_toStartOf="@+id/user_change_password"
         app:layout_constraintTop_toBottomOf="@id/user_change_password" />
 
     <Button
         android:id="@+id/user_delete_account"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="56dp"
-        android:layout_marginEnd="56dp"
+        android:layout_width="@dimen/standard_button_width"
+        android:layout_height="@dimen/standard_button_height"
+        android:layout_marginTop="8dp"
+        android:background="@drawable/rounded_button"
         android:text="@string/delete_account"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="@+id/user_logout"
+        app:layout_constraintStart_toStartOf="@+id/user_logout"
         app:layout_constraintTop_toBottomOf="@id/user_logout" />
 
     <androidx.constraintlayout.widget.Group
@@ -170,8 +171,9 @@
 
     <Button
         android:id="@+id/user_change_password_submit"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="@dimen/submit_button_width"
+        android:layout_height="@dimen/submit_button_height"
+        android:background="@drawable/rounded_button"
         android:layout_marginTop="16dp"
         android:text="@string/submit"
         app:layout_constraintEnd_toEndOf="@+id/user_new_password_confirm_input"

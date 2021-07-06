@@ -88,8 +88,9 @@
 
     <Button
         android:id="@+id/register_button"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
+        android:layout_width="@dimen/standard_button_width"
+        android:layout_height="@dimen/standard_button_height"
+        android:background="@drawable/rounded_button"
         android:layout_marginTop="16dp"
         android:text="@string/register"
         app:layout_constraintEnd_toEndOf="@id/register_password_input"
@@ -109,8 +110,9 @@
 
     <Button
         android:id="@+id/register_login_button"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
+        android:layout_width="@dimen/standard_button_width"
+        android:layout_height="@dimen/standard_button_height"
+        android:background="@drawable/rounded_button"
         android:layout_marginTop="16dp"
         android:text="@string/login"
         app:layout_constraintEnd_toEndOf="@id/register_already_registered"

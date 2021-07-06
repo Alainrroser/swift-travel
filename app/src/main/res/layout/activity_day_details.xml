@@ -55,6 +55,7 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
+        android:layout_marginTop="32dp"
         android:layout_marginEnd="16dp"
         android:text="@string/day_date"
         app:layout_constraintBottom_toTopOf="@id/day_duration_space"
@@ -132,12 +133,13 @@
 
     <Button
         android:id="@+id/day_submit_button"
-        android:layout_width="0dp"
-        android:layout_height="56dp"
+        android:layout_width="@dimen/submit_button_width"
+        android:layout_height="@dimen/submit_button_height"
         android:layout_marginStart="16dp"
         android:layout_marginTop="8dp"
         android:layout_marginEnd="16dp"
         android:layout_marginBottom="16dp"
+        android:background="@drawable/rounded_button"
         android:text="@string/submit"
         android:textSize="12sp"
         app:layout_constraintBottom_toTopOf="@id/locations_title"

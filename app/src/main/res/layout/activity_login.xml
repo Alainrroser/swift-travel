@@ -67,8 +67,9 @@
     <Button
         android:id="@+id/login_button"
         android:layout_width="0dp"
-        android:layout_height="wrap_content"
+        android:layout_height="42dp"
         android:layout_marginTop="16dp"
+        android:background="@drawable/rounded_button"
         android:text="@string/login"
         app:layout_constraintEnd_toEndOf="@id/login_password_input"
         app:layout_constraintStart_toStartOf="@id/login_password_input"
@@ -77,8 +78,9 @@
     <Button
         android:id="@+id/login_register_button"
         android:layout_width="0dp"
-        android:layout_height="wrap_content"
+        android:layout_height="42dp"
         android:layout_marginTop="16dp"
+        android:background="@drawable/rounded_button"
         android:text="@string/register"
         app:layout_constraintEnd_toEndOf="@id/login_registered_yet"
         app:layout_constraintStart_toStartOf="@id/login_registered_yet"
@@ -98,7 +100,9 @@
     <Button
         android:id="@+id/login_with_google"
         android:layout_width="0dp"
-        android:layout_height="wrap_content"
+        android:layout_height="42dp"
+        android:layout_marginTop="8dp"
+        android:background="@drawable/rounded_button"
         android:drawableStart="@drawable/ic_google__g__logo"
         android:text="@string/google_login"
         app:layout_constraintEnd_toEndOf="@+id/login_button"

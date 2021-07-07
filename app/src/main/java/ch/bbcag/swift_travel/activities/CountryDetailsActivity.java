@@ -20,6 +20,7 @@ import androidx.constraintlayout.widget.Group;
 
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentSnapshot;
 
 import java.time.LocalDate;
@@ -176,7 +177,7 @@ public class CountryDetailsActivity extends UpButtonActivity implements SearchVi
 	}
 
 	private void checkIfSavingOnline(long id) {
-		if (saveOnline()) {
+		if (FirebaseAuth.getInstance().getCurrentUser() != null) {
 			OnlineDatabaseUtils.getById(Const.COUNTRIES, id, this::checkIfSelectedTaskWasSuccessful);
 		} else {
 			selected = countryDao.getById(id);
@@ -193,7 +194,7 @@ public class CountryDetailsActivity extends UpButtonActivity implements SearchVi
 
 	private void onStartAfterSelectedInitialized() {
 		cityList = new ArrayList<>();
-		if (saveOnline()) {
+		if (FirebaseAuth.getInstance().getCurrentUser() != null) {
 			OnlineDatabaseUtils.getAllFromParentId(Const.CITIES, Const.COUNTRY_ID, selected.getId(), task -> addToList(task, cityList, City.class));
 		} else {
 			cityList = cityDao.getAllFromCountry(selected.getId());
@@ -274,7 +275,7 @@ public class CountryDetailsActivity extends UpButtonActivity implements SearchVi
 			city.setId(id);
 			addDaysToCity(city);
 
-			OnlineDatabaseUtils.add(Const.CITIES, city.getId(), city, saveOnline());
+			OnlineDatabaseUtils.add(Const.CITIES, city.getId(), city);
 
 			adapter.add(city);
 			adapter.sort(this::compareCityStartDates);
@@ -282,7 +283,7 @@ public class CountryDetailsActivity extends UpButtonActivity implements SearchVi
 			selected.setStartDate(adapter.getItem(0).getStartDate());
 			selected.setEndDate(adapter.getItem(adapter.getCount() - 1).getEndDate());
 			countryDao.update(selected);
-			OnlineDatabaseUtils.add(Const.COUNTRIES, selected.getId(), selected, saveOnline());
+			OnlineDatabaseUtils.add(Const.COUNTRIES, selected.getId(), selected);
 		} else {
 			generateMessageDialog(getString(R.string.duration_overlap_error_title), getString(R.string.duration_overlap_error_text));
 		}
@@ -300,7 +301,7 @@ public class CountryDetailsActivity extends UpButtonActivity implements SearchVi
 			long dayID = dayDao.insert(day);
 			day.setId(dayID);
 
-			OnlineDatabaseUtils.add(Const.DAYS, day.getId(), day, saveOnline());
+			OnlineDatabaseUtils.add(Const.DAYS, day.getId(), day);
 
 			city.addDay(day);
 		}
@@ -326,7 +327,7 @@ public class CountryDetailsActivity extends UpButtonActivity implements SearchVi
 		submitButton.setOnClickListener(v -> {
 			editDescription();
 			countryDao.update(selected);
-			OnlineDatabaseUtils.add(Const.COUNTRIES, selected.getId(), selected, saveOnline());
+			OnlineDatabaseUtils.add(Const.COUNTRIES, selected.getId(), selected);
 			refreshContent();
 			toggleForm();
 		});
@@ -375,7 +376,7 @@ public class CountryDetailsActivity extends UpButtonActivity implements SearchVi
 		}
 		selected.setDuration(duration);
 		countryDao.update(selected);
-		OnlineDatabaseUtils.add(Const.COUNTRIES, selected.getId(), selected, saveOnline());
+		OnlineDatabaseUtils.add(Const.COUNTRIES, selected.getId(), selected);
 		return duration;
 	}
 }

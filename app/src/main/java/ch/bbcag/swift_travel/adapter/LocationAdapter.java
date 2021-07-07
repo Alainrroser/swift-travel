@@ -28,7 +28,7 @@ import static ch.bbcag.swift_travel.R.drawable.timeline_bottom;
 import static ch.bbcag.swift_travel.R.drawable.timeline_middle;
 import static ch.bbcag.swift_travel.R.drawable.timeline_single;
 import static ch.bbcag.swift_travel.R.drawable.timeline_top;
-import static ch.bbcag.swift_travel.R.drawable.trip_placeholder;
+import static ch.bbcag.swift_travel.R.drawable.placeholder_icon;
 
 public class LocationAdapter extends ArrayAdapter<Location> {
 	private DayDetailsActivity dayDetailsActivity;
@@ -89,7 +89,7 @@ public class LocationAdapter extends ArrayAdapter<Location> {
 				viewHolder.image.setImageResource(category_location);
 				break;
 			default:
-				viewHolder.image.setImageResource(trip_placeholder);
+				viewHolder.image.setImageResource(placeholder_icon);
 				break;
 		}
 	}
@@ -117,7 +117,7 @@ public class LocationAdapter extends ArrayAdapter<Location> {
 			remove(location);
 			notifyDataSetChanged();
 			deleteImages(location);
-			OnlineDatabaseUtils.delete(Const.LOCATIONS, location.getId(), dayDetailsActivity.saveOnline());
+			OnlineDatabaseUtils.delete(Const.LOCATIONS, location.getId());
 			SwiftTravelDatabase.getInstance(dayDetailsActivity.getApplicationContext()).getLocationDao().deleteById(location.getId());
 		});
 	}
@@ -125,7 +125,7 @@ public class LocationAdapter extends ArrayAdapter<Location> {
 	private void deleteImages(Location location) {
 		List<Image> images = SwiftTravelDatabase.getInstance(dayDetailsActivity.getApplicationContext()).getImageDao().getAllFromLocation(location.getId());
 		for (Image image : images) {
-			OnlineDatabaseUtils.delete(Const.IMAGES, image.getId(), dayDetailsActivity.saveOnline());
+			OnlineDatabaseUtils.delete(Const.IMAGES, image.getId());
 			SwiftTravelDatabase.getInstance(dayDetailsActivity.getApplicationContext()).getImageDao().deleteById(image.getId());
 		}
 	}

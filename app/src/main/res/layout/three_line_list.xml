@@ -13,7 +13,7 @@
         android:layout_marginTop="16dp"
         android:contentDescription="@string/place_holder_image"
         android:scaleType="fitCenter"
-        android:src="@drawable/trip_placeholder"
+        android:src="@drawable/placeholder_icon"
         app:layout_constraintBottom_toBottomOf="@id/duration_three_line_list"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
@@ -28,8 +28,7 @@
         android:contentDescription="@string/delete"
         android:src="@drawable/delete"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:tint="@color/standard_text_and_icons" />
+        app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
         android:id="@+id/name_three_line_list"

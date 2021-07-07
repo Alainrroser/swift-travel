@@ -24,6 +24,7 @@ import androidx.constraintlayout.widget.Group;
 import com.github.dhaval2404.imagepicker.ImagePicker;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.textfield.TextInputLayout;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentSnapshot;
 
 import java.util.ArrayList;
@@ -160,7 +161,7 @@ public class CityDetailsActivity extends UpButtonActivity implements SearchView.
 			Uri imageURI = data.getData();
 			selected.setImageURI(imageURI.toString());
 			cityDao.update(selected);
-			OnlineDatabaseUtils.add(Const.CITIES, selected.getId(), selected, saveOnline());
+			OnlineDatabaseUtils.add(Const.CITIES, selected.getId(), selected);
 			cityImage.setImageURI(imageURI);
 		}
 	}
@@ -186,7 +187,7 @@ public class CityDetailsActivity extends UpButtonActivity implements SearchView.
 	}
 
 	private void checkIfSavingOnline(long id) {
-		if (saveOnline()) {
+		if (FirebaseAuth.getInstance().getCurrentUser() != null) {
 			OnlineDatabaseUtils.getById(Const.CITIES, id, this::checkIfSelectedTaskWasSuccessful);
 		} else {
 			selected = cityDao.getById(id);
@@ -203,7 +204,7 @@ public class CityDetailsActivity extends UpButtonActivity implements SearchView.
 
 	private void onStartAfterSelectedInitialized() {
 		dayList = new ArrayList<>();
-		if (saveOnline()) {
+		if (FirebaseAuth.getInstance().getCurrentUser() != null) {
 			OnlineDatabaseUtils.getAllFromParentId(Const.DAYS, Const.CITY_ID, selected.getId(), task -> addToList(task, dayList, Day.class));
 		} else {
 			dayList = dayDao.getAllFromCity(selected.getId());
@@ -248,7 +249,7 @@ public class CityDetailsActivity extends UpButtonActivity implements SearchView.
 			editDescription();
 			editTransport();
 			cityDao.update(selected);
-			OnlineDatabaseUtils.add(Const.CITIES, selected.getId(), selected, saveOnline());
+			OnlineDatabaseUtils.add(Const.CITIES, selected.getId(), selected);
 			refreshContent();
 			toggleForm();
 		});

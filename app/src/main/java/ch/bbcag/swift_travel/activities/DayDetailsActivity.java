@@ -25,6 +25,7 @@ import com.github.dhaval2404.imagepicker.ImagePicker;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.textfield.TextInputLayout;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentSnapshot;
 
 import java.util.ArrayList;
@@ -163,7 +164,7 @@ public class DayDetailsActivity extends UpButtonActivity implements SearchView.O
 			Uri imageURI = data.getData();
 			selected.setImageURI(imageURI.toString());
 			dayDao.update(selected);
-			OnlineDatabaseUtils.add(Const.DAYS, selected.getId(), selected, saveOnline());
+			OnlineDatabaseUtils.add(Const.DAYS, selected.getId(), selected);
 			dayImage.setImageURI(imageURI);
 		}
 	}
@@ -189,7 +190,7 @@ public class DayDetailsActivity extends UpButtonActivity implements SearchView.O
 	}
 
 	private void checkIfSavingOnline(long id) {
-		if (saveOnline()) {
+		if (FirebaseAuth.getInstance().getCurrentUser() != null) {
 			OnlineDatabaseUtils.getById(Const.DAYS, id, this::checkIfSelectedTaskWasSuccessful);
 		} else {
 			selected = dayDao.getById(id);
@@ -206,7 +207,7 @@ public class DayDetailsActivity extends UpButtonActivity implements SearchView.O
 
 	private void onStartAfterSelectedInitialized() {
 		locationList = new ArrayList<>();
-		if (saveOnline()) {
+		if (FirebaseAuth.getInstance().getCurrentUser() != null) {
 			OnlineDatabaseUtils.getAllFromParentId(Const.LOCATIONS, Const.DAY_ID, selected.getId(), task -> addToList(task, locationList, Location.class));
 		} else {
 			locationList = locationDao.getAllFromDay(selected.getId());
@@ -290,7 +291,7 @@ public class DayDetailsActivity extends UpButtonActivity implements SearchView.O
 			long id = locationDao.insert(location);
 			location.setId(id);
 
-			OnlineDatabaseUtils.add(Const.LOCATIONS, location.getId(), location, saveOnline());
+			OnlineDatabaseUtils.add(Const.LOCATIONS, location.getId(), location);
 
 			locationList.add(location);
 			adapter.add(location);
@@ -315,7 +316,7 @@ public class DayDetailsActivity extends UpButtonActivity implements SearchView.O
 			editName();
 			editDescription();
 			dayDao.update(selected);
-			OnlineDatabaseUtils.add(Const.DAYS, selected.getId(), selected, saveOnline());
+			OnlineDatabaseUtils.add(Const.DAYS, selected.getId(), selected);
 			refreshContent();
 			toggleForm();
 		});

@@ -25,6 +25,7 @@ import com.github.dhaval2404.imagepicker.ImagePicker;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.textfield.TextInputLayout;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentSnapshot;
 
 import java.time.LocalDate;
@@ -169,7 +170,7 @@ public class TripDetailsActivity extends UpButtonActivity implements SearchView.
 			Uri imageURI = data.getData();
 			selected.setImageURI(imageURI.toString());
 			tripDao.update(selected);
-			OnlineDatabaseUtils.add(Const.TRIPS, selected.getId(), selected, saveOnline());
+			OnlineDatabaseUtils.add(Const.TRIPS, selected.getId(), selected);
 			tripImage.setImageURI(imageURI);
 		}
 	}
@@ -195,7 +196,7 @@ public class TripDetailsActivity extends UpButtonActivity implements SearchView.
 	}
 
 	private void checkIfSavingOnline(long id) {
-		if (saveOnline()) {
+		if (FirebaseAuth.getInstance().getCurrentUser() != null) {
 			OnlineDatabaseUtils.getById(Const.TRIPS, id, this::checkIfSelectedTaskWasSuccessful);
 		} else {
 			selected = tripDao.getById(id);
@@ -212,7 +213,7 @@ public class TripDetailsActivity extends UpButtonActivity implements SearchView.
 
 	private void onStartAfterSelectedInitialized() {
 		countryList = new ArrayList<>();
-		if (saveOnline()) {
+		if (FirebaseAuth.getInstance().getCurrentUser() != null) {
 			OnlineDatabaseUtils.getAllFromParentId(Const.COUNTRIES, Const.TRIP_ID, selected.getId(), listTask -> addToList(listTask, countryList, Country.class));
 		} else {
 			countryList = countryDao.getAllFromTrip(selected.getId());
@@ -224,7 +225,7 @@ public class TripDetailsActivity extends UpButtonActivity implements SearchView.
 			selected.setStartDate(adapter.getItem(0).getStartDate());
 			selected.setEndDate(adapter.getItem(adapter.getCount() - 1).getEndDate());
 			tripDao.update(selected);
-			OnlineDatabaseUtils.add(Const.TRIPS, selected.getId(), selected, saveOnline());
+			OnlineDatabaseUtils.add(Const.TRIPS, selected.getId(), selected);
 		}
 
 		createCountryFromIntent();
@@ -257,14 +258,14 @@ public class TripDetailsActivity extends UpButtonActivity implements SearchView.
 			long id = countryDao.insert(country);
 			country.setId(id);
 
-			OnlineDatabaseUtils.add(Const.COUNTRIES, country.getId(), country, saveOnline());
+			OnlineDatabaseUtils.add(Const.COUNTRIES, country.getId(), country);
 
 			adapter.add(country);
 
 			selected.setStartDate(adapter.getItem(0).getStartDate());
 			selected.setEndDate(adapter.getItem(adapter.getCount() - 1).getEndDate());
 			tripDao.update(selected);
-			OnlineDatabaseUtils.add(Const.TRIPS, selected.getId(), selected, saveOnline());
+			OnlineDatabaseUtils.add(Const.TRIPS, selected.getId(), selected);
 		}
 	}
 
@@ -347,7 +348,7 @@ public class TripDetailsActivity extends UpButtonActivity implements SearchView.
 			editName();
 			editDescription();
 			tripDao.update(selected);
-			OnlineDatabaseUtils.add(Const.TRIPS, selected.getId(), selected, saveOnline());
+			OnlineDatabaseUtils.add(Const.TRIPS, selected.getId(), selected);
 			refreshContent();
 			toggleForm();
 		});
@@ -377,12 +378,12 @@ public class TripDetailsActivity extends UpButtonActivity implements SearchView.
 		}
 		selected.setDuration(duration);
 		tripDao.update(selected);
-		OnlineDatabaseUtils.add(Const.TRIPS, selected.getId(), selected, saveOnline());
+		OnlineDatabaseUtils.add(Const.TRIPS, selected.getId(), selected);
 		return duration;
 	}
 
 	private void updateDestinationAndOrigin(Country country, LocalDate localDate, boolean updateOrigin) {
-		if (saveOnline()) {
+		if (FirebaseAuth.getInstance().getCurrentUser() != null) {
 			List<City> cityList = new ArrayList<>();
 			OnlineDatabaseUtils.getAllFromParentId(Const.CITIES, Const.COUNTRY_ID, country.getId(), task -> addToList(task, cityList, City.class));
 			for (City city : cityList) {
@@ -409,7 +410,7 @@ public class TripDetailsActivity extends UpButtonActivity implements SearchView.
 			localDate = LocalDate.parse(city.getStartDate(), DateTimeFormatter.ofPattern("dd.MM.yyyy"));
 			country.setOrigin(city.getName());
 			countryDao.update(country);
-			OnlineDatabaseUtils.add(Const.COUNTRIES, country.getId(), country, saveOnline());
+			OnlineDatabaseUtils.add(Const.COUNTRIES, country.getId(), country);
 		}
 		return localDate;
 	}
@@ -419,7 +420,7 @@ public class TripDetailsActivity extends UpButtonActivity implements SearchView.
 			localDate = LocalDate.parse(city.getStartDate(), DateTimeFormatter.ofPattern("dd.MM.yyyy"));
 			country.setDestination(city.getName());
 			countryDao.update(country);
-			OnlineDatabaseUtils.add(Const.COUNTRIES, country.getId(), country, saveOnline());
+			OnlineDatabaseUtils.add(Const.COUNTRIES, country.getId(), country);
 		}
 		return localDate;
 	}

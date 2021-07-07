@@ -22,8 +22,6 @@ import ch.bbcag.swift_travel.utils.Const;
 public class BaseActivity extends AppCompatActivity {
 	private ProgressBar progressBar;
 
-	private boolean saveOnline;
-
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -32,12 +30,6 @@ public class BaseActivity extends AppCompatActivity {
 	@Override
 	protected void onStart() {
 		super.onStart();
-
-		boolean defaultValue = false;
-		if (FirebaseAuth.getInstance().getCurrentUser() != null) {
-			defaultValue = true;
-		}
-		saveOnline = getPreferences(Context.MODE_PRIVATE).getBoolean(Const.SAFE_ONLINE_SWITCH_TOGGLE_STATE, defaultValue);
 
 		progressBar = findViewById(R.id.progress_bar);
 		progressBar.setVisibility(View.VISIBLE);
@@ -76,10 +68,6 @@ public class BaseActivity extends AppCompatActivity {
 
 	protected ProgressBar getProgressBar() {
 		return progressBar;
-	}
-
-	public boolean saveOnline() {
-		return saveOnline;
 	}
 
 	protected <T> void addToList(Task<QuerySnapshot> task, List<T> objects, Class<T> type) {

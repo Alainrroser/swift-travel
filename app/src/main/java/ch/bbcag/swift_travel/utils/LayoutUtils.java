@@ -58,7 +58,7 @@ public class LayoutUtils {
 	}
 
 	public static void setFlagImageURIOnImageView(Context context, ImageView iv, String URI) {
-		GlideToVectorYou.init().with(context).setPlaceHolder(R.drawable.flag_placeholder, R.drawable.flag_placeholder).load(Uri.parse(URI), iv);
+		GlideToVectorYou.init().with(context).setPlaceHolder(R.drawable.placeholder_flag, R.drawable.placeholder_flag).load(Uri.parse(URI), iv);
 	}
 
 	public static void setOnlineImageURIOnImageView(Context context, ImageView iv, Uri URI) {

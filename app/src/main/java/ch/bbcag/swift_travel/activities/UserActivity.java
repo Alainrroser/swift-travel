@@ -1,6 +1,5 @@
 package ch.bbcag.swift_travel.activities;
 
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.MenuItem;
@@ -12,7 +11,6 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.constraintlayout.widget.Group;
 
-import com.google.android.material.switchmaterial.SwitchMaterial;
 import com.google.android.material.textfield.TextInputLayout;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -22,7 +20,6 @@ import java.util.List;
 import java.util.Objects;
 
 import ch.bbcag.swift_travel.R;
-import ch.bbcag.swift_travel.utils.Const;
 import ch.bbcag.swift_travel.utils.ValidationUtils;
 
 public class UserActivity extends UpButtonActivity {
@@ -46,8 +43,6 @@ public class UserActivity extends UpButtonActivity {
 	private TextInputLayout newPasswordConfirmLayout;
 	private EditText newPasswordConfirm;
 
-	private SwitchMaterial safeOnlineSwitch;
-
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -70,8 +65,6 @@ public class UserActivity extends UpButtonActivity {
 		newPassword = findViewById(R.id.user_new_password);
 		newPasswordConfirmLayout = findViewById(R.id.user_new_password_confirm_input);
 		newPasswordConfirm = findViewById(R.id.user_new_password_confirm);
-
-		safeOnlineSwitch = findViewById(R.id.safe_online_switch);
 	}
 
 	@Override
@@ -87,17 +80,10 @@ public class UserActivity extends UpButtonActivity {
 		setTitle(currentUser.getEmail());
 		userEmail.setText(currentUser.getEmail());
 
-		if (getIntent().getBooleanExtra(Const.SAFE_ONLINE, false)) {
-			getPreferences(Context.MODE_PRIVATE).edit().putBoolean(Const.SAFE_ONLINE_SWITCH_TOGGLE_STATE, true).apply();
-			safeOnlineSwitch.setChecked(true);
-		}
-		setSafeOnlineSwitchState();
-
 		form.setVisibility(View.GONE);
 
 		getProgressBar().setVisibility(View.GONE);
 
-		onSafeOnlineSwitchToggle();
 		onChangePasswordClick();
 		onSubmitButtonClick();
 		onLogoutButtonClick();
@@ -123,18 +109,6 @@ public class UserActivity extends UpButtonActivity {
 			content.setVisibility(View.GONE);
 
 		}
-	}
-
-	private void onSafeOnlineSwitchToggle() {
-		safeOnlineSwitch.setOnCheckedChangeListener((compoundButton, b) -> {
-			getPreferences(Context.MODE_PRIVATE).edit().putBoolean(Const.SAFE_ONLINE_SWITCH_TOGGLE_STATE, safeOnlineSwitch.isChecked()).apply();
-			setSafeOnlineSwitchState();
-		});
-	}
-
-	private void setSafeOnlineSwitchState() {
-		boolean saveOnline = getPreferences(Context.MODE_PRIVATE).getBoolean(Const.SAFE_ONLINE_SWITCH_TOGGLE_STATE, safeOnlineSwitch.isChecked());
-		safeOnlineSwitch.setChecked(saveOnline);
 	}
 
 	private void onChangePasswordClick() {

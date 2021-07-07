@@ -97,7 +97,6 @@
         android:src="@drawable/person"
         app:layout_constraintBottom_toTopOf="@id/trips"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/trips_image"
-        app:tint="@color/standard_text_and_icons" />
+        app:layout_constraintTop_toBottomOf="@id/trips_image" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

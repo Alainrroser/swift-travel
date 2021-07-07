@@ -77,7 +77,7 @@ public class TripAdapter extends ArrayAdapter<Trip> {
 		if (trip.getImageURI() != null) {
 			LayoutUtils.setImageURIOnImageView(viewHolder.image, trip.getImageURI());
 		} else {
-			viewHolder.image.setImageResource(R.drawable.trip_placeholder);
+			viewHolder.image.setImageResource(R.drawable.placeholder_icon);
 		}
 	}
 
@@ -87,7 +87,7 @@ public class TripAdapter extends ArrayAdapter<Trip> {
 			remove(trip);
 			notifyDataSetChanged();
 			deleteCountries(trip);
-			OnlineDatabaseUtils.delete(Const.TRIPS, trip.getId(), mainActivity.saveOnline());
+			OnlineDatabaseUtils.delete(Const.TRIPS, trip.getId());
 			SwiftTravelDatabase.getInstance(mainActivity.getApplicationContext()).getTripDao().delete(trip.getId());
 		});
 	}
@@ -96,7 +96,7 @@ public class TripAdapter extends ArrayAdapter<Trip> {
 		List<Country> countries = SwiftTravelDatabase.getInstance(mainActivity.getApplicationContext()).getCountryDao().getAllFromTrip(trip.getId());
 		for (Country country : countries) {
 			deleteCities(country);
-			OnlineDatabaseUtils.delete(Const.COUNTRIES, country.getId(), mainActivity.saveOnline());
+			OnlineDatabaseUtils.delete(Const.COUNTRIES, country.getId());
 			SwiftTravelDatabase.getInstance(mainActivity.getApplicationContext()).getCountryDao().deleteById(country.getId());
 		}
 	}
@@ -105,7 +105,7 @@ public class TripAdapter extends ArrayAdapter<Trip> {
 		List<City> cities = SwiftTravelDatabase.getInstance(mainActivity.getApplicationContext()).getCityDao().getAllFromCountry(country.getId());
 		for (City city : cities) {
 			deleteDays(city);
-			OnlineDatabaseUtils.delete(Const.CITIES, city.getId(), mainActivity.saveOnline());
+			OnlineDatabaseUtils.delete(Const.CITIES, city.getId());
 			SwiftTravelDatabase.getInstance(mainActivity.getApplicationContext()).getCityDao().deleteById(city.getId());
 		}
 	}
@@ -114,7 +114,7 @@ public class TripAdapter extends ArrayAdapter<Trip> {
 		List<Day> days = SwiftTravelDatabase.getInstance(mainActivity.getApplicationContext()).getDayDao().getAllFromCity(city.getId());
 		for (Day day : days) {
 			deleteLocations(day);
-			OnlineDatabaseUtils.delete(Const.DAYS, day.getId(), mainActivity.saveOnline());
+			OnlineDatabaseUtils.delete(Const.DAYS, day.getId());
 			SwiftTravelDatabase.getInstance(mainActivity.getApplicationContext()).getDayDao().deleteById(day.getId());
 		}
 	}
@@ -123,7 +123,7 @@ public class TripAdapter extends ArrayAdapter<Trip> {
 		List<Location> locations = SwiftTravelDatabase.getInstance(mainActivity.getApplicationContext()).getLocationDao().getAllFromDay(day.getId());
 		for (Location location : locations) {
 			deleteImages(location);
-			OnlineDatabaseUtils.delete(Const.LOCATIONS, location.getId(), mainActivity.saveOnline());
+			OnlineDatabaseUtils.delete(Const.LOCATIONS, location.getId());
 			SwiftTravelDatabase.getInstance(mainActivity.getApplicationContext()).getLocationDao().deleteById(location.getId());
 		}
 	}
@@ -131,7 +131,7 @@ public class TripAdapter extends ArrayAdapter<Trip> {
 	private void deleteImages(Location location) {
 		List<Image> images = SwiftTravelDatabase.getInstance(mainActivity.getApplicationContext()).getImageDao().getAllFromLocation(location.getId());
 		for (Image image : images) {
-			OnlineDatabaseUtils.delete(Const.IMAGES, image.getId(), mainActivity.saveOnline());
+			OnlineDatabaseUtils.delete(Const.IMAGES, image.getId());
 			SwiftTravelDatabase.getInstance(mainActivity.getApplicationContext()).getImageDao().deleteById(image.getId());
 		}
 	}

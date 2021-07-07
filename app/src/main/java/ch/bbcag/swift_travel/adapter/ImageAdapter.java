@@ -58,7 +58,7 @@ public class ImageAdapter extends ArrayAdapter<Image> {
 		locationDetailsActivity.generateConfirmDialog(locationDetailsActivity.getString(R.string.delete_entry_title), locationDetailsActivity.getString(R.string.delete_entry_text), () -> {
 			remove(image);
 			notifyDataSetChanged();
-			OnlineDatabaseUtils.delete(Const.IMAGES, image.getId(), locationDetailsActivity.saveOnline());
+			OnlineDatabaseUtils.delete(Const.IMAGES, image.getId());
 			SwiftTravelDatabase.getInstance(locationDetailsActivity.getApplicationContext()).getImageDao().deleteById(image.getId());
 		});
 	}

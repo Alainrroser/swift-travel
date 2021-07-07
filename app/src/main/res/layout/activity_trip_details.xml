@@ -55,8 +55,7 @@
         android:contentDescription="@string/edit"
         android:src="@drawable/edit"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:tint="@color/standard_text_and_icons" />
+        app:layout_constraintTop_toTopOf="parent" />
 
     <androidx.constraintlayout.widget.Group
         android:id="@+id/trip_content"

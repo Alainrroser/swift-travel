@@ -71,7 +71,7 @@ public class MainActivity extends BaseActivity implements SearchView.OnQueryText
 		super.onStart();
 
 		tripList = new ArrayList<>();
-		if (saveOnline()) {
+		if (FirebaseAuth.getInstance().getCurrentUser() != null) {
 			OnlineDatabaseUtils.getAllTripsFromUser(Const.TRIPS, Const.USER_ID, Objects.requireNonNull(FirebaseAuth.getInstance().getCurrentUser()).getUid(), task -> addToList(task, tripList, Trip.class));
 		} else {
 			tripList = tripDao.getAll();
@@ -80,7 +80,6 @@ public class MainActivity extends BaseActivity implements SearchView.OnQueryText
 		adapter = new TripAdapter(this, tripList);
 
 		if (FirebaseAuth.getInstance().getCurrentUser() != null && Objects.requireNonNull(FirebaseAuth.getInstance().getCurrentUser()).getPhotoUrl() != null) {
-			loginButton.setImageTintList(null);
 			LayoutUtils.setOnlineImageURIOnImageView(getApplicationContext(), loginButton, FirebaseAuth.getInstance().getCurrentUser().getPhotoUrl());
 		}
 
@@ -176,7 +175,7 @@ public class MainActivity extends BaseActivity implements SearchView.OnQueryText
 			long id = tripDao.insert(trip);
 			trip.setId(id);
 
-			OnlineDatabaseUtils.add(Const.TRIPS, trip.getId(), trip, saveOnline());
+			OnlineDatabaseUtils.add(Const.TRIPS, trip.getId(), trip);
 
 			adapter.add(trip);
 		}
@@ -192,7 +191,7 @@ public class MainActivity extends BaseActivity implements SearchView.OnQueryText
 	}
 
 	private void updateDestinationAndOrigin(Trip trip, LocalDate localDate, boolean updateOrigin) {
-		if (saveOnline()) {
+		if (FirebaseAuth.getInstance().getCurrentUser() != null) {
 			List<Country> countryList = new ArrayList<>();
 			OnlineDatabaseUtils.getAllFromParentId(Const.COUNTRIES, Const.TRIP_ID, trip.getId(), task -> addToList(task, countryList, Country.class));
 			for (Country country : countryList) {
@@ -206,7 +205,7 @@ public class MainActivity extends BaseActivity implements SearchView.OnQueryText
 	}
 
 	private LocalDate loopThroughCities(Trip trip, Country country, LocalDate localDate, boolean updateOrigin) {
-		if (saveOnline()) {
+		if (FirebaseAuth.getInstance().getCurrentUser() != null) {
 			List<City> cityList = new ArrayList<>();
 			OnlineDatabaseUtils.getAllFromParentId(Const.CITIES, Const.COUNTRY_ID, country.getId(), task -> addToList(task, cityList, City.class));
 			for (City city : cityList) {
@@ -234,7 +233,7 @@ public class MainActivity extends BaseActivity implements SearchView.OnQueryText
 			localDate = LocalDate.parse(city.getStartDate(), DateTimeFormatter.ofPattern("dd.MM.yyyy"));
 			trip.setOrigin(city.getName());
 			tripDao.update(trip);
-			OnlineDatabaseUtils.add(Const.TRIPS, trip.getId(), trip, saveOnline());
+			OnlineDatabaseUtils.add(Const.TRIPS, trip.getId(), trip);
 		}
 		return localDate;
 	}
@@ -244,7 +243,7 @@ public class MainActivity extends BaseActivity implements SearchView.OnQueryText
 			localDate = LocalDate.parse(city.getStartDate(), DateTimeFormatter.ofPattern("dd.MM.yyyy"));
 			trip.setDestination(city.getName());
 			tripDao.update(trip);
-			OnlineDatabaseUtils.add(Const.TRIPS, trip.getId(), trip, saveOnline());
+			OnlineDatabaseUtils.add(Const.TRIPS, trip.getId(), trip);
 		}
 		return localDate;
 	}

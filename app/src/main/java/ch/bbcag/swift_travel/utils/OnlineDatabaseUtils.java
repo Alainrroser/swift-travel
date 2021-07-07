@@ -1,13 +1,14 @@
 package ch.bbcag.swift_travel.utils;
 
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QuerySnapshot;
 
 public class OnlineDatabaseUtils {
-	public static void add(String collection, long id, Object object, boolean saveOnline) {
-		if (saveOnline) {
+	public static void add(String collection, long id, Object object) {
+		if (FirebaseAuth.getInstance().getCurrentUser() != null) {
 			FirebaseFirestore.getInstance().collection(collection).document(String.valueOf(id)).set(object);
 		}
 	}
@@ -24,8 +25,8 @@ public class OnlineDatabaseUtils {
 		FirebaseFirestore.getInstance().collection(collection).document(String.valueOf(id)).get().addOnCompleteListener(onCompleteListener);
 	}
 
-	public static void delete(String collection, long id, boolean saveOnline) {
-		if (saveOnline) {
+	public static void delete(String collection, long id) {
+		if (FirebaseAuth.getInstance().getCurrentUser() != null) {
 			FirebaseFirestore.getInstance().collection(collection).document(String.valueOf(id)).delete();
 		}
 	}

@@ -23,6 +23,7 @@ import com.github.dhaval2404.imagepicker.ImagePicker;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.textfield.TextInputLayout;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentSnapshot;
 
 import java.util.ArrayList;
@@ -116,7 +117,7 @@ public class LocationDetailsActivity extends UpButtonActivity implements Adapter
 			Uri imageURI = data.getData();
 			selected.setImageURI(imageURI.toString());
 			locationDao.update(selected);
-			OnlineDatabaseUtils.add(Const.LOCATIONS, selected.getId(), selected, saveOnline());
+			OnlineDatabaseUtils.add(Const.LOCATIONS, selected.getId(), selected);
 			locationImage.setImageURI(imageURI);
 		} else if (requestCode == Const.ADD_IMAGE_REQUEST_CODE && resultCode == Activity.RESULT_OK && data != null) {
 			Uri imageURI = data.getData();
@@ -126,14 +127,14 @@ public class LocationDetailsActivity extends UpButtonActivity implements Adapter
 			long id = imageDao.insert(image);
 			image.setId(id);
 
-			OnlineDatabaseUtils.add(Const.IMAGES, image.getId(), image, saveOnline());
+			OnlineDatabaseUtils.add(Const.IMAGES, image.getId(), image);
 
 			imageAdapter.add(image);
 		} else if (requestCode == Const.REPLACE_IMAGE_REQUEST_CODE && resultCode == Activity.RESULT_OK && data != null) {
 			Uri imageURI = data.getData();
 			clickedImage.setImageURI(imageURI.toString());
 			imageDao.update(clickedImage);
-			OnlineDatabaseUtils.add(Const.IMAGES, clickedImage.getId(), clickedImage, saveOnline());
+			OnlineDatabaseUtils.add(Const.IMAGES, clickedImage.getId(), clickedImage);
 			imageAdapter.clear();
 			List<Image> images = imageDao.getAllFromLocation(selected.getId());
 			imageAdapter.addAll(images);
@@ -174,7 +175,7 @@ public class LocationDetailsActivity extends UpButtonActivity implements Adapter
 	}
 
 	private void checkIfSavingOnline(long id) {
-		if (saveOnline()) {
+		if (FirebaseAuth.getInstance().getCurrentUser() != null) {
 			OnlineDatabaseUtils.getById(Const.LOCATIONS, id, this::checkIfSelectedTaskWasSuccessful);
 		} else {
 			selected = locationDao.getById(id);
@@ -191,7 +192,7 @@ public class LocationDetailsActivity extends UpButtonActivity implements Adapter
 
 	private void onStartAfterSelectedInitialized() {
 		imageList = new ArrayList<>();
-		if (saveOnline()) {
+		if (FirebaseAuth.getInstance().getCurrentUser() != null) {
 			OnlineDatabaseUtils.getAllFromParentId(Const.IMAGES, Const.LOCATION_ID, selected.getId(), task -> addToList(task, imageList, Image.class));
 		} else {
 			imageList = imageDao.getAllFromLocation(selected.getId());
@@ -233,7 +234,7 @@ public class LocationDetailsActivity extends UpButtonActivity implements Adapter
 			editDescription();
 			editTransport();
 			locationDao.update(selected);
-			OnlineDatabaseUtils.add(Const.LOCATIONS, selected.getId(), selected, saveOnline());
+			OnlineDatabaseUtils.add(Const.LOCATIONS, selected.getId(), selected);
 			refreshContent();
 			toggleForm();
 		});

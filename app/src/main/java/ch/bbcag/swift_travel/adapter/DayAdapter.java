@@ -54,7 +54,7 @@ public class DayAdapter extends ArrayAdapter<Day> {
 		if (day.getImageURI() != null) {
 			LayoutUtils.setImageURIOnImageView(viewHolder.image, day.getImageURI());
 		} else {
-			viewHolder.image.setImageResource(R.drawable.trip_placeholder);
+			viewHolder.image.setImageResource(R.drawable.placeholder_icon);
 		}
 		viewHolder.date.setText(day.getDate());
 	}

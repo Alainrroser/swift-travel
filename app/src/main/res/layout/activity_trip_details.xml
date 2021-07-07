@@ -213,8 +213,6 @@
         android:layout_width="@dimen/standard_element_width"
         android:layout_height="0dp"
         android:layout_marginBottom="@dimen/list_margin_bottom"
-        android:divider="@android:drawable/divider_horizontal_dark"
-        android:dividerHeight="1dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"

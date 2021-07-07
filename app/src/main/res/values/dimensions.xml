@@ -68,4 +68,6 @@
     <dimen name="fab_margin_bottom">16dp</dimen>
 
     <dimen name="list_margin_bottom">88dp</dimen>
+    <dimen name="list_padding">5dp</dimen>
+    <dimen name="list_divider_height">5dp</dimen>
 </resources>

@@ -8,6 +8,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.resource.bitmap.RoundedCorners;
+import com.bumptech.glide.request.RequestOptions;
 import com.github.twocoffeesoneteam.glidetovectoryou.GlideToVectorYou;
 
 import ch.bbcag.swift_travel.R;
@@ -61,7 +63,11 @@ public class LayoutUtils {
 		GlideToVectorYou.init().with(context).setPlaceHolder(R.drawable.placeholder_flag, R.drawable.placeholder_flag).load(Uri.parse(URI), iv);
 	}
 
-	public static void setOnlineImageURIOnImageView(Context context, ImageView iv, Uri URI) {
-		Glide.with(context).load(URI).into(iv);
+	public static void setOnlineImageURIOnImageView(Context context, ImageView iv, Uri URI, boolean roundedCorners) {
+		if (roundedCorners) {
+			Glide.with(context).load(URI).apply(RequestOptions.bitmapTransform(new RoundedCorners(180))).into(iv);
+		} else{
+			Glide.with(context).load(URI).into(iv);
+		}
 	}
 }

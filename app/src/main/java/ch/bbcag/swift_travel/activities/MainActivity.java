@@ -80,7 +80,7 @@ public class MainActivity extends BaseActivity implements SearchView.OnQueryText
 		adapter = new TripAdapter(this, tripList);
 
 		if (FirebaseAuth.getInstance().getCurrentUser() != null && Objects.requireNonNull(FirebaseAuth.getInstance().getCurrentUser()).getPhotoUrl() != null) {
-			LayoutUtils.setOnlineImageURIOnImageView(getApplicationContext(), loginButton, FirebaseAuth.getInstance().getCurrentUser().getPhotoUrl());
+			LayoutUtils.setOnlineImageURIOnImageView(getApplicationContext(), loginButton, FirebaseAuth.getInstance().getCurrentUser().getPhotoUrl(), true);
 		}
 
 		createTripFromIntent();

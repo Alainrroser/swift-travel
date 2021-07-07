@@ -1,71 +1,77 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="72dp"
+    android:layout_height="80dp"
     android:descendantFocusability="blocksDescendants">
 
-    <ImageButton
-        android:id="@+id/delete_two_line_list"
-        android:layout_width="@dimen/icon_button_size"
-        android:layout_height="@dimen/icon_button_size"
-        android:layout_marginTop="@dimen/standard_element_margin_top"
-        android:layout_marginEnd="@dimen/list_icon_button_margin_end"
-        android:backgroundTint="@android:color/transparent"
-        android:contentDescription="@string/delete"
-        android:src="@drawable/delete"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <ImageView
-        android:id="@+id/image_two_line_list"
-        android:layout_width="@dimen/list_image_size"
-        android:layout_height="@dimen/list_image_size"
-        android:layout_marginStart="@dimen/list_image_margin_start"
-        android:layout_marginTop="@dimen/list_image_margin_top"
-        android:contentDescription="@string/place_holder_image"
-        android:scaleType="fitCenter"
-        android:src="@drawable/placeholder_icon"
-        app:layout_constraintBottom_toBottomOf="@id/duration_or_date_two_line_list"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <TextView
-        android:id="@+id/name_two_line_list"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="16dp"
-        android:layout_marginEnd="16dp"
-        android:text="@string/countries"
-        android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-        android:textColor="@color/standard_text_and_icons"
-        android:textSize="14sp"
-        android:textStyle="bold"
-        app:layout_constraintEnd_toStartOf="@+id/delete_two_line_list"
-        app:layout_constraintStart_toEndOf="@+id/image_two_line_list"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <TextView
-        android:id="@+id/duration_or_date_two_line_list"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="16dp"
-        android:text="@string/trip_duration"
-        android:textColor="@color/standard_text_and_icons"
-        android:textSize="14sp"
-        app:layout_constraintEnd_toStartOf="@+id/delete_two_line_list"
-        app:layout_constraintStart_toStartOf="@id/name_two_line_list"
-        app:layout_constraintTop_toBottomOf="@id/name_two_line_list" />
-
-    <View
-        android:id="@+id/divider_two_line_list"
-        android:layout_width="0dp"
-        android:layout_height="1dp"
-        android:background="?android:attr/listDivider"
-        android:visibility="visible"
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="72dp"
+        android:layout_margin="15dp"
+        android:layout_marginStart="15dp"
+        android:layout_marginEnd="14dp"
+        android:background="@drawable/rounded_corners"
+        android:descendantFocusability="blocksDescendants"
+        android:elevation="4dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
 
+        <ImageButton
+            android:id="@+id/delete_two_line_list"
+            android:layout_width="@dimen/icon_button_size"
+            android:layout_height="@dimen/icon_button_size"
+            android:layout_marginTop="@dimen/standard_element_margin_top"
+            android:layout_marginEnd="@dimen/list_icon_button_margin_end"
+            android:backgroundTint="@android:color/transparent"
+            android:contentDescription="@string/delete"
+            android:src="@drawable/delete"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <ImageView
+            android:id="@+id/image_two_line_list"
+            android:layout_width="@dimen/list_image_size"
+            android:layout_height="@dimen/list_image_size"
+            android:layout_marginStart="@dimen/list_image_margin_start"
+            android:layout_marginTop="@dimen/list_image_margin_top"
+            android:contentDescription="@string/place_holder_image"
+            android:scaleType="fitCenter"
+            android:src="@drawable/placeholder_icon"
+            app:layout_constraintBottom_toBottomOf="@id/duration_or_date_two_line_list"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/name_two_line_list"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="16dp"
+            android:layout_marginEnd="16dp"
+            android:text="@string/countries"
+            android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+            android:textColor="@color/standard_text_and_icons"
+            android:textSize="14sp"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toStartOf="@+id/delete_two_line_list"
+            app:layout_constraintStart_toEndOf="@+id/image_two_line_list"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/duration_or_date_two_line_list"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="16dp"
+            android:text="@string/trip_duration"
+            android:textColor="@color/standard_text_and_icons"
+            android:textSize="14sp"
+            app:layout_constraintEnd_toStartOf="@+id/delete_two_line_list"
+            app:layout_constraintStart_toStartOf="@id/name_two_line_list"
+            app:layout_constraintTop_toBottomOf="@id/name_two_line_list" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -13,8 +13,8 @@ public class OnlineDatabaseUtils {
 		}
 	}
 
-	public static void getAllTripsFromUser(String collection, String parentIdText, String parentId, OnCompleteListener<QuerySnapshot> onCompleteListener) {
-		FirebaseFirestore.getInstance().collection(collection).whereEqualTo(parentIdText, parentId).get().addOnCompleteListener(onCompleteListener);
+	public static void getAllTripsFromUser(String userId, OnCompleteListener<QuerySnapshot> onCompleteListener) {
+		FirebaseFirestore.getInstance().collection(Const.TRIPS).whereEqualTo(Const.USER_ID, userId).get().addOnCompleteListener(onCompleteListener);
 	}
 
 	public static void getAllFromParentId(String collection, String parentIdText, long parentId, OnCompleteListener<QuerySnapshot> onCompleteListener) {

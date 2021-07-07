@@ -24,5 +24,5 @@ public interface TripDao {
 	void update(Trip trip);
 
 	@Query("DELETE FROM trips WHERE id = :id")
-	void delete(long id);
+	void deleteById(long id);
 }

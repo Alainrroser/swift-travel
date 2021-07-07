@@ -20,6 +20,15 @@ import java.util.List;
 import java.util.Objects;
 
 import ch.bbcag.swift_travel.R;
+import ch.bbcag.swift_travel.dal.SwiftTravelDatabase;
+import ch.bbcag.swift_travel.entities.City;
+import ch.bbcag.swift_travel.entities.Country;
+import ch.bbcag.swift_travel.entities.Day;
+import ch.bbcag.swift_travel.entities.Image;
+import ch.bbcag.swift_travel.entities.Location;
+import ch.bbcag.swift_travel.entities.Trip;
+import ch.bbcag.swift_travel.utils.Const;
+import ch.bbcag.swift_travel.utils.OnlineDatabaseUtils;
 import ch.bbcag.swift_travel.utils.ValidationUtils;
 
 public class UserActivity extends UpButtonActivity {
@@ -162,9 +171,63 @@ public class UserActivity extends UpButtonActivity {
 
 	private void onDeleteButtonClick() {
 		deleteButton.setOnClickListener(v -> generateConfirmDialog(getString(R.string.delete_account_title), getString(R.string.delete_account_text), () -> {
+			deleteTrips();
 			currentUser.delete();
 			currentUser = null;
 			logout();
 		}));
+	}
+
+	private void deleteTrips() {
+		List<Trip> trips = SwiftTravelDatabase.getInstance(getApplicationContext()).getTripDao().getAll();
+		for(Trip trip : trips) {
+			deleteCountries(trip);
+			OnlineDatabaseUtils.delete(Const.TRIPS, trip.getId());
+			SwiftTravelDatabase.getInstance(getApplicationContext()).getTripDao().deleteById(trip.getId());
+		}
+	}
+
+	private void deleteCountries(Trip trip) {
+		List<Country> countries = SwiftTravelDatabase.getInstance(getApplicationContext()).getCountryDao().getAllFromTrip(trip.getId());
+		for (Country country : countries) {
+			deleteCities(country);
+			OnlineDatabaseUtils.delete(Const.COUNTRIES, country.getId());
+			SwiftTravelDatabase.getInstance(getApplicationContext()).getCountryDao().deleteById(country.getId());
+		}
+	}
+
+	private void deleteCities(Country country) {
+		List<City> cities = SwiftTravelDatabase.getInstance(getApplicationContext()).getCityDao().getAllFromCountry(country.getId());
+		for (City city : cities) {
+			deleteDays(city);
+			OnlineDatabaseUtils.delete(Const.CITIES, city.getId());
+			SwiftTravelDatabase.getInstance(getApplicationContext()).getCityDao().deleteById(city.getId());
+		}
+	}
+
+	private void deleteDays(City city) {
+		List<Day> days = SwiftTravelDatabase.getInstance(getApplicationContext()).getDayDao().getAllFromCity(city.getId());
+		for (Day day : days) {
+			deleteLocations(day);
+			OnlineDatabaseUtils.delete(Const.DAYS, day.getId());
+			SwiftTravelDatabase.getInstance(getApplicationContext()).getDayDao().deleteById(day.getId());
+		}
+	}
+
+	private void deleteLocations(Day day) {
+		List<Location> locations = SwiftTravelDatabase.getInstance(getApplicationContext()).getLocationDao().getAllFromDay(day.getId());
+		for (Location location : locations) {
+			deleteImages(location);
+			OnlineDatabaseUtils.delete(Const.LOCATIONS, location.getId());
+			SwiftTravelDatabase.getInstance(getApplicationContext()).getLocationDao().deleteById(location.getId());
+		}
+	}
+
+	private void deleteImages(Location location) {
+		List<Image> images = SwiftTravelDatabase.getInstance(getApplicationContext()).getImageDao().getAllFromLocation(location.getId());
+		for (Image image : images) {
+			OnlineDatabaseUtils.delete(Const.IMAGES, image.getId());
+			SwiftTravelDatabase.getInstance(getApplicationContext()).getImageDao().deleteById(image.getId());
+		}
 	}
 }

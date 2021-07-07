@@ -363,8 +363,8 @@ public class TripDetailsActivity extends UpButtonActivity implements SearchView.
 		countries.setAdapter(adapter);
 		adapter.sort(this::compareCountryStartDates);
 		for (Country country : countryList) {
-			updateDestinationAndOrigin(country, true);
-			updateDestinationAndOrigin(country, false);
+			updateDestinationOrOrigin(country, true);
+			updateDestinationOrOrigin(country, false);
 		}
 
 		AdapterView.OnItemClickListener mListClickedHandler = (parent, v, position, id) -> {
@@ -463,23 +463,39 @@ public class TripDetailsActivity extends UpButtonActivity implements SearchView.
 		return duration;
 	}
 
-	private void updateDestinationAndOrigin(Country country, boolean updateOrigin) {
+	private void updateDestinationOrOrigin(Country country, boolean updateOrigin) {
+		if (FirebaseAuth.getInstance().getCurrentUser() != null) {
+			List<City> cityList = new ArrayList<>();
+			OnlineDatabaseUtils.getAllFromParentId(Const.CITIES, Const.COUNTRY_ID, country.getId(), task -> addToList(task, () -> addCitiesToList(task, cityList, country, updateOrigin)));
+		} else {
+			loopThroughCities(country, updateOrigin);
+		}
+	}
+
+	private void initializeLocalDate(boolean updateOrigin) {
 		if (updateOrigin) {
 			localDate = LocalDate.parse("01.01.2200", DateTimeFormatter.ofPattern("dd.MM.yyyy"));
 		} else {
 			localDate = LocalDate.parse("01.01.1800", DateTimeFormatter.ofPattern("dd.MM.yyyy"));
 		}
-		if (FirebaseAuth.getInstance().getCurrentUser() != null) {
-			List<City> cityList = new ArrayList<>();
-			OnlineDatabaseUtils.getAllFromParentId(Const.CITIES, Const.COUNTRY_ID, country.getId(), task -> addToList(task, () -> updateDestinationAndOriginAfterListWasLoaded(cityList, country, updateOrigin)));
-		} else {
-			for (City city : cityDao.getAllFromCountry(country.getId())) {
-				updateOriginOrDestination(country, city, updateOrigin);
-			}
+	}
+
+	private void loopThroughCities(Country country, boolean updateOrigin) {
+		initializeLocalDate(updateOrigin);
+		for (City city : cityDao.getAllFromCountry(country.getId())) {
+			updateOriginOrDestination(country, city, updateOrigin);
 		}
 	}
 
-	private void updateDestinationAndOriginAfterListWasLoaded(List<City> cityList, Country country, boolean updateOrigin) {
+	private void addCitiesToList(Task<QuerySnapshot> task, List<City> cityList, Country country, boolean updateOrigin) {
+		initializeLocalDate(updateOrigin);
+		for(QueryDocumentSnapshot document : Objects.requireNonNull(task.getResult())) {
+			cityList.add(document.toObject(City.class));
+		}
+		updateDestinationAndOriginIfLoggedIn(cityList, country, updateOrigin);
+	}
+
+	private void updateDestinationAndOriginIfLoggedIn(List<City> cityList, Country country, boolean updateOrigin) {
 		for (City city : cityList) {
 			updateOriginOrDestination(country, city, updateOrigin);
 		}

@@ -88,7 +88,7 @@ public class TripAdapter extends ArrayAdapter<Trip> {
 			notifyDataSetChanged();
 			deleteCountries(trip);
 			OnlineDatabaseUtils.delete(Const.TRIPS, trip.getId());
-			SwiftTravelDatabase.getInstance(mainActivity.getApplicationContext()).getTripDao().delete(trip.getId());
+			SwiftTravelDatabase.getInstance(mainActivity.getApplicationContext()).getTripDao().deleteById(trip.getId());
 		});
 	}
 

@@ -23,8 +23,8 @@
         android:layout_marginTop="@dimen/top_element_margin_top"
         android:layout_marginEnd="@dimen/top_element_margin_end"
         android:text="@string/register"
-        android:textSize="@dimen/title_text_size"
         android:textAppearance="@style/TextAppearance.AppCompat.Display1"
+        android:textSize="@dimen/title_text_size"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />

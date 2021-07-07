@@ -22,6 +22,8 @@ import com.google.android.gms.tasks.Task;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -102,7 +104,7 @@ public class CountryDetailsActivity extends UpButtonActivity implements SearchVi
 
 		long id = getIntent().getLongExtra(Const.COUNTRY, -1);
 		if (id != -1) {
-			checkIfSavingOnline(id);
+			checkIfLoggedIn(id);
 		}
 	}
 
@@ -176,30 +178,107 @@ public class CountryDetailsActivity extends UpButtonActivity implements SearchVi
 		adapter.getFilter().filter(searchText);
 	}
 
-	private void checkIfSavingOnline(long id) {
+	private void checkIfLoggedIn(long id) {
 		if (FirebaseAuth.getInstance().getCurrentUser() != null) {
-			OnlineDatabaseUtils.getById(Const.COUNTRIES, id, this::checkIfSelectedTaskWasSuccessful);
+			OnlineDatabaseUtils.getById(Const.COUNTRIES, id, task -> setObject(task, () -> initializeSelected(task, id)));
 		} else {
 			selected = countryDao.getById(id);
 			onStartAfterSelectedInitialized();
 		}
 	}
 
-	private void checkIfSelectedTaskWasSuccessful(Task<DocumentSnapshot> selectedTask) {
-		if (selectedTask.isSuccessful()) {
-			selected = Objects.requireNonNull(selectedTask.getResult()).toObject(Country.class);
-			onStartAfterSelectedInitialized();
+	private void initializeSelected(Task<DocumentSnapshot> selectedTask, long id) {
+		if (Objects.requireNonNull(selectedTask.getResult()).toObject(Country.class) == null) {
+			OnlineDatabaseUtils.add(Const.COUNTRIES, id, countryDao.getById(id));
+			OnlineDatabaseUtils.getById(Const.COUNTRIES, id, task -> setObject(task, () -> setSelected(task)));
+		} else {
+			setSelected(selectedTask);
 		}
 	}
 
+	private void setSelected(Task<DocumentSnapshot> selectedTask) {
+		selected = Objects.requireNonNull(selectedTask.getResult()).toObject(Country.class);
+		onStartAfterSelectedInitialized();
+	}
+
 	private void onStartAfterSelectedInitialized() {
-		cityList = new ArrayList<>();
+		cityList = cityDao.getAllFromCountry(selected.getId());
 		if (FirebaseAuth.getInstance().getCurrentUser() != null) {
-			OnlineDatabaseUtils.getAllFromParentId(Const.CITIES, Const.COUNTRY_ID, selected.getId(), task -> addToList(task, cityList, City.class));
+			OnlineDatabaseUtils.getAllFromParentId(Const.CITIES, Const.COUNTRY_ID, selected.getId(), task -> addToList(task, () -> synchronizeCities(task)));
 		} else {
-			cityList = cityDao.getAllFromCountry(selected.getId());
 			getProgressBar().setVisibility(View.GONE);
+			onStartAfterListInitialized();
 		}
+	}
+
+	private void synchronizeCities(Task<QuerySnapshot> task) {
+		List<City> localNonExistingCities = new ArrayList<>();
+		for (QueryDocumentSnapshot document : Objects.requireNonNull(task.getResult())) {
+			City onlineCity = document.toObject(City.class);
+			addToList(onlineCity);
+			checkIfSavedLocal(localNonExistingCities, onlineCity);
+		}
+		addLocal(localNonExistingCities);
+		onStartAfterListInitialized();
+	}
+
+	private void addToList(City onlineCity) {
+		if (cityList.size() > 0) {
+			addIfNotExists(onlineCity);
+		} else {
+			cityList.add(onlineCity);
+		}
+	}
+
+	private void addIfNotExists(City onlineCity) {
+		if (!checkIfExistsInList(onlineCity)) {
+			cityList.add(onlineCity);
+		}
+	}
+
+	private boolean checkIfExistsInList(City onlineCity) {
+		boolean existsInList = false;
+		for (City listCity : cityList) {
+			if (listCity.getId() == onlineCity.getId()) {
+				existsInList = true;
+				break;
+			}
+		}
+		return existsInList;
+	}
+
+	private void ifExistsLocal(List<City> localNonExistingCities, City onlineCity) {
+		if (checkIfExistsLocal(onlineCity)) {
+			localNonExistingCities.add(onlineCity);
+		}
+	}
+
+	private boolean checkIfExistsLocal(City onlineCity) {
+		boolean existsInLocalDatabase = false;
+		for (City localCity : cityDao.getAllFromCountry(selected.getId())) {
+			existsInLocalDatabase = localCity.getId() != onlineCity.getId();
+		}
+		return existsInLocalDatabase;
+	}
+
+	private void checkIfSavedLocal(List<City> localNonExistingCities, City onlineCity) {
+		if (cityDao.getAllFromCountry(selected.getId()).size() > 0) {
+			ifExistsLocal(localNonExistingCities, onlineCity);
+		} else {
+			localNonExistingCities.add(onlineCity);
+		}
+	}
+
+	private void addLocal(List<City> localNonExistingCities) {
+		for (City localNonExistingCity : localNonExistingCities) {
+			OnlineDatabaseUtils.delete(Const.CITIES, localNonExistingCity.getId());
+			localNonExistingCity.setId(0);
+			long newId = cityDao.insert(localNonExistingCity);
+			OnlineDatabaseUtils.add(Const.CITIES, newId, cityDao.getById(newId));
+		}
+	}
+
+	private void onStartAfterListInitialized() {
 		adapter = new CityAdapter(this, cityList);
 
 		createCityFromIntent();
@@ -302,8 +381,6 @@ public class CountryDetailsActivity extends UpButtonActivity implements SearchVi
 			day.setId(dayID);
 
 			OnlineDatabaseUtils.add(Const.DAYS, day.getId(), day);
-
-			city.addDay(day);
 		}
 	}
 
@@ -352,7 +429,6 @@ public class CountryDetailsActivity extends UpButtonActivity implements SearchVi
 			selected.setDescription(editDescription.getText().toString());
 		}
 	}
-
 
 	public void refreshContent() {
 		LayoutUtils.setTitleText(titleText, selected.getName());

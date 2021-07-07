@@ -27,6 +27,8 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.textfield.TextInputLayout;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -76,6 +78,8 @@ public class TripDetailsActivity extends UpButtonActivity implements SearchView.
 
 	private boolean nameValidated = false;
 
+	private LocalDate localDate;
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -109,7 +113,7 @@ public class TripDetailsActivity extends UpButtonActivity implements SearchView.
 
 		long id = getIntent().getLongExtra(Const.TRIP, -1);
 		if (id != -1) {
-			checkIfSavingOnline(id);
+			checkIfLoggedIn(id);
 		}
 	}
 
@@ -195,30 +199,107 @@ public class TripDetailsActivity extends UpButtonActivity implements SearchView.
 		adapter.getFilter().filter(searchText);
 	}
 
-	private void checkIfSavingOnline(long id) {
+	private void checkIfLoggedIn(long id) {
 		if (FirebaseAuth.getInstance().getCurrentUser() != null) {
-			OnlineDatabaseUtils.getById(Const.TRIPS, id, this::checkIfSelectedTaskWasSuccessful);
+			OnlineDatabaseUtils.getById(Const.TRIPS, id, task -> setObject(task, () -> initializeSelected(task, id)));
 		} else {
 			selected = tripDao.getById(id);
 			onStartAfterSelectedInitialized();
 		}
 	}
 
-	private void checkIfSelectedTaskWasSuccessful(Task<DocumentSnapshot> selectedTask) {
-		if (selectedTask.isSuccessful()) {
-			selected = Objects.requireNonNull(selectedTask.getResult()).toObject(Trip.class);
-			onStartAfterSelectedInitialized();
+	private void initializeSelected(Task<DocumentSnapshot> selectedTask, long id) {
+		if (Objects.requireNonNull(selectedTask.getResult()).toObject(Trip.class) == null) {
+			OnlineDatabaseUtils.add(Const.TRIPS, id, tripDao.getById(id));
+			OnlineDatabaseUtils.getById(Const.TRIPS, id, task -> setObject(task, () -> setSelected(task)));
+		} else {
+			setSelected(selectedTask);
 		}
 	}
 
+	private void setSelected(Task<DocumentSnapshot> selectedTask) {
+		selected = Objects.requireNonNull(selectedTask.getResult()).toObject(Trip.class);
+		onStartAfterSelectedInitialized();
+	}
+
 	private void onStartAfterSelectedInitialized() {
-		countryList = new ArrayList<>();
+		countryList = countryDao.getAllFromTrip(selected.getId());
 		if (FirebaseAuth.getInstance().getCurrentUser() != null) {
-			OnlineDatabaseUtils.getAllFromParentId(Const.COUNTRIES, Const.TRIP_ID, selected.getId(), listTask -> addToList(listTask, countryList, Country.class));
+			OnlineDatabaseUtils.getAllFromParentId(Const.COUNTRIES, Const.TRIP_ID, selected.getId(), task -> addToList(task, () -> synchronizeCountries(task)));
 		} else {
-			countryList = countryDao.getAllFromTrip(selected.getId());
 			getProgressBar().setVisibility(View.GONE);
+			onStartAfterListInitialized();
 		}
+	}
+
+	private void synchronizeCountries(Task<QuerySnapshot> task) {
+		List<Country> localNonExistingCountries = new ArrayList<>();
+		for (QueryDocumentSnapshot document : Objects.requireNonNull(task.getResult())) {
+			Country onlineCountry = document.toObject(Country.class);
+			addToList(onlineCountry);
+			checkIfSavedLocal(localNonExistingCountries, onlineCountry);
+		}
+		addLocal(localNonExistingCountries);
+		onStartAfterListInitialized();
+	}
+
+	private void addToList(Country onlineCountry) {
+		if (countryList.size() > 0) {
+			addIfNotExists(onlineCountry);
+		} else {
+			countryList.add(onlineCountry);
+		}
+	}
+
+	private void addIfNotExists(Country onlineCountry) {
+		if (!checkIfExistsInList(onlineCountry)) {
+			countryList.add(onlineCountry);
+		}
+	}
+
+	private boolean checkIfExistsInList(Country onlineCountry) {
+		boolean existsInList = false;
+		for (Country listCountry : countryList) {
+			if (listCountry.getId() == onlineCountry.getId()) {
+				existsInList = true;
+				break;
+			}
+		}
+		return existsInList;
+	}
+
+	private void ifExistsLocal(List<Country> localNonExistingCountries, Country onlineCountry) {
+		if (checkIfExistsLocal(onlineCountry)) {
+			localNonExistingCountries.add(onlineCountry);
+		}
+	}
+
+	private boolean checkIfExistsLocal(Country onlineCountry) {
+		boolean existsInLocalDatabase = false;
+		for (Country localCountry : countryDao.getAllFromTrip(selected.getId())) {
+			existsInLocalDatabase = localCountry.getId() != onlineCountry.getId();
+		}
+		return existsInLocalDatabase;
+	}
+
+	private void checkIfSavedLocal(List<Country> localNonExistingCountries, Country onlineCountry) {
+		if (countryDao.getAllFromTrip(selected.getId()).size() > 0) {
+			ifExistsLocal(localNonExistingCountries, onlineCountry);
+		} else {
+			localNonExistingCountries.add(onlineCountry);
+		}
+	}
+
+	private void addLocal(List<Country> localNonExistingCountries) {
+		for (Country localNonExistingCountry : localNonExistingCountries) {
+			OnlineDatabaseUtils.delete(Const.COUNTRIES, localNonExistingCountry.getId());
+			localNonExistingCountry.setId(0);
+			long newId = countryDao.insert(localNonExistingCountry);
+			OnlineDatabaseUtils.add(Const.COUNTRIES, newId, countryDao.getById(newId));
+		}
+	}
+
+	private void onStartAfterListInitialized() {
 		adapter = new CountryAdapter(this, countryList);
 
 		if (adapter.getCount() > 0) {
@@ -383,16 +464,20 @@ public class TripDetailsActivity extends UpButtonActivity implements SearchView.
 	}
 
 	private void updateDestinationAndOrigin(Country country, LocalDate localDate, boolean updateOrigin) {
+		this.localDate = localDate;
 		if (FirebaseAuth.getInstance().getCurrentUser() != null) {
 			List<City> cityList = new ArrayList<>();
-			OnlineDatabaseUtils.getAllFromParentId(Const.CITIES, Const.COUNTRY_ID, country.getId(), task -> addToList(task, cityList, City.class));
-			for (City city : cityList) {
-				localDate = updateOriginOrDestination(country, city, localDate, updateOrigin);
-			}
+			OnlineDatabaseUtils.getAllFromParentId(Const.CITIES, Const.COUNTRY_ID, country.getId(), task -> addToList(task, () -> updateDestinationAndOriginAfterListWasLoaded(cityList, country, this.localDate, updateOrigin)));
 		} else {
 			for (City city : cityDao.getAllFromCountry(country.getId())) {
 				localDate = updateOriginOrDestination(country, city, localDate, updateOrigin);
 			}
+		}
+	}
+
+	private void updateDestinationAndOriginAfterListWasLoaded(List<City> cityList, Country country, LocalDate localDate, boolean updateOrigin) {
+		for (City city : cityList) {
+			localDate = updateOriginOrDestination(country, city, localDate, updateOrigin);
 		}
 	}
 

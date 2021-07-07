@@ -13,8 +13,11 @@ import android.widget.SearchView;
 
 import androidx.annotation.NonNull;
 
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -51,6 +54,8 @@ public class MainActivity extends BaseActivity implements SearchView.OnQueryText
 
 	private List<Trip> tripList;
 
+	private LocalDate localDate;
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -70,24 +75,13 @@ public class MainActivity extends BaseActivity implements SearchView.OnQueryText
 	protected void onStart() {
 		super.onStart();
 
-		tripList = new ArrayList<>();
+		tripList = tripDao.getAll();
 		if (FirebaseAuth.getInstance().getCurrentUser() != null) {
-			OnlineDatabaseUtils.getAllTripsFromUser(Const.TRIPS, Const.USER_ID, Objects.requireNonNull(FirebaseAuth.getInstance().getCurrentUser()).getUid(), task -> addToList(task, tripList, Trip.class));
+			OnlineDatabaseUtils.getAllTripsFromUser(Const.TRIPS, Const.USER_ID, Objects.requireNonNull(FirebaseAuth.getInstance().getCurrentUser()).getUid(), task -> addToList(task, () -> synchronizeTrips(task)));
 		} else {
-			tripList = tripDao.getAll();
 			getProgressBar().setVisibility(View.GONE);
+			onStartAfterListInitialized();
 		}
-		adapter = new TripAdapter(this, tripList);
-
-		if (FirebaseAuth.getInstance().getCurrentUser() != null && Objects.requireNonNull(FirebaseAuth.getInstance().getCurrentUser()).getPhotoUrl() != null) {
-			LayoutUtils.setOnlineImageURIOnImageView(getApplicationContext(), loginButton, FirebaseAuth.getInstance().getCurrentUser().getPhotoUrl(), true);
-		}
-
-		createTripFromIntent();
-		addTripsToClickableList();
-
-		onFloatingActionButtonClick();
-		onLoginButtonClick();
 	}
 
 	@Override
@@ -160,6 +154,89 @@ public class MainActivity extends BaseActivity implements SearchView.OnQueryText
 		adapter.getFilter().filter(searchText);
 	}
 
+	private void synchronizeTrips(Task<QuerySnapshot> task) {
+		List<Trip> localNonExistingTrips = new ArrayList<>();
+		for (QueryDocumentSnapshot document : Objects.requireNonNull(task.getResult())) {
+			Trip onlineTrip = document.toObject(Trip.class);
+			addToList(onlineTrip);
+			checkIfSavedLocal(localNonExistingTrips, onlineTrip);
+		}
+		addLocal(localNonExistingTrips);
+		onStartAfterListInitialized();
+	}
+
+	private void addToList(Trip onlineTrip) {
+		if (tripList.size() > 0) {
+			addIfNotExists(onlineTrip);
+		} else {
+			tripList.add(onlineTrip);
+		}
+	}
+
+	private void addIfNotExists(Trip onlineTrip) {
+		if (!checkIfExistsInList(onlineTrip)) {
+			tripList.add(onlineTrip);
+		}
+	}
+
+	private boolean checkIfExistsInList(Trip onlineTrip) {
+		boolean existsInList = false;
+		for (Trip listTrip : tripList) {
+			if (listTrip.getId() == onlineTrip.getId()) {
+				existsInList = true;
+				break;
+			}
+		}
+		return existsInList;
+	}
+
+	private void ifExistsLocal(List<Trip> localNonExistingTrips, Trip onlineTrip) {
+		if (checkIfExistsLocal(onlineTrip)) {
+			localNonExistingTrips.add(onlineTrip);
+		}
+	}
+
+	private boolean checkIfExistsLocal(Trip onlineTrip) {
+		boolean existsInLocalDatabase = false;
+		for (Trip localTrip : tripDao.getAll()) {
+			existsInLocalDatabase = localTrip.getId() != onlineTrip.getId();
+		}
+		return existsInLocalDatabase;
+	}
+
+	private void checkIfSavedLocal(List<Trip> localNonExistingTrips, Trip onlineTrip) {
+		if (tripDao.getAll().size() > 0) {
+			ifExistsLocal(localNonExistingTrips, onlineTrip);
+		} else {
+			localNonExistingTrips.add(onlineTrip);
+		}
+	}
+
+	private void addLocal(List<Trip> localNonExistingTrips) {
+		for (Trip localNonExistingTrip : localNonExistingTrips) {
+			OnlineDatabaseUtils.delete(Const.TRIPS, localNonExistingTrip.getId());
+			localNonExistingTrip.setId(0);
+			long newId = tripDao.insert(localNonExistingTrip);
+			localNonExistingTrip.setId(newId);
+
+			OnlineDatabaseUtils.add(Const.TRIPS, newId, tripDao.getById(newId));
+		}
+	}
+
+	private void onStartAfterListInitialized() {
+		adapter = new TripAdapter(this, tripList);
+
+		if (FirebaseAuth.getInstance().getCurrentUser() != null && Objects.requireNonNull(FirebaseAuth.getInstance().getCurrentUser()).getPhotoUrl() != null) {
+			LayoutUtils.setOnlineImageURIOnImageView(getApplicationContext(), loginButton, FirebaseAuth.getInstance().getCurrentUser().getPhotoUrl(), true);
+		}
+
+		createTripFromIntent();
+		addTripsToClickableList();
+
+		onFloatingActionButtonClick();
+		onLoginButtonClick();
+	}
+
 	private void createTripFromIntent() {
 		Intent intent = getIntent();
 		Trip trip = new Trip();
@@ -190,70 +267,77 @@ public class MainActivity extends BaseActivity implements SearchView.OnQueryText
 		return 0;
 	}
 
-	private void updateDestinationAndOrigin(Trip trip, LocalDate localDate, boolean updateOrigin) {
+	private void updateDestinationAndOrigin(Trip trip, boolean updateOrigin) {
+		if (updateOrigin) {
+			localDate = LocalDate.parse("01.01.2200", DateTimeFormatter.ofPattern("dd.MM.yyyy"));
+		} else {
+			localDate = LocalDate.parse("01.01.1800", DateTimeFormatter.ofPattern("dd.MM.yyyy"));
+		}
 		if (FirebaseAuth.getInstance().getCurrentUser() != null) {
 			List<Country> countryList = new ArrayList<>();
-			OnlineDatabaseUtils.getAllFromParentId(Const.COUNTRIES, Const.TRIP_ID, trip.getId(), task -> addToList(task, countryList, Country.class));
-			for (Country country : countryList) {
-				localDate = loopThroughCities(trip, country, localDate, updateOrigin);
-			}
+			OnlineDatabaseUtils.getAllFromParentId(Const.COUNTRIES, Const.TRIP_ID, trip.getId(), task -> addToList(task, () -> updateDestinationAndOriginIfLoggedIn(countryList, trip, updateOrigin)));
 		} else {
 			for (Country country : countryDao.getAllFromTrip(trip.getId())) {
-				localDate = loopThroughCities(trip, country, localDate, updateOrigin);
+				loopThroughCities(trip, country, updateOrigin);
 			}
 		}
 	}
 
-	private LocalDate loopThroughCities(Trip trip, Country country, LocalDate localDate, boolean updateOrigin) {
+	private void updateDestinationAndOriginIfLoggedIn(List<Country> countryList, Trip trip, boolean updateOrigin) {
+		for (Country country : countryList) {
+			loopThroughCities(trip, country, updateOrigin);
+		}
+	}
+
+	private void loopThroughCities(Trip trip, Country country, boolean updateOrigin) {
 		if (FirebaseAuth.getInstance().getCurrentUser() != null) {
 			List<City> cityList = new ArrayList<>();
-			OnlineDatabaseUtils.getAllFromParentId(Const.CITIES, Const.COUNTRY_ID, country.getId(), task -> addToList(task, cityList, City.class));
-			for (City city : cityList) {
-				localDate = updateOriginOrDestination(trip, city, localDate, updateOrigin);
-			}
+			OnlineDatabaseUtils.getAllFromParentId(Const.CITIES, Const.COUNTRY_ID, country.getId(), task -> addToList(task, () -> loopThroughCitiesIfLoggedIn(cityList, trip, updateOrigin)));
 		} else {
 			for (City city : cityDao.getAllFromCountry(country.getId())) {
-				localDate = updateOriginOrDestination(trip, city, localDate, updateOrigin);
+				updateOriginOrDestination(trip, city, updateOrigin);
 			}
 		}
-		return localDate;
 	}
 
-	private LocalDate updateOriginOrDestination(Trip trip, City city, LocalDate localDate, boolean updateOrigin) {
-		if (updateOrigin) {
-			localDate = updateOrigin(trip, city, localDate);
-		} else {
-			localDate = updateDestination(trip, city, localDate);
+	private void loopThroughCitiesIfLoggedIn(List<City> cityList, Trip trip, boolean updateOrigin) {
+		for (City city : cityList) {
+			updateOriginOrDestination(trip, city, updateOrigin);
 		}
-		return localDate;
 	}
 
-	private LocalDate updateOrigin(Trip trip, City city, LocalDate localDate) {
+	private void updateOriginOrDestination(Trip trip, City city, boolean updateOrigin) {
+		if (updateOrigin) {
+			updateOrigin(trip, city);
+		} else {
+			updateDestination(trip, city);
+		}
+	}
+
+	private void updateOrigin(Trip trip, City city) {
 		if (localDate.compareTo(LocalDate.parse(city.getStartDate(), DateTimeFormatter.ofPattern("dd.MM.yyyy"))) > 0) {
 			localDate = LocalDate.parse(city.getStartDate(), DateTimeFormatter.ofPattern("dd.MM.yyyy"));
 			trip.setOrigin(city.getName());
 			tripDao.update(trip);
 			OnlineDatabaseUtils.add(Const.TRIPS, trip.getId(), trip);
 		}
-		return localDate;
 	}
 
-	private LocalDate updateDestination(Trip trip, City city, LocalDate localDate) {
+	private void updateDestination(Trip trip, City city) {
 		if (localDate.compareTo(LocalDate.parse(city.getStartDate(), DateTimeFormatter.ofPattern("dd.MM.yyyy"))) < 0) {
 			localDate = LocalDate.parse(city.getStartDate(), DateTimeFormatter.ofPattern("dd.MM.yyyy"));
 			trip.setDestination(city.getName());
 			tripDao.update(trip);
 			OnlineDatabaseUtils.add(Const.TRIPS, trip.getId(), trip);
 		}
-		return localDate;
 	}
 
 	private void addTripsToClickableList() {
 		trips.setAdapter(adapter);
 		adapter.sort(this::compareTripStartDates);
 		for (Trip trip : tripList) {
-			updateDestinationAndOrigin(trip, LocalDate.parse("01.01.2200", DateTimeFormatter.ofPattern("dd.MM.yyyy")), true);
-			updateDestinationAndOrigin(trip, LocalDate.parse("01.01.1800", DateTimeFormatter.ofPattern("dd.MM.yyyy")), false);
+			updateDestinationAndOrigin(trip, true);
+			updateDestinationAndOrigin(trip, false);
 		}
 
 		AdapterView.OnItemClickListener onItemClickListener = (parent, v, position, id) -> {

@@ -20,8 +20,8 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/top_element_margin_top"
         android:text="@string/user_title"
-        android:textSize="@dimen/title_text_size"
         android:textAppearance="@style/TextAppearance.AppCompat.Display2"
+        android:textSize="@dimen/title_text_size"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />

@@ -10,9 +10,9 @@
         android:layout_height="@dimen/list_image_size"
         android:layout_marginStart="@dimen/list_image_margin_start"
         android:layout_marginTop="@dimen/list_image_margin_top"
-        android:src="@drawable/placeholder_flag"
         android:contentDescription="@string/place_holder_image"
         android:scaleType="fitCenter"
+        android:src="@drawable/placeholder_flag"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 

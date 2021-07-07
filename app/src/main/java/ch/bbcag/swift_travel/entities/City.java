@@ -3,18 +3,12 @@ package ch.bbcag.swift_travel.entities;
 import androidx.annotation.NonNull;
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
-import androidx.room.Ignore;
 import androidx.room.PrimaryKey;
-
-import java.util.ArrayList;
-import java.util.List;
 
 import ch.bbcag.swift_travel.utils.Const;
 
 @Entity(tableName = Const.CITIES)
 public class City {
-	@Ignore
-	List<Day> days = new ArrayList<>();
 	@PrimaryKey(autoGenerate = true)
 	@ColumnInfo(name = Const.ID)
 	private long id;
@@ -114,17 +108,5 @@ public class City {
 
 	public void setTransport(String transport) {
 		this.transport = transport;
-	}
-
-	public List<Day> getDays() {
-		return days;
-	}
-
-	public void setDays(List<Day> days) {
-		this.days = days;
-	}
-
-	public void addDay(Day day) {
-		this.days.add(day);
 	}
 }

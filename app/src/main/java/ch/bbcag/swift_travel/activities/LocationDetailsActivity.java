@@ -25,6 +25,8 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.textfield.TextInputLayout;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -106,7 +108,7 @@ public class LocationDetailsActivity extends UpButtonActivity implements Adapter
 
 		long id = getIntent().getLongExtra(Const.LOCATION, -1);
 		if (id != -1) {
-			checkIfSavingOnline(id);
+			checkIfLoggedIn(id);
 		}
 	}
 
@@ -174,30 +176,107 @@ public class LocationDetailsActivity extends UpButtonActivity implements Adapter
 		Toast.makeText(this, getString(R.string.category_error), Toast.LENGTH_SHORT).show();
 	}
 
-	private void checkIfSavingOnline(long id) {
+	private void checkIfLoggedIn(long id) {
 		if (FirebaseAuth.getInstance().getCurrentUser() != null) {
-			OnlineDatabaseUtils.getById(Const.LOCATIONS, id, this::checkIfSelectedTaskWasSuccessful);
+			OnlineDatabaseUtils.getById(Const.LOCATIONS, id, task -> setObject(task, () -> initializeSelected(task, id)));
 		} else {
 			selected = locationDao.getById(id);
 			onStartAfterSelectedInitialized();
 		}
 	}
 
-	private void checkIfSelectedTaskWasSuccessful(Task<DocumentSnapshot> selectedTask) {
-		if (selectedTask.isSuccessful()) {
-			selected = Objects.requireNonNull(selectedTask.getResult()).toObject(Location.class);
-			onStartAfterSelectedInitialized();
+	private void initializeSelected(Task<DocumentSnapshot> selectedTask, long id) {
+		if (Objects.requireNonNull(selectedTask.getResult()).toObject(Location.class) == null) {
+			OnlineDatabaseUtils.add(Const.LOCATIONS, id, locationDao.getById(id));
+			OnlineDatabaseUtils.getById(Const.LOCATIONS, id, task -> setObject(task, () -> setSelected(task)));
+		} else {
+			setSelected(selectedTask);
 		}
 	}
 
+	private void setSelected(Task<DocumentSnapshot> selectedTask) {
+		selected = Objects.requireNonNull(selectedTask.getResult()).toObject(Location.class);
+		onStartAfterSelectedInitialized();
+	}
+
 	private void onStartAfterSelectedInitialized() {
-		imageList = new ArrayList<>();
+		imageList = imageDao.getAllFromLocation(selected.getId());
 		if (FirebaseAuth.getInstance().getCurrentUser() != null) {
-			OnlineDatabaseUtils.getAllFromParentId(Const.IMAGES, Const.LOCATION_ID, selected.getId(), task -> addToList(task, imageList, Image.class));
+			OnlineDatabaseUtils.getAllFromParentId(Const.IMAGES, Const.LOCATION_ID, selected.getId(), task -> addToList(task, () -> synchronizeImages(task)));
 		} else {
-			imageList = imageDao.getAllFromLocation(selected.getId());
 			getProgressBar().setVisibility(View.GONE);
+			onStartAfterListInitialized();
 		}
+	}
+
+	private void synchronizeImages(Task<QuerySnapshot> task) {
+		List<Image> localNonExistingImages = new ArrayList<>();
+		for (QueryDocumentSnapshot document : Objects.requireNonNull(task.getResult())) {
+			Image onlineImage = document.toObject(Image.class);
+			addToList(onlineImage);
+			checkIfSavedLocal(localNonExistingImages, onlineImage);
+		}
+		addLocal(localNonExistingImages);
+		onStartAfterListInitialized();
+	}
+
+	private void addToList(Image onlineImage) {
+		if (imageList.size() > 0) {
+			addIfNotExists(onlineImage);
+		} else {
+			imageList.add(onlineImage);
+		}
+	}
+
+	private void addIfNotExists(Image onlineImage) {
+		if (!checkIfExistsInList(onlineImage)) {
+			imageList.add(onlineImage);
+		}
+	}
+
+	private boolean checkIfExistsInList(Image onlineImage) {
+		boolean existsInList = false;
+		for (Image listImage : imageList) {
+			if (listImage.getId() == onlineImage.getId()) {
+				existsInList = true;
+				break;
+			}
+		}
+		return existsInList;
+	}
+
+	private void ifExistsLocal(List<Image> localNonExistingImages, Image onlineImage) {
+		if (checkIfExistsLocal(onlineImage)) {
+			localNonExistingImages.add(onlineImage);
+		}
+	}
+
+	private boolean checkIfExistsLocal(Image onlineImage) {
+		boolean existsInLocalDatabase = false;
+		for (Image localImage : imageDao.getAllFromLocation(selected.getId())) {
+			existsInLocalDatabase = localImage.getId() != onlineImage.getId();
+		}
+		return existsInLocalDatabase;
+	}
+
+	private void checkIfSavedLocal(List<Image> localNonExistingImages, Image onlineImage) {
+		if (imageDao.getAllFromLocation(selected.getId()).size() > 0) {
+			ifExistsLocal(localNonExistingImages, onlineImage);
+		} else {
+			localNonExistingImages.add(onlineImage);
+		}
+	}
+
+	private void addLocal(List<Image> localNonExistingImages) {
+		for (Image localNonExistingImage : localNonExistingImages) {
+			OnlineDatabaseUtils.delete(Const.LOCATIONS, localNonExistingImage.getId());
+			localNonExistingImage.setId(0);
+			long newId = imageDao.insert(localNonExistingImage);
+			OnlineDatabaseUtils.add(Const.LOCATIONS, newId, imageDao.getById(newId));
+		}
+	}
+
+	private void onStartAfterListInitialized() {
 		imageAdapter = new ImageAdapter(this, imageList);
 
 		imageGrid.setAdapter(imageAdapter);

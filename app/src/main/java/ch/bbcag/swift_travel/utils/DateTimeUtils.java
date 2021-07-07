@@ -9,7 +9,7 @@ public class DateTimeUtils {
 	public static long parseDateToMilliseconds(String dateString) {
 		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy");
 		// Subtract a day so you can be at two locations in one day
-		return LocalDate.parse(dateString, formatter).atStartOfDay().atZone(ZoneId.systemDefault()).toInstant().toEpochMilli() - (24 * 60 * 60 * 1000);
+		return LocalDate.parse(dateString, formatter).atStartOfDay().atZone(ZoneId.systemDefault()).toInstant().toEpochMilli();
 	}
 
 	public static long parseTimeToMilliseconds(String timeString) {
@@ -19,7 +19,7 @@ public class DateTimeUtils {
 
 	public static long getDaysCountFromTimeSpan(long startDate, long endDate) {
 		// Add a day because otherwise the last day would be missing
-		return ((endDate + 86400000) - startDate) / (1000 * 60 * 60 * 24);
+		return ((endDate + (1000 * 60 * 60 * 24)) - startDate) / (1000 * 60 * 60 * 24);
 	}
 
 	public static String addZeroToHour(int hour) {

@@ -27,6 +27,8 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.textfield.TextInputLayout;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -103,7 +105,7 @@ public class DayDetailsActivity extends UpButtonActivity implements SearchView.O
 
 		long id = getIntent().getLongExtra(Const.DAY, -1);
 		if (id != -1) {
-			checkIfSavingOnline(id);
+			checkIfLoggedIn(id);
 		}
 	}
 
@@ -189,30 +191,107 @@ public class DayDetailsActivity extends UpButtonActivity implements SearchView.O
 		adapter.getFilter().filter(searchText);
 	}
 
-	private void checkIfSavingOnline(long id) {
+	private void checkIfLoggedIn(long id) {
 		if (FirebaseAuth.getInstance().getCurrentUser() != null) {
-			OnlineDatabaseUtils.getById(Const.DAYS, id, this::checkIfSelectedTaskWasSuccessful);
+			OnlineDatabaseUtils.getById(Const.DAYS, id, task -> setObject(task, () -> initializeSelected(task, id)));
 		} else {
 			selected = dayDao.getById(id);
 			onStartAfterSelectedInitialized();
 		}
 	}
 
-	private void checkIfSelectedTaskWasSuccessful(Task<DocumentSnapshot> selectedTask) {
-		if (selectedTask.isSuccessful()) {
-			selected = Objects.requireNonNull(selectedTask.getResult()).toObject(Day.class);
-			onStartAfterSelectedInitialized();
+	private void initializeSelected(Task<DocumentSnapshot> selectedTask, long id) {
+		if (Objects.requireNonNull(selectedTask.getResult()).toObject(Day.class) == null) {
+			OnlineDatabaseUtils.add(Const.DAYS, id, dayDao.getById(id));
+			OnlineDatabaseUtils.getById(Const.DAYS, id, task -> setObject(task, () -> setSelected(task)));
+		} else {
+			setSelected(selectedTask);
 		}
 	}
 
+	private void setSelected(Task<DocumentSnapshot> selectedTask) {
+		selected = Objects.requireNonNull(selectedTask.getResult()).toObject(Day.class);
+		onStartAfterSelectedInitialized();
+	}
+
 	private void onStartAfterSelectedInitialized() {
-		locationList = new ArrayList<>();
+		locationList = locationDao.getAllFromDay(selected.getId());
 		if (FirebaseAuth.getInstance().getCurrentUser() != null) {
-			OnlineDatabaseUtils.getAllFromParentId(Const.LOCATIONS, Const.DAY_ID, selected.getId(), task -> addToList(task, locationList, Location.class));
+			OnlineDatabaseUtils.getAllFromParentId(Const.LOCATIONS, Const.DAY_ID, selected.getId(), task -> addToList(task, () -> synchronizeLocations(task)));
 		} else {
-			locationList = locationDao.getAllFromDay(selected.getId());
 			getProgressBar().setVisibility(View.GONE);
+			onStartAfterListInitialized();
 		}
+	}
+
+	private void synchronizeLocations(Task<QuerySnapshot> task) {
+		List<Location> localNonExistingLocations = new ArrayList<>();
+		for (QueryDocumentSnapshot document : Objects.requireNonNull(task.getResult())) {
+			Location onlineLocation = document.toObject(Location.class);
+			addToList(onlineLocation);
+			checkIfSavedLocal(localNonExistingLocations, onlineLocation);
+		}
+		addLocal(localNonExistingLocations);
+		onStartAfterListInitialized();
+	}
+
+	private void addToList(Location onlineLocation) {
+		if (locationList.size() > 0) {
+			addIfNotExists(onlineLocation);
+		} else {
+			locationList.add(onlineLocation);
+		}
+	}
+
+	private void addIfNotExists(Location onlineLocation) {
+		if (!checkIfExistsInList(onlineLocation)) {
+			locationList.add(onlineLocation);
+		}
+	}
+
+	private boolean checkIfExistsInList(Location onlineLocation) {
+		boolean existsInList = false;
+		for (Location listLocation : locationList) {
+			if (listLocation.getId() == onlineLocation.getId()) {
+				existsInList = true;
+				break;
+			}
+		}
+		return existsInList;
+	}
+
+	private void ifExistsLocal(List<Location> localNonExistingLocations, Location onlineLocation) {
+		if (checkIfExistsLocal(onlineLocation)) {
+			localNonExistingLocations.add(onlineLocation);
+		}
+	}
+
+	private boolean checkIfExistsLocal(Location onlineLocation) {
+		boolean existsInLocalDatabase = false;
+		for (Location localLocation : locationDao.getAllFromDay(selected.getId())) {
+			existsInLocalDatabase = localLocation.getId() != onlineLocation.getId();
+		}
+		return existsInLocalDatabase;
+	}
+
+	private void checkIfSavedLocal(List<Location> localNonExistingLocations, Location onlineLocation) {
+		if (locationDao.getAllFromDay(selected.getId()).size() > 0) {
+			ifExistsLocal(localNonExistingLocations, onlineLocation);
+		} else {
+			localNonExistingLocations.add(onlineLocation);
+		}
+	}
+
+	private void addLocal(List<Location> localNonExistingLocations) {
+		for (Location localNonExistingLocation : localNonExistingLocations) {
+			OnlineDatabaseUtils.delete(Const.LOCATIONS, localNonExistingLocation.getId());
+			localNonExistingLocation.setId(0);
+			long newId = locationDao.insert(localNonExistingLocation);
+			OnlineDatabaseUtils.add(Const.LOCATIONS, newId, locationDao.getById(newId));
+		}
+	}
+
+	private void onStartAfterListInitialized() {
 		adapter = new LocationAdapter(this, locationList);
 
 		createLocationFromIntent();
@@ -293,7 +372,6 @@ public class DayDetailsActivity extends UpButtonActivity implements SearchView.O
 
 			OnlineDatabaseUtils.add(Const.LOCATIONS, location.getId(), location);
 
-			locationList.add(location);
 			adapter.add(location);
 			adapter.sort(this::compareLocationStartTimes);
 		} else {

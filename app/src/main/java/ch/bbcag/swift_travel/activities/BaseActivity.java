@@ -1,7 +1,6 @@
 package ch.bbcag.swift_travel.activities;
 
 import android.app.AlertDialog;
-import android.content.Context;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ProgressBar;
@@ -9,15 +8,10 @@ import android.widget.ProgressBar;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.android.gms.tasks.Task;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
-import java.util.List;
-import java.util.Objects;
-
 import ch.bbcag.swift_travel.R;
-import ch.bbcag.swift_travel.utils.Const;
 
 public class BaseActivity extends AppCompatActivity {
 	private ProgressBar progressBar;
@@ -70,11 +64,16 @@ public class BaseActivity extends AppCompatActivity {
 		return progressBar;
 	}
 
-	protected <T> void addToList(Task<QuerySnapshot> task, List<T> objects, Class<T> type) {
+	protected void addToList(Task<QuerySnapshot> task, Runnable runnable) {
 		if (task.isSuccessful()) {
-			for (QueryDocumentSnapshot document : Objects.requireNonNull(task.getResult())) {
-				objects.add(document.toObject(type));
-			}
+			runnable.run();
+			progressBar.setVisibility(View.GONE);
+		}
+	}
+
+	protected void setObject(Task<DocumentSnapshot> task, Runnable runnable) {
+		if (task.isSuccessful()) {
+			runnable.run();
 			progressBar.setVisibility(View.GONE);
 		}
 	}

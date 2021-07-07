@@ -66,7 +66,7 @@ public class LayoutUtils {
 	public static void setOnlineImageURIOnImageView(Context context, ImageView iv, Uri URI, boolean roundedCorners) {
 		if (roundedCorners) {
 			Glide.with(context).load(URI).apply(RequestOptions.bitmapTransform(new RoundedCorners(180))).into(iv);
-		} else{
+		} else {
 			Glide.with(context).load(URI).into(iv);
 		}
 	}

@@ -212,8 +212,8 @@ public class CreateActivity extends UpButtonActivity implements AdapterView.OnIt
 	}
 
 	private void onPositiveMaterialDatePickerClick(Pair<Long, Long> selection) {
-		startDate = Instant.ofEpochMilli(selection.first).atZone(ZoneId.systemDefault()).toLocalDate().format(DateTimeFormatter.ofPattern("dd.MM.yyyy"));
-		endDate = Instant.ofEpochMilli(selection.second).atZone(ZoneId.systemDefault()).toLocalDate().format(DateTimeFormatter.ofPattern("dd.MM.yyyy"));
+		startDate = (Instant.ofEpochMilli(selection.first + (1000 * 60 * 60 * 24)).atZone(ZoneId.systemDefault()).toLocalDate().format(DateTimeFormatter.ofPattern("dd.MM.yyyy")));
+		endDate = (Instant.ofEpochMilli(selection.second + (1000 * 60 * 60 * 24)).atZone(ZoneId.systemDefault()).toLocalDate().format(DateTimeFormatter.ofPattern("dd.MM.yyyy")));
 		String dateRange = startDate + "-" + endDate;
 		durationDate.setText(dateRange);
 		dateSelected = true;

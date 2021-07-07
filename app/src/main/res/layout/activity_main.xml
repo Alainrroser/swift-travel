@@ -11,7 +11,7 @@
 
     <ImageView
         android:id="@+id/trips_image"
-        android:layout_width="0dp"
+        android:layout_width="@dimen/standard_element_width"
         android:layout_height="0dp"
         android:adjustViewBounds="true"
         android:contentDescription="@string/place_holder_image"
@@ -25,23 +25,23 @@
 
     <TextView
         android:id="@+id/countries_title"
-        android:layout_width="0dp"
+        android:layout_width="@dimen/standard_element_width"
         android:layout_height="wrap_content"
-        android:layout_marginStart="72dp"
-        android:layout_marginTop="16dp"
-        android:layout_marginBottom="16dp"
+        android:layout_marginStart="@dimen/subtitle_margin_start"
+        android:layout_marginTop="@dimen/subtitle_margin_top"
+        android:layout_marginBottom="@dimen/subtitle_margin_bottom"
         android:ellipsize="end"
         android:maxLines="1"
         android:text="@string/trips"
         android:textAppearance="@style/TextAppearance.AppCompat.Title"
-        android:textSize="34sp"
+        android:textSize="@dimen/subtitle_text_size"
         app:layout_constraintBottom_toTopOf="@id/trips"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/trips_image" />
 
     <View
         android:id="@+id/divider_main"
-        android:layout_width="0dp"
+        android:layout_width="@dimen/standard_element_width"
         android:layout_height="1dp"
         android:background="?android:attr/listDivider"
         android:visibility="visible"
@@ -51,11 +51,11 @@
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/floating_action_button_main"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="@dimen/fab_size"
+        android:layout_height="@dimen/fab_size"
         android:layout_gravity="end|bottom"
-        android:layout_marginEnd="16dp"
-        android:layout_marginBottom="16dp"
+        android:layout_marginEnd="@dimen/fab_margin_end"
+        android:layout_marginBottom="@dimen/fab_margin_bottom"
         android:contentDescription="@string/add_trip"
         android:src="@drawable/add"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -64,9 +64,9 @@
     <ListView
         android:id="@+id/trips"
         style="@style/Widget.AppCompat.Light.ListView.DropDown"
-        android:layout_width="match_parent"
+        android:layout_width="@dimen/standard_element_width"
         android:layout_height="0dp"
-        android:layout_marginBottom="88dp"
+        android:layout_marginBottom="@dimen/list_margin_bottom"
         android:divider="@android:drawable/divider_horizontal_dark"
         android:dividerHeight="1dp"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -76,7 +76,7 @@
 
     <View
         android:id="@+id/divider_trips"
-        android:layout_width="0dp"
+        android:layout_width="@dimen/standard_element_width"
         android:layout_height="1dp"
         android:background="?android:attr/listDivider"
         android:visibility="visible"
@@ -86,14 +86,11 @@
 
     <ImageButton
         android:id="@+id/login_button"
-        style="@style/Widget.AppCompat.ImageButton"
-        android:layout_width="48dp"
-        android:layout_height="48dp"
-        android:layout_marginEnd="32dp"
-        android:background="@drawable/rounded_button"
-        android:backgroundTint="@android:color/transparent"
+        android:layout_width="@dimen/icon_button_size"
+        android:layout_height="@dimen/icon_button_size"
+        android:layout_marginEnd="@dimen/list_icon_button_margin_end"
+        android:background="@drawable/rounded_corners"
         android:contentDescription="@string/profile_image"
-        android:outlineProvider="none"
         android:src="@drawable/person"
         app:layout_constraintBottom_toTopOf="@id/trips"
         app:layout_constraintEnd_toEndOf="parent"

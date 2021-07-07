@@ -1,11 +1,71 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <dimen name="first_element_margin_top">16dp</dimen>
+    <dimen name="standard_element_margin_top">8dp</dimen>
+    <dimen name="standard_element_width">0dp</dimen>
+
+    <dimen name="title_element_margin_top">16dp</dimen>
+    <dimen name="title_element_margin_start">8dp</dimen>
+    <dimen name="title_element_margin_end">8dp</dimen>
+
+    <dimen name="top_element_margin_start">72dp</dimen>
+    <dimen name="top_element_margin_end">72dp</dimen>
+    <dimen name="top_element_margin_top">24dp</dimen>
+
+    <dimen name="title_margin_top">16dp</dimen>
+    <dimen name="title_margin_bottom">16dp</dimen>
+    <dimen name="title_text_size">34sp</dimen>
+
+    <dimen name="edit_submit_button_margin_start">16dp</dimen>
+    <dimen name="edit_submit_button_margin_end">16dp</dimen>
+    <dimen name="edit_submit_button_margin_bottom">16dp</dimen>
+    <dimen name="edit_title_input_margin_top">16dp</dimen>
+    <dimen name="edit_title_input_margin_start">8dp</dimen>
+    <dimen name="edit_title_input_margin_end">8dp</dimen>
+    <dimen name="edit_input_margin_top">16dp</dimen>
+    <dimen name="edit_input_margin_start">16dp</dimen>
+    <dimen name="edit_input_margin_end">16dp</dimen>
+    <dimen name="edit_button_margin_end">16dp</dimen>
+    <dimen name="edit_button_margin_top">16dp</dimen>
+
+    <dimen name="duration_margin_top">32dp</dimen>
+
+    <dimen name="subtitle_text_size">24sp</dimen>
+    <dimen name="subtitle_margin_top">16dp</dimen>
+    <dimen name="subtitle_margin_start">72dp</dimen>
+    <dimen name="subtitle_margin_end">16dp</dimen>
+    <dimen name="subtitle_margin_bottom">16dp</dimen>
+
+    <dimen name="description_margin_top">16dp</dimen>
+    <dimen name="description_margin_start">16dp</dimen>
+    <dimen name="description_margin_end">16dp</dimen>
+    <dimen name="description_max_height">150dp</dimen>
+
+    <dimen name="icon_button_size">48dp</dimen>
+    <dimen name="three_line_list_icon_button_margin_top">16dp</dimen>
+    <dimen name="list_icon_button_margin_end">32dp</dimen>
+
+    <dimen name="title_image_width">150dp</dimen>
+    <dimen name="title_image_height">100dp</dimen>
+    <dimen name="title_image_margin_top">16dp</dimen>
+    <dimen name="title_image_margin_start">16dp</dimen>
+
+    <dimen name="list_image_size">40dp</dimen>
+    <dimen name="list_image_margin_start">16dp</dimen>
+    <dimen name="list_image_margin_top">16dp</dimen>
+
     <dimen name="standard_button_height">46dp</dimen>
-    <dimen name="standard_button_width">0dp</dimen>
+    <dimen name="button_margin_top">8dp</dimen>
 
     <dimen name="submit_button_height">46dp</dimen>
     <dimen name="submit_button_width">0dp</dimen>
 
     <dimen name="select_button_height">52dp</dimen>
     <dimen name="select_button_width">180dp</dimen>
+
+    <dimen name="fab_size">56dp</dimen>
+    <dimen name="fab_margin_end">16dp</dimen>
+    <dimen name="fab_margin_bottom">16dp</dimen>
+
+    <dimen name="list_margin_bottom">88dp</dimen>
 </resources>

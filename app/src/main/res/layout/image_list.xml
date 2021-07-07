@@ -17,8 +17,8 @@
 
     <ImageButton
         android:id="@+id/delete_image_list"
-        android:layout_width="36dp"
-        android:layout_height="36dp"
+        android:layout_width="@dimen/icon_button_size"
+        android:layout_height="@dimen/icon_button_size"
         android:backgroundTint="@android:color/transparent"
         android:contentDescription="@string/delete"
         android:src="@drawable/delete"

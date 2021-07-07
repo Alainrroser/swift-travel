@@ -8,10 +8,10 @@
 
     <ImageButton
         android:id="@+id/delete_timeline_list"
-        android:layout_width="36dp"
-        android:layout_height="36dp"
-        android:layout_marginTop="18dp"
-        android:layout_marginEnd="16dp"
+        android:layout_width="@dimen/icon_button_size"
+        android:layout_height="@dimen/icon_button_size"
+        android:layout_marginTop="@dimen/standard_element_margin_top"
+        android:layout_marginEnd="@dimen/list_icon_button_margin_end"
         android:backgroundTint="@android:color/transparent"
         android:contentDescription="@string/delete"
         android:src="@drawable/delete"
@@ -39,10 +39,10 @@
 
     <ImageView
         android:id="@+id/image_timeline_list"
-        android:layout_width="40dp"
-        android:layout_height="40dp"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="16dp"
+        android:layout_width="@dimen/list_image_size"
+        android:layout_height="@dimen/list_image_size"
+        android:layout_marginStart="@dimen/list_image_margin_start"
+        android:layout_marginTop="@dimen/list_image_margin_top"
         android:contentDescription="@string/place_holder_image"
         android:scaleType="fitCenter"
         android:src="@drawable/placeholder_icon"
@@ -52,7 +52,7 @@
 
     <TextView
         android:id="@+id/name_timeline_list"
-        android:layout_width="0dp"
+        android:layout_width="@dimen/standard_element_width"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
         android:layout_marginEnd="16dp"

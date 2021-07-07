@@ -6,10 +6,11 @@
 
     <ImageView
         android:id="@+id/image_one_line_list"
-        android:layout_width="40dp"
-        android:layout_height="40dp"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="16dp"
+        android:layout_width="@dimen/list_image_size"
+        android:layout_height="@dimen/list_image_size"
+        android:layout_marginStart="@dimen/list_image_margin_start"
+        android:layout_marginTop="@dimen/list_image_margin_top"
+        android:src="@drawable/placeholder_flag"
         android:contentDescription="@string/place_holder_image"
         android:scaleType="fitCenter"
         app:layout_constraintStart_toStartOf="parent"

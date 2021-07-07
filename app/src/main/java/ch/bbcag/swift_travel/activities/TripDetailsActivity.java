@@ -363,8 +363,8 @@ public class TripDetailsActivity extends UpButtonActivity implements SearchView.
 		countries.setAdapter(adapter);
 		adapter.sort(this::compareCountryStartDates);
 		for (Country country : countryList) {
-			updateDestinationAndOrigin(country, LocalDate.parse("01.01.2200", DateTimeFormatter.ofPattern("dd.MM.yyyy")), true);
-			updateDestinationAndOrigin(country, LocalDate.parse("01.01.1800", DateTimeFormatter.ofPattern("dd.MM.yyyy")), false);
+			updateDestinationAndOrigin(country, true);
+			updateDestinationAndOrigin(country, false);
 		}
 
 		AdapterView.OnItemClickListener mListClickedHandler = (parent, v, position, id) -> {
@@ -463,50 +463,51 @@ public class TripDetailsActivity extends UpButtonActivity implements SearchView.
 		return duration;
 	}
 
-	private void updateDestinationAndOrigin(Country country, LocalDate localDate, boolean updateOrigin) {
-		this.localDate = localDate;
+	private void updateDestinationAndOrigin(Country country, boolean updateOrigin) {
+		if (updateOrigin) {
+			localDate = LocalDate.parse("01.01.2200", DateTimeFormatter.ofPattern("dd.MM.yyyy"));
+		} else {
+			localDate = LocalDate.parse("01.01.1800", DateTimeFormatter.ofPattern("dd.MM.yyyy"));
+		}
 		if (FirebaseAuth.getInstance().getCurrentUser() != null) {
 			List<City> cityList = new ArrayList<>();
-			OnlineDatabaseUtils.getAllFromParentId(Const.CITIES, Const.COUNTRY_ID, country.getId(), task -> addToList(task, () -> updateDestinationAndOriginAfterListWasLoaded(cityList, country, this.localDate, updateOrigin)));
+			OnlineDatabaseUtils.getAllFromParentId(Const.CITIES, Const.COUNTRY_ID, country.getId(), task -> addToList(task, () -> updateDestinationAndOriginAfterListWasLoaded(cityList, country, updateOrigin)));
 		} else {
 			for (City city : cityDao.getAllFromCountry(country.getId())) {
-				localDate = updateOriginOrDestination(country, city, localDate, updateOrigin);
+				updateOriginOrDestination(country, city, updateOrigin);
 			}
 		}
 	}
 
-	private void updateDestinationAndOriginAfterListWasLoaded(List<City> cityList, Country country, LocalDate localDate, boolean updateOrigin) {
+	private void updateDestinationAndOriginAfterListWasLoaded(List<City> cityList, Country country, boolean updateOrigin) {
 		for (City city : cityList) {
-			localDate = updateOriginOrDestination(country, city, localDate, updateOrigin);
+			updateOriginOrDestination(country, city, updateOrigin);
 		}
 	}
 
-	private LocalDate updateOriginOrDestination(Country country, City city, LocalDate localDate, boolean updateOrigin) {
+	private void updateOriginOrDestination(Country country, City city, boolean updateOrigin) {
 		if (updateOrigin) {
-			localDate = updateOrigin(country, city, localDate);
+			updateOrigin(country, city);
 		} else {
-			localDate = updateDestination(country, city, localDate);
+			updateDestination(country, city);
 		}
-		return localDate;
 	}
 
-	private LocalDate updateOrigin(Country country, City city, LocalDate localDate) {
+	private void updateOrigin(Country country, City city) {
 		if (localDate.compareTo(LocalDate.parse(city.getStartDate(), DateTimeFormatter.ofPattern("dd.MM.yyyy"))) > 0) {
 			localDate = LocalDate.parse(city.getStartDate(), DateTimeFormatter.ofPattern("dd.MM.yyyy"));
 			country.setOrigin(city.getName());
 			countryDao.update(country);
 			OnlineDatabaseUtils.add(Const.COUNTRIES, country.getId(), country);
 		}
-		return localDate;
 	}
 
-	private LocalDate updateDestination(Country country, City city, LocalDate localDate) {
+	private void updateDestination(Country country, City city) {
 		if (localDate.compareTo(LocalDate.parse(city.getStartDate(), DateTimeFormatter.ofPattern("dd.MM.yyyy"))) < 0) {
 			localDate = LocalDate.parse(city.getStartDate(), DateTimeFormatter.ofPattern("dd.MM.yyyy"));
 			country.setDestination(city.getName());
 			countryDao.update(country);
 			OnlineDatabaseUtils.add(Const.COUNTRIES, country.getId(), country);
 		}
-		return localDate;
 	}
 }

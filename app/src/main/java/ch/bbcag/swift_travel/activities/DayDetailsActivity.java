@@ -40,7 +40,6 @@ import ch.bbcag.swift_travel.dal.DayDao;
 import ch.bbcag.swift_travel.dal.LocationDao;
 import ch.bbcag.swift_travel.dal.SwiftTravelDatabase;
 import ch.bbcag.swift_travel.entities.Day;
-import ch.bbcag.swift_travel.entities.Image;
 import ch.bbcag.swift_travel.entities.Location;
 import ch.bbcag.swift_travel.utils.Const;
 import ch.bbcag.swift_travel.utils.DateTimeUtils;
@@ -103,6 +102,9 @@ public class DayDetailsActivity extends UpButtonActivity implements SearchView.O
 	@Override
 	protected void onStart() {
 		super.onStart();
+
+		Group form = findViewById(R.id.day_form);
+		form.setVisibility(View.GONE);
 
 		long id = getIntent().getLongExtra(Const.DAY, -1);
 		if (id != -1) {
@@ -226,13 +228,10 @@ public class DayDetailsActivity extends UpButtonActivity implements SearchView.O
 	}
 
 	private void synchronizeLocations(Task<QuerySnapshot> task) {
-		List<Location> localNonExistingLocations = new ArrayList<>();
 		for (QueryDocumentSnapshot document : Objects.requireNonNull(task.getResult())) {
 			Location onlineLocation = document.toObject(Location.class);
 			addToList(onlineLocation);
-			checkIfSavedLocal(localNonExistingLocations, onlineLocation);
 		}
-		addLocal(localNonExistingLocations);
 		runOnUiThread(this::onStartAfterListInitialized);
 	}
 
@@ -261,56 +260,6 @@ public class DayDetailsActivity extends UpButtonActivity implements SearchView.O
 		return existsInList;
 	}
 
-	private void ifExistsLocal(List<Location> localNonExistingLocations, Location onlineLocation) {
-		if (checkIfExistsLocal(onlineLocation)) {
-			localNonExistingLocations.add(onlineLocation);
-		}
-	}
-
-	private boolean checkIfExistsLocal(Location onlineLocation) {
-		boolean existsInLocalDatabase = false;
-		for (Location localLocation : locationDao.getAllFromDay(selected.getId())) {
-			existsInLocalDatabase = localLocation.getId() != onlineLocation.getId();
-		}
-		return existsInLocalDatabase;
-	}
-
-	private void checkIfSavedLocal(List<Location> localNonExistingLocations, Location onlineLocation) {
-		if (locationDao.getAllFromDay(selected.getId()).size() > 0) {
-			ifExistsLocal(localNonExistingLocations, onlineLocation);
-		} else {
-			localNonExistingLocations.add(onlineLocation);
-		}
-	}
-
-	private void addLocal(List<Location> localNonExistingLocations) {
-		for (Location localNonExistingLocation : localNonExistingLocations) {
-			long oldId = localNonExistingLocation.getId();
-			OnlineDatabaseUtils.delete(Const.LOCATIONS, localNonExistingLocation.getId());
-			localNonExistingLocation.setId(0);
-			long newId = locationDao.insert(localNonExistingLocation);
-			localNonExistingLocation.setId(newId);
-
-			OnlineDatabaseUtils.add(Const.LOCATIONS, newId, locationDao.getById(newId));
-			updateImages(oldId, newId);
-		}
-	}
-
-	private void updateImages(long oldId, long newId) {
-		List<Image> imageList = new ArrayList<>();
-		OnlineDatabaseUtils.getAllFromParentId(Const.IMAGES, Const.LOCATION_ID, oldId, task -> updateImageLocationIds(task, imageList, newId));
-	}
-
-	private void updateImageLocationIds(Task<QuerySnapshot> task, List<Image> imageList, long newId) {
-		for (QueryDocumentSnapshot document : Objects.requireNonNull(task.getResult())) {
-			imageList.add(document.toObject(Image.class));
-		}
-		for (Image image : imageList) {
-			image.setLocationId(newId);
-			OnlineDatabaseUtils.add(Const.IMAGES, image.getId(), image);
-		}
-	}
-
 	private void onStartAfterListInitialized() {
 		adapter = new LocationAdapter(this, locationList);
 
@@ -321,9 +270,6 @@ public class DayDetailsActivity extends UpButtonActivity implements SearchView.O
 		editDescription.setText(selected.getDescription());
 
 		refreshContent();
-
-		Group form = findViewById(R.id.day_form);
-		form.setVisibility(View.GONE);
 
 		onFloatingActionButtonClick();
 		editDescriptionButton.setOnClickListener(v -> toggleForm());

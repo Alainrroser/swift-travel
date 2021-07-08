@@ -27,7 +27,6 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
@@ -107,6 +106,9 @@ public class LocationDetailsActivity extends UpButtonActivity implements Adapter
 	@Override
 	protected void onStart() {
 		super.onStart();
+
+		Group form = findViewById(R.id.location_form);
+		form.setVisibility(View.GONE);
 
 		long id = getIntent().getLongExtra(Const.LOCATION, -1);
 		if (id != -1) {
@@ -209,13 +211,10 @@ public class LocationDetailsActivity extends UpButtonActivity implements Adapter
 	}
 
 	private void synchronizeImages(Task<QuerySnapshot> task) {
-		List<Image> localNonExistingImages = new ArrayList<>();
 		for (QueryDocumentSnapshot document : Objects.requireNonNull(task.getResult())) {
 			Image onlineImage = document.toObject(Image.class);
 			addToList(onlineImage);
-			checkIfSavedLocal(localNonExistingImages, onlineImage);
 		}
-		addLocal(localNonExistingImages);
 		runOnUiThread(this::onStartAfterListInitialized);
 	}
 
@@ -244,39 +243,6 @@ public class LocationDetailsActivity extends UpButtonActivity implements Adapter
 		return existsInList;
 	}
 
-	private void ifExistsLocal(List<Image> localNonExistingImages, Image onlineImage) {
-		if (checkIfExistsLocal(onlineImage)) {
-			localNonExistingImages.add(onlineImage);
-		}
-	}
-
-	private boolean checkIfExistsLocal(Image onlineImage) {
-		boolean existsInLocalDatabase = false;
-		for (Image localImage : imageDao.getAllFromLocation(selected.getId())) {
-			existsInLocalDatabase = localImage.getId() != onlineImage.getId();
-		}
-		return existsInLocalDatabase;
-	}
-
-	private void checkIfSavedLocal(List<Image> localNonExistingImages, Image onlineImage) {
-		if (imageDao.getAllFromLocation(selected.getId()).size() > 0) {
-			ifExistsLocal(localNonExistingImages, onlineImage);
-		} else {
-			localNonExistingImages.add(onlineImage);
-		}
-	}
-
-	private void addLocal(List<Image> localNonExistingImages) {
-		for (Image localNonExistingImage : localNonExistingImages) {
-			OnlineDatabaseUtils.delete(Const.LOCATIONS, localNonExistingImage.getId());
-			localNonExistingImage.setId(0);
-			long newId = imageDao.insert(localNonExistingImage);
-			localNonExistingImage.setId(newId);
-
-			OnlineDatabaseUtils.add(Const.LOCATIONS, newId, imageDao.getById(newId));
-		}
-	}
-
 	private void onStartAfterListInitialized() {
 		imageAdapter = new ImageAdapter(this, imageList);
 
@@ -299,9 +265,6 @@ public class LocationDetailsActivity extends UpButtonActivity implements Adapter
 
 		refreshContent();
 		setCategory();
-
-		Group form = findViewById(R.id.location_form);
-		form.setVisibility(View.GONE);
 
 		editDescriptionButton.setOnClickListener(v -> toggleForm());
 		locationImage.setOnClickListener(v -> ImagePicker.with(this).crop().start(Const.LOCATION_IMAGE_REQUEST_CODE));

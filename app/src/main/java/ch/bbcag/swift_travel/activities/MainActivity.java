@@ -53,6 +53,7 @@ public class MainActivity extends BaseActivity implements SearchView.OnQueryText
 	private CityDao cityDao;
 
 	private List<Trip> tripList;
+	private List<Country> countryList;
 
 	private LocalDate localDate;
 
@@ -230,6 +231,54 @@ public class MainActivity extends BaseActivity implements SearchView.OnQueryText
 		}
 	}
 
+	private void initializeCountryList(Trip trip) {
+		countryList = countryDao.getAllFromTrip(trip.getId());
+		OnlineDatabaseUtils.getAllFromParentId(Const.COUNTRIES, Const.TRIP_ID, trip.getId(), task -> addToList(task, () -> synchronizeCountries(task, trip)));
+	}
+
+	private void synchronizeCountries(Task<QuerySnapshot> task, Trip trip) {
+		for (QueryDocumentSnapshot document : Objects.requireNonNull(task.getResult())) {
+			Country onlineCountry = document.toObject(Country.class);
+			addToList(onlineCountry);
+		}
+		getTripDuration(trip);
+	}
+
+	private void addToList(Country onlineCountry) {
+		if (countryList.size() > 0) {
+			addIfNotExists(onlineCountry);
+		} else {
+			countryList.add(onlineCountry);
+		}
+	}
+
+	private void addIfNotExists(Country onlineCountry) {
+		if (!checkIfExistsInList(onlineCountry)) {
+			countryList.add(onlineCountry);
+		}
+	}
+
+	private boolean checkIfExistsInList(Country onlineCountry) {
+		boolean existsInList = false;
+		for (Country listCountry : countryList) {
+			if (listCountry.getId() == onlineCountry.getId()) {
+				existsInList = true;
+				break;
+			}
+		}
+		return existsInList;
+	}
+
+	private void getTripDuration(Trip trip) {
+		long duration = 0;
+		for (Country country : countryList) {
+			duration += country.getDuration();
+		}
+		trip.setDuration(duration);
+		tripDao.update(trip);
+		OnlineDatabaseUtils.add(Const.TRIPS, trip.getId(), trip);
+	}
+
 	private void updateCountries(long oldId, long newId) {
 		List<Country> countryList = new ArrayList<>();
 		OnlineDatabaseUtils.getAllFromParentId(Const.COUNTRIES, Const.TRIP_ID, oldId, task -> updateCountryTripIds(task, countryList, newId));
@@ -377,6 +426,7 @@ public class MainActivity extends BaseActivity implements SearchView.OnQueryText
 		trips.setAdapter(adapter);
 		adapter.sort(this::compareTripStartDates);
 		for (Trip trip : tripList) {
+			initializeCountryList(trip);
 			updateDestinationOrOrigin(trip, true);
 			updateDestinationOrOrigin(trip, false);
 		}

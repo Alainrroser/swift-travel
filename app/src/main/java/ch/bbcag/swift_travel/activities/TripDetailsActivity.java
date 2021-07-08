@@ -111,6 +111,9 @@ public class TripDetailsActivity extends UpButtonActivity implements SearchView.
 	protected void onStart() {
 		super.onStart();
 
+		Group form = findViewById(R.id.trip_form);
+		form.setVisibility(View.GONE);
+
 		long id = getIntent().getLongExtra(Const.TRIP, -1);
 		if (id != -1) {
 			checkIfLoggedIn(id);
@@ -233,13 +236,10 @@ public class TripDetailsActivity extends UpButtonActivity implements SearchView.
 	}
 
 	private void synchronizeCountries(Task<QuerySnapshot> task) {
-		List<Country> localNonExistingCountries = new ArrayList<>();
 		for (QueryDocumentSnapshot document : Objects.requireNonNull(task.getResult())) {
 			Country onlineCountry = document.toObject(Country.class);
 			addToList(onlineCountry);
-			checkIfSavedLocal(localNonExistingCountries, onlineCountry);
 		}
-		addLocal(localNonExistingCountries);
 		runOnUiThread(this::onStartAfterListInitialized);
 	}
 
@@ -268,55 +268,6 @@ public class TripDetailsActivity extends UpButtonActivity implements SearchView.
 		return existsInList;
 	}
 
-	private void ifExistsLocal(List<Country> localNonExistingCountries, Country onlineCountry) {
-		if (checkIfExistsLocal(onlineCountry)) {
-			localNonExistingCountries.add(onlineCountry);
-		}
-	}
-
-	private boolean checkIfExistsLocal(Country onlineCountry) {
-		boolean existsInLocalDatabase = false;
-		for (Country localCountry : countryDao.getAllFromTrip(selected.getId())) {
-			existsInLocalDatabase = localCountry.getId() != onlineCountry.getId();
-		}
-		return existsInLocalDatabase;
-	}
-
-	private void checkIfSavedLocal(List<Country> localNonExistingCountries, Country onlineCountry) {
-		if (countryDao.getAllFromTrip(selected.getId()).size() > 0) {
-			ifExistsLocal(localNonExistingCountries, onlineCountry);
-		} else {
-			localNonExistingCountries.add(onlineCountry);
-		}
-	}
-
-	private void addLocal(List<Country> localNonExistingCountries) {
-		for (Country localNonExistingCountry : localNonExistingCountries) {
-			long oldId = localNonExistingCountry.getId();
-			OnlineDatabaseUtils.delete(Const.COUNTRIES, localNonExistingCountry.getId());
-			localNonExistingCountry.setId(0);
-			long newId = countryDao.insert(localNonExistingCountry);
-			localNonExistingCountry.setId(newId);
-
-			OnlineDatabaseUtils.add(Const.COUNTRIES, newId, countryDao.getById(newId));
-			updateCities(oldId, newId);
-		}
-	}
-
-	private void updateCities(long oldId, long newId) {
-		List<City> cityList = new ArrayList<>();
-		OnlineDatabaseUtils.getAllFromParentId(Const.CITIES, Const.COUNTRY_ID, oldId, task -> updateCityCountryIds(task, cityList, newId));
-	}
-
-	private void updateCityCountryIds(Task<QuerySnapshot> task, List<City> cityList, long newId) {
-		for (QueryDocumentSnapshot document : Objects.requireNonNull(task.getResult())) {
-			cityList.add(document.toObject(City.class));
-		}
-		for (City city : cityList) {
-			city.setCountryId(newId);
-			OnlineDatabaseUtils.add(Const.CITIES, city.getId(), city);
-		}
-	}
 
 	private void onStartAfterListInitialized() {
 		adapter = new CountryAdapter(this, countryList);
@@ -333,9 +284,6 @@ public class TripDetailsActivity extends UpButtonActivity implements SearchView.
 
 		editTitle.setText(selected.getName());
 		editDescription.setText(selected.getDescription());
-
-		Group form = findViewById(R.id.trip_form);
-		form.setVisibility(View.GONE);
 
 		refreshContent();
 

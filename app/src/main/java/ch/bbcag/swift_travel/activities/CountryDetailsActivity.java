@@ -27,7 +27,6 @@ import com.google.firebase.firestore.QuerySnapshot;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
@@ -101,6 +100,9 @@ public class CountryDetailsActivity extends UpButtonActivity implements SearchVi
 	@Override
 	protected void onStart() {
 		super.onStart();
+
+		Group form = findViewById(R.id.country_form);
+		form.setVisibility(View.GONE);
 
 		long id = getIntent().getLongExtra(Const.COUNTRY, -1);
 		if (id != -1) {
@@ -212,13 +214,10 @@ public class CountryDetailsActivity extends UpButtonActivity implements SearchVi
 	}
 
 	private void synchronizeCities(Task<QuerySnapshot> task) {
-		List<City> localNonExistingCities = new ArrayList<>();
 		for (QueryDocumentSnapshot document : Objects.requireNonNull(task.getResult())) {
 			City onlineCity = document.toObject(City.class);
 			addToList(onlineCity);
-			checkIfSavedLocal(localNonExistingCities, onlineCity);
 		}
-		addLocal(localNonExistingCities);
 		runOnUiThread(this::onStartAfterListInitialized);
 	}
 
@@ -247,56 +246,6 @@ public class CountryDetailsActivity extends UpButtonActivity implements SearchVi
 		return existsInList;
 	}
 
-	private void ifExistsLocal(List<City> localNonExistingCities, City onlineCity) {
-		if (checkIfExistsLocal(onlineCity)) {
-			localNonExistingCities.add(onlineCity);
-		}
-	}
-
-	private boolean checkIfExistsLocal(City onlineCity) {
-		boolean existsInLocalDatabase = false;
-		for (City localCity : cityDao.getAllFromCountry(selected.getId())) {
-			existsInLocalDatabase = localCity.getId() != onlineCity.getId();
-		}
-		return existsInLocalDatabase;
-	}
-
-	private void checkIfSavedLocal(List<City> localNonExistingCities, City onlineCity) {
-		if (cityDao.getAllFromCountry(selected.getId()).size() > 0) {
-			ifExistsLocal(localNonExistingCities, onlineCity);
-		} else {
-			localNonExistingCities.add(onlineCity);
-		}
-	}
-
-	private void addLocal(List<City> localNonExistingCities) {
-		for (City localNonExistingCity : localNonExistingCities) {
-			long oldId = localNonExistingCity.getId();
-			OnlineDatabaseUtils.delete(Const.CITIES, localNonExistingCity.getId());
-			localNonExistingCity.setId(0);
-			long newId = cityDao.insert(localNonExistingCity);
-			localNonExistingCity.setId(newId);
-
-			OnlineDatabaseUtils.add(Const.CITIES, newId, cityDao.getById(newId));
-			updateDays(oldId, newId);
-		}
-	}
-
-	private void updateDays(long oldId, long newId) {
-		List<Day> dayList = new ArrayList<>();
-		OnlineDatabaseUtils.getAllFromParentId(Const.DAYS, Const.CITY_ID, oldId, task -> updateDayCityIds(task, dayList, newId));
-	}
-
-	private void updateDayCityIds(Task<QuerySnapshot> task, List<Day> dayList, long newId) {
-		for (QueryDocumentSnapshot document : Objects.requireNonNull(task.getResult())) {
-			dayList.add(document.toObject(Day.class));
-		}
-		for (Day day : dayList) {
-			day.setCityId(newId);
-			OnlineDatabaseUtils.add(Const.DAYS, day.getId(), day);
-		}
-	}
-
 	private void onStartAfterListInitialized() {
 		adapter = new CityAdapter(this, cityList);
 
@@ -306,9 +255,6 @@ public class CountryDetailsActivity extends UpButtonActivity implements SearchVi
 		editDescription.setText(selected.getDescription());
 
 		refreshContent();
-
-		Group form = findViewById(R.id.country_form);
-		form.setVisibility(View.GONE);
 
 		onFloatingActionButtonClick();
 		editDescriptionButton.setOnClickListener(v -> toggleForm());

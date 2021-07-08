@@ -40,7 +40,6 @@ import ch.bbcag.swift_travel.dal.DayDao;
 import ch.bbcag.swift_travel.dal.SwiftTravelDatabase;
 import ch.bbcag.swift_travel.entities.City;
 import ch.bbcag.swift_travel.entities.Day;
-import ch.bbcag.swift_travel.entities.Location;
 import ch.bbcag.swift_travel.utils.Const;
 import ch.bbcag.swift_travel.utils.LayoutUtils;
 import ch.bbcag.swift_travel.utils.OnlineDatabaseUtils;
@@ -100,6 +99,9 @@ public class CityDetailsActivity extends UpButtonActivity implements SearchView.
 	@Override
 	protected void onStart() {
 		super.onStart();
+
+		Group form = findViewById(R.id.city_form);
+		form.setVisibility(View.GONE);
 
 		long id = getIntent().getLongExtra(Const.CITY, -1);
 		if (id != -1) {
@@ -223,13 +225,10 @@ public class CityDetailsActivity extends UpButtonActivity implements SearchView.
 	}
 
 	private void synchronizeDays(Task<QuerySnapshot> task) {
-		List<Day> localNonExistingDays = new ArrayList<>();
 		for (QueryDocumentSnapshot document : Objects.requireNonNull(task.getResult())) {
 			Day onlineDay = document.toObject(Day.class);
 			addToList(onlineDay);
-			checkIfSavedLocal(localNonExistingDays, onlineDay);
 		}
-		addLocal(localNonExistingDays);
 		runOnUiThread(this::onStartAfterListInitialized);
 	}
 
@@ -258,56 +257,6 @@ public class CityDetailsActivity extends UpButtonActivity implements SearchView.
 		return existsInList;
 	}
 
-	private void ifExistsLocal(List<Day> localNonExistingDays, Day onlineDay) {
-		if (checkIfExistsLocal(onlineDay)) {
-			localNonExistingDays.add(onlineDay);
-		}
-	}
-
-	private boolean checkIfExistsLocal(Day onlineDay) {
-		boolean existsInLocalDatabase = false;
-		for (Day localDay : dayDao.getAllFromCity(selected.getId())) {
-			existsInLocalDatabase = localDay.getId() != onlineDay.getId();
-		}
-		return existsInLocalDatabase;
-	}
-
-	private void checkIfSavedLocal(List<Day> localNonExistingDays, Day onlineDay) {
-		if (dayDao.getAllFromCity(selected.getId()).size() > 0) {
-			ifExistsLocal(localNonExistingDays, onlineDay);
-		} else {
-			localNonExistingDays.add(onlineDay);
-		}
-	}
-
-	private void addLocal(List<Day> localNonExistingDays) {
-		for (Day localNonExistingDay : localNonExistingDays) {
-			long oldId = localNonExistingDay.getId();
-			OnlineDatabaseUtils.delete(Const.DAYS, localNonExistingDay.getId());
-			localNonExistingDay.setId(0);
-			long newId = dayDao.insert(localNonExistingDay);
-			localNonExistingDay.setId(newId);
-
-			OnlineDatabaseUtils.add(Const.DAYS, newId, dayDao.getById(newId));
-			updateLocations(oldId, newId);
-		}
-	}
-
-	private void updateLocations(long oldId, long newId) {
-		List<Location> locationList = new ArrayList<>();
-		OnlineDatabaseUtils.getAllFromParentId(Const.LOCATIONS, Const.DAY_ID, oldId, task -> updateLocationDayIds(task, locationList, newId));
-	}
-
-	private void updateLocationDayIds(Task<QuerySnapshot> task, List<Location> locationList, long newId) {
-		for (QueryDocumentSnapshot document : Objects.requireNonNull(task.getResult())) {
-			locationList.add(document.toObject(Location.class));
-		}
-		for (Location location : locationList) {
-			location.setDayId(newId);
-			OnlineDatabaseUtils.add(Const.LOCATIONS, location.getId(), location);
-		}
-	}
-
 	private void onStartAfterListInitialized() {
 		adapter = new DayAdapter(this, dayList);
 
@@ -318,9 +267,6 @@ public class CityDetailsActivity extends UpButtonActivity implements SearchView.
 		editTransport.setText(selected.getTransport());
 
 		refreshContent();
-
-		Group form = findViewById(R.id.city_form);
-		form.setVisibility(View.GONE);
 
 		editDescriptionButton.setOnClickListener(v -> toggleForm());
 		cityImage.setOnClickListener(v -> ImagePicker.with(this).crop().start());

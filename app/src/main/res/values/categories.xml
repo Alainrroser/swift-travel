@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string-array name="location_categories">
+        <item>@string/category</item>
         <item>@string/category_hotel</item>
         <item>@string/category_restaurant</item>
-        <item>@string/category_place</item>
+        <item>@string/category_location</item>
     </string-array>
 </resources>

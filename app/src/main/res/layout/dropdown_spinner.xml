@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="40dp"
+    android:background="@color/button_text_and_icons">
+
+    <TextView
+        android:id="@+id/spinner_text"
+        android:layout_width="@dimen/standard_element_width"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="16dp"
+        android:hint="@string/category_hotel"
+        android:textColor="@color/standard_text_and_icons"
+        android:textSize="18sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@id/spinner_image"
+        app:layout_constraintTop_toTopOf="parent"
+         />
+
+    <ImageView
+        android:id="@+id/spinner_image"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="8dp"
+        android:foregroundGravity="center_vertical"
+        android:src="@drawable/category_hotel"
+        app:tint="@color/standard_text_and_icons"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/spinner_text"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:contentDescription="@string/internet_connection_error_title" />
+</androidx.constraintlayout.widget.ConstraintLayout>

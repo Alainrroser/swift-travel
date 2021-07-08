@@ -6,9 +6,10 @@ public class Const {
 	public static final String USER_ID = "userId";
 
 	public static final String CATEGORY = "Category";
-	public static final int CATEGORY_HOTEL = 0;
-	public static final int CATEGORY_RESTAURANT = 1;
-	public static final int CATEGORY_PLACE = 2;
+	public static final int CATEGORY_DEFAULT = 0;
+	public static final int CATEGORY_HOTEL = 1;
+	public static final int CATEGORY_RESTAURANT = 2;
+	public static final int CATEGORY_LOCATION = 3;
 
 	public static final String ID = "id";
 	public static final String NAME = "name";

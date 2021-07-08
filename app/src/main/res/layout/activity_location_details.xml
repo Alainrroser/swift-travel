@@ -20,12 +20,12 @@
         android:layout_height="@dimen/title_image_height"
         android:layout_marginStart="@dimen/title_image_margin_start"
         android:layout_marginTop="@dimen/title_image_margin_top"
-        android:background="@android:color/transparent"
+        android:elevation="4dp"
+        android:background="@drawable/rounded_button"
+        android:backgroundTint="@android:color/white"
         android:contentDescription="@string/place_holder_image"
-        android:scaleType="fitXY"
+        android:scaleType="centerCrop"
         android:src="@drawable/trips_image"
-        android:visibility="visible"
-        app:layout_constraintDimensionRatio="21:9"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -49,15 +49,15 @@
         android:layout_width="@dimen/standard_element_width"
         android:layout_height="wrap_content"
         android:layout_marginStart="@dimen/description_margin_start"
-        android:layout_marginTop="@dimen/description_margin_top"
+        android:layout_marginTop="@dimen/standard_element_margin_top"
         android:layout_marginEnd="@dimen/description_margin_end"
         android:maxHeight="@dimen/description_max_height"
         android:scrollbars="vertical"
         android:text="@string/description_hint"
-        app:layout_constraintBottom_toTopOf="@id/location_transport"
+        app:layout_constraintBottom_toTopOf="@id/images_title"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/location_image"
+        app:layout_constraintTop_toBottomOf="@id/location_transport"
         tools:visibility="visible" />
 
     <TextView
@@ -69,10 +69,10 @@
         android:layout_marginEnd="@dimen/description_margin_end"
         android:maxHeight="100dp"
         android:text="@string/transport"
-        app:layout_constraintBottom_toTopOf="@id/days_title"
-        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/location_description"
+        app:layout_constraintEnd_toStartOf="@id/location_category_name"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/location_description"
+        app:layout_constraintTop_toBottomOf="@id/location_image"
         tools:visibility="visible" />
 
     <ImageButton
@@ -109,7 +109,8 @@
         android:layout_marginTop="@dimen/standard_element_margin_top"
         app:layout_constraintEnd_toEndOf="@id/location_edit_transport_layout"
         app:layout_constraintStart_toStartOf="@id/location_edit_transport_layout"
-        app:layout_constraintTop_toBottomOf="@id/location_edit_transport_layout" />
+        app:layout_constraintTop_toBottomOf="@id/location_edit_transport_layout"
+        app:layout_constraintBottom_toTopOf="@id/location_submit_button"/>
 
     <Button
         android:id="@+id/location_submit_button"
@@ -126,6 +127,27 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/location_category_spinner" />
+
+    <ImageView
+        android:id="@+id/location_category_icon"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="@dimen/category_icon_margin_end"
+        android:contentDescription="@string/category"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@id/location_category_name"
+        app:layout_constraintTop_toBottomOf="@id/location_duration"
+        app:srcCompat="@drawable/category_unknown" />
+
+    <TextView
+        android:id="@+id/location_category_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="@dimen/title_element_margin_end"
+        android:text="@string/category"
+        app:layout_constraintEnd_toStartOf="@id/location_category_icon"
+        app:layout_constraintStart_toEndOf="@id/location_transport"
+        app:layout_constraintTop_toTopOf="@id/location_transport" />
 
     <Space
         android:id="@+id/duration_space"
@@ -211,7 +233,7 @@
         android:id="@+id/location_content"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:constraint_referenced_ids="location_title, location_description, location_transport"
+        app:constraint_referenced_ids="location_title, location_description, location_transport,location_category_icon,location_category_name"
         app:layout_constraintEnd_toStartOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
@@ -242,7 +264,7 @@
         app:layout_constraintBottom_toTopOf="@id/location_images"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/location_transport" />
+        app:layout_constraintTop_toBottomOf="@id/location_description" />
 
     <View
         android:id="@+id/divider_location_details"
@@ -299,5 +321,8 @@
         android:src="@drawable/add"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
+
+
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>

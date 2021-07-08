@@ -34,6 +34,7 @@ import java.util.Objects;
 
 import ch.bbcag.swift_travel.R;
 import ch.bbcag.swift_travel.adapter.ImageAdapter;
+import ch.bbcag.swift_travel.adapter.SpinnerAdapter;
 import ch.bbcag.swift_travel.dal.ImageDao;
 import ch.bbcag.swift_travel.dal.LocationDao;
 import ch.bbcag.swift_travel.dal.SwiftTravelDatabase;
@@ -57,6 +58,7 @@ public class LocationDetailsActivity extends UpButtonActivity implements Adapter
 	private EditText editDescription;
 	private EditText editTransport;
 	private ImageView locationImage;
+	private ImageView categoryIcon;
 
 	private FloatingActionButton floatingActionButton;
 	private GridView imageGrid;
@@ -92,6 +94,7 @@ public class LocationDetailsActivity extends UpButtonActivity implements Adapter
 		editDescription = findViewById(R.id.location_edit_description);
 		editTransport = findViewById(R.id.location_edit_transport);
 		locationImage = findViewById(R.id.location_image);
+		categoryIcon = findViewById(R.id.location_category_icon);
 
 		categorySpinner = findViewById(R.id.location_category_spinner);
 
@@ -144,9 +147,7 @@ public class LocationDetailsActivity extends UpButtonActivity implements Adapter
 	}
 
 	private void setCategorySpinner() {
-		ArrayAdapter<String> adapter = new ArrayAdapter<>(LocationDetailsActivity.this, android.R.layout.simple_spinner_item, getResources().getStringArray(R.array.location_categories));
-		adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-		categorySpinner.setAdapter(adapter);
+		categorySpinner.setAdapter(new SpinnerAdapter(this, R.layout.dropdown_spinner, getResources().getStringArray(R.array.location_categories)));
 		categorySpinner.setOnItemSelectedListener(this);
 	}
 
@@ -161,7 +162,7 @@ public class LocationDetailsActivity extends UpButtonActivity implements Adapter
 				System.out.println(selected.getCategory());
 				break;
 			case 2:
-				selected.setCategory(Const.CATEGORY_PLACE);
+				selected.setCategory(Const.CATEGORY_LOCATION);
 				break;
 			default:
 				break;
@@ -298,6 +299,7 @@ public class LocationDetailsActivity extends UpButtonActivity implements Adapter
 		editTransport.setText(selected.getTransport());
 
 		refreshContent();
+		setCategory();
 
 		Group form = findViewById(R.id.location_form);
 		form.setVisibility(View.GONE);
@@ -307,6 +309,23 @@ public class LocationDetailsActivity extends UpButtonActivity implements Adapter
 		floatingActionButton.setOnClickListener(v -> ImagePicker.with(this).crop().start(Const.ADD_IMAGE_REQUEST_CODE));
 		setCategorySpinner();
 		onSubmitButtonClick();
+	}
+
+	private void setCategory(){
+		switch (selected.getCategory()){
+			case Const.CATEGORY_HOTEL:
+				categoryIcon.setImageResource(R.drawable.category_hotel);
+				break;
+			case Const.CATEGORY_RESTAURANT:
+				categoryIcon.setImageResource(R.drawable.category_restaurant);
+				break;
+			case Const.CATEGORY_LOCATION:
+				categoryIcon.setImageResource(R.drawable.category_location);
+				break;
+			default:
+				categoryIcon.setImageResource(R.drawable.category_unknown);
+				break;
+		}
 	}
 
 	private void onSubmitButtonClick() {

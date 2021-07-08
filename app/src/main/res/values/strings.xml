@@ -106,6 +106,7 @@
 
     <string name="category_hotel">Hotel</string>
     <string name="category_restaurant">Restaurant</string>
-    <string name="category_place">Place</string>
+    <string name="category_location">Location</string>
     <string name="category_error">Category dropdown error. Please restart the app.</string>
+    <string name="category">Category:</string>
 </resources>

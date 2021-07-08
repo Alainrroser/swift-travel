@@ -1,5 +1,6 @@
 package ch.bbcag.swift_travel.utils;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.net.Uri;
 import android.text.method.ScrollingMovementMethod;
@@ -55,12 +56,25 @@ public class LayoutUtils {
 		setTextOnEditText(editTextBox, text);
 	}
 
+
 	public static void setImageURIOnImageView(ImageView iv, String URI) {
 		iv.setImageURI(Uri.parse(URI));
 	}
 
+	@SuppressLint("UseCompatLoadingForDrawables")
+	public static void setRoundedImageURIOnImageView(Context context, ImageView iv, String URI) {
+		Glide.with(context)
+		     .load(URI)
+		     .apply(RequestOptions.bitmapTransform(new RoundedCorners(180)))
+		     .into(iv);
+	}
+
 	public static void setFlagImageURIOnImageView(Context context, ImageView iv, String URI) {
-		GlideToVectorYou.init().with(context).setPlaceHolder(R.drawable.placeholder_flag, R.drawable.placeholder_flag).load(Uri.parse(URI), iv);
+		GlideToVectorYou
+				.init()
+				.with(context)
+				.setPlaceHolder(R.drawable.placeholder_flag, R.drawable.placeholder_flag)
+				.load(Uri.parse(URI), iv);
 	}
 
 	public static void setOnlineImageURIOnImageView(Context context, ImageView iv, Uri URI, boolean roundedCorners) {

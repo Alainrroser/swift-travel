@@ -24,6 +24,7 @@ import ch.bbcag.swift_travel.utils.OnlineDatabaseUtils;
 import static ch.bbcag.swift_travel.R.drawable.category_hotel;
 import static ch.bbcag.swift_travel.R.drawable.category_location;
 import static ch.bbcag.swift_travel.R.drawable.category_restaurant;
+import static ch.bbcag.swift_travel.R.drawable.category_unknown;
 import static ch.bbcag.swift_travel.R.drawable.placeholder_icon;
 import static ch.bbcag.swift_travel.R.drawable.timeline_bottom;
 import static ch.bbcag.swift_travel.R.drawable.timeline_middle;
@@ -71,7 +72,7 @@ public class LocationAdapter extends ArrayAdapter<Location> {
 		String duration = location.getDuration() + ", " + location.getStartTime() + "-" + location.getEndTime();
 		viewHolder.duration.setText(duration);
 		if (location.getImageURI() != null) {
-			LayoutUtils.setImageURIOnImageView(viewHolder.image, location.getImageURI());
+			LayoutUtils.setRoundedImageURIOnImageView(dayDetailsActivity, viewHolder.image, location.getImageURI());
 		} else {
 			setImage(viewHolder, location);
 		}
@@ -85,11 +86,11 @@ public class LocationAdapter extends ArrayAdapter<Location> {
 			case Const.CATEGORY_RESTAURANT:
 				viewHolder.image.setImageResource(category_restaurant);
 				break;
-			case Const.CATEGORY_PLACE:
+			case Const.CATEGORY_LOCATION:
 				viewHolder.image.setImageResource(category_location);
 				break;
 			default:
-				viewHolder.image.setImageResource(placeholder_icon);
+				viewHolder.image.setImageResource(category_unknown);
 				break;
 		}
 	}

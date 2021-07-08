@@ -90,7 +90,7 @@
         android:id="@+id/login_button"
         android:layout_width="@dimen/icon_button_size"
         android:layout_height="@dimen/icon_button_size"
-        android:layout_marginEnd="@dimen/list_icon_button_margin_end"
+        android:layout_marginEnd="@dimen/icon_button_margin_end"
         android:background="@drawable/person"
         android:contentDescription="@string/profile_image"
         app:layout_constraintBottom_toTopOf="@id/trips"

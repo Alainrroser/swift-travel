@@ -6,7 +6,6 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
@@ -29,6 +28,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.Objects;
 
 import ch.bbcag.swift_travel.R;
+import ch.bbcag.swift_travel.adapter.SpinnerAdapter;
 import ch.bbcag.swift_travel.entities.City;
 import ch.bbcag.swift_travel.entities.Location;
 import ch.bbcag.swift_travel.entities.Trip;
@@ -167,11 +167,7 @@ public class CreateActivity extends UpButtonActivity implements AdapterView.OnIt
 	}
 
 	private void setCategorySpinner() {
-		ArrayAdapter<String> adapter = new ArrayAdapter<>(CreateActivity.this,
-		                                                  android.R.layout.simple_spinner_item,
-		                                                  getResources().getStringArray(R.array.location_categories));
-		adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-		categorySpinner.setAdapter(adapter);
+		categorySpinner.setAdapter(new SpinnerAdapter(this, R.layout.dropdown_spinner, getResources().getStringArray(R.array.location_categories)));
 		categorySpinner.setOnItemSelectedListener(this);
 	}
 
@@ -179,16 +175,16 @@ public class CreateActivity extends UpButtonActivity implements AdapterView.OnIt
 	public void onItemSelected(AdapterView<?> parent, View v, int position, long id) {
 		switch (position) {
 			case 0:
-				location.setCategory(Const.CATEGORY_HOTEL);
+				location.setCategory(Const.CATEGORY_DEFAULT);
 				break;
 			case 1:
-				location.setCategory(Const.CATEGORY_RESTAURANT);
-				System.out.println(location.getCategory());
+				location.setCategory(Const.CATEGORY_HOTEL);
 				break;
 			case 2:
-				location.setCategory(Const.CATEGORY_PLACE);
+				location.setCategory(Const.CATEGORY_RESTAURANT);
 				break;
-			default:
+			case 3:
+				location.setCategory(Const.CATEGORY_LOCATION);
 				break;
 		}
 	}

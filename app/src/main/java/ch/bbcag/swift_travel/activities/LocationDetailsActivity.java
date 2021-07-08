@@ -6,7 +6,6 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.GridView;
@@ -146,11 +145,6 @@ public class LocationDetailsActivity extends UpButtonActivity implements Adapter
 		}
 	}
 
-	private void setCategorySpinner() {
-		categorySpinner.setAdapter(new SpinnerAdapter(this, R.layout.dropdown_spinner, getResources().getStringArray(R.array.location_categories)));
-		categorySpinner.setOnItemSelectedListener(this);
-	}
-
 	@Override
 	public void onItemSelected(AdapterView<?> parent, View v, int position, long id) {
 		switch (position) {
@@ -159,7 +153,6 @@ public class LocationDetailsActivity extends UpButtonActivity implements Adapter
 				break;
 			case 1:
 				selected.setCategory(Const.CATEGORY_RESTAURANT);
-				System.out.println(selected.getCategory());
 				break;
 			case 2:
 				selected.setCategory(Const.CATEGORY_LOCATION);
@@ -175,6 +168,11 @@ public class LocationDetailsActivity extends UpButtonActivity implements Adapter
 	public void onNothingSelected(AdapterView<?> parent) {
 		// Callback method to be invoked when the selection disappears from this view.
 		Toast.makeText(this, getString(R.string.category_error), Toast.LENGTH_SHORT).show();
+	}
+
+	private void setCategorySpinner() {
+		categorySpinner.setAdapter(new SpinnerAdapter(this, R.layout.dropdown_spinner, getResources().getStringArray(R.array.location_categories)));
+		categorySpinner.setOnItemSelectedListener(this);
 	}
 
 	private void checkIfLoggedIn(long id) {
@@ -297,6 +295,7 @@ public class LocationDetailsActivity extends UpButtonActivity implements Adapter
 		editTitle.setText(selected.getName());
 		editDescription.setText(selected.getDescription());
 		editTransport.setText(selected.getTransport());
+		categorySpinner.setSelection(selected.getCategory());
 
 		refreshContent();
 		setCategory();
@@ -307,12 +306,13 @@ public class LocationDetailsActivity extends UpButtonActivity implements Adapter
 		editDescriptionButton.setOnClickListener(v -> toggleForm());
 		locationImage.setOnClickListener(v -> ImagePicker.with(this).crop().start(Const.LOCATION_IMAGE_REQUEST_CODE));
 		floatingActionButton.setOnClickListener(v -> ImagePicker.with(this).crop().start(Const.ADD_IMAGE_REQUEST_CODE));
+
 		setCategorySpinner();
 		onSubmitButtonClick();
 	}
 
-	private void setCategory(){
-		switch (selected.getCategory()){
+	private void setCategory() {
+		switch (selected.getCategory()) {
 			case Const.CATEGORY_HOTEL:
 				categoryIcon.setImageResource(R.drawable.category_hotel);
 				break;
@@ -391,6 +391,7 @@ public class LocationDetailsActivity extends UpButtonActivity implements Adapter
 			editTitle.setText(selected.getName());
 			editDescription.setText(selected.getDescription());
 			editTransport.setText(selected.getTransport());
+			categorySpinner.setSelection(selected.getCategory());
 			form.setVisibility(View.VISIBLE);
 			content.setVisibility(View.GONE);
 		}

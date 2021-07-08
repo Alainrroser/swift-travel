@@ -8,7 +8,6 @@ import java.time.format.DateTimeFormatter;
 public class DateTimeUtils {
 	public static long parseDateToMilliseconds(String dateString) {
 		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy");
-		// Subtract a day so you can be at two locations in one day
 		return LocalDate.parse(dateString, formatter).atStartOfDay().atZone(ZoneId.systemDefault()).toInstant().toEpochMilli();
 	}
 

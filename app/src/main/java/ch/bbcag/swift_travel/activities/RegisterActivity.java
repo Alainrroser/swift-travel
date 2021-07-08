@@ -9,7 +9,9 @@ import android.widget.EditText;
 
 import androidx.annotation.NonNull;
 
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.textfield.TextInputLayout;
+import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 
 import java.util.ArrayList;
@@ -81,20 +83,26 @@ public class RegisterActivity extends UpButtonActivity {
 			editTexts.add(password);
 			editTexts.add(passwordConfirm);
 
-			if (ValidationUtils.areInputsEmpty(RegisterActivity.this, inputLayouts, editTexts)
-			    && ValidationUtils.areInputsEqual(RegisterActivity.this, passwordLayout, password, passwordConfirmLayout, passwordConfirm)) {
-				String emailStr = email.getText().toString();
-				String passwordStr = password.getText().toString();
-				firebaseAuth.createUserWithEmailAndPassword(emailStr, passwordStr).addOnCompleteListener(RegisterActivity.this, task -> {
-					if (!task.isSuccessful()) {
-						RegisterActivity.this.generateMessageDialog(getString(R.string.login_unsuccessful_title), Objects.requireNonNull(task.getException()).getMessage());
-					} else {
-						Intent intent = new Intent(getApplicationContext(), UserActivity.class);
-						startActivity(intent);
-					}
-				});
-			}
+			validateInputsAndRegister(inputLayouts, editTexts);
 		});
+	}
+
+	private void validateInputsAndRegister(List<TextInputLayout> inputLayouts, List<EditText> editTexts) {
+		if (ValidationUtils.areInputsEmpty(RegisterActivity.this, inputLayouts, editTexts)
+		    && ValidationUtils.areInputsEqual(RegisterActivity.this, passwordLayout, password, passwordConfirmLayout, passwordConfirm)) {
+			String emailStr = email.getText().toString();
+			String passwordStr = password.getText().toString();
+			firebaseAuth.createUserWithEmailAndPassword(emailStr, passwordStr).addOnCompleteListener(RegisterActivity.this, this::register);
+		}
+	}
+
+	private void register(Task<AuthResult> task) {
+		if (task.isSuccessful()) {
+			Intent intent = new Intent(getApplicationContext(), UserActivity.class);
+			startActivity(intent);
+		} else {
+			RegisterActivity.this.generateMessageDialog(getString(R.string.login_unsuccessful_title), Objects.requireNonNull(task.getException()).getMessage());
+		}
 	}
 
 	private void onLoginButtonClick() {

@@ -220,6 +220,22 @@ public class MainActivity extends BaseActivity implements SearchView.OnQueryText
 			localNonExistingTrip.setId(newId);
 
 			OnlineDatabaseUtils.add(Const.TRIPS, newId, tripDao.getById(newId));
+			updateCountries(localNonExistingTrip);
+		}
+	}
+
+	private void updateCountries(Trip trip) {
+		List<Country> countryList = new ArrayList<>();
+		OnlineDatabaseUtils.getAllFromParentId(Const.COUNTRIES, Const.TRIP_ID, trip.getId(), task -> updateCountryTripIds(task, countryList, trip));
+	}
+
+	private void updateCountryTripIds(Task<QuerySnapshot> task, List<Country> countryList, Trip trip) {
+		for (QueryDocumentSnapshot document : Objects.requireNonNull(task.getResult())) {
+			countryList.add(document.toObject(Country.class));
+		}
+		for (Country country : countryList) {
+			country.setTripId(trip.getId());
+			OnlineDatabaseUtils.add(Const.COUNTRIES, country.getId(), country);
 		}
 	}
 
@@ -246,15 +262,19 @@ public class MainActivity extends BaseActivity implements SearchView.OnQueryText
 			trip.setName(intent.getStringExtra(Const.TRIP_NAME));
 			trip.setDescription(intent.getStringExtra(Const.TRIP_DESCRIPTION));
 			trip.setImageURI(intent.getStringExtra(Const.IMAGE_URI));
-			if (FirebaseAuth.getInstance().getCurrentUser() != null) {
-				trip.setUserId(Objects.requireNonNull(FirebaseAuth.getInstance().getCurrentUser()).getUid());
-			}
+			setUserId(trip);
 			long id = tripDao.insert(trip);
 			trip.setId(id);
 
 			OnlineDatabaseUtils.add(Const.TRIPS, trip.getId(), trip);
 
 			adapter.add(trip);
+		}
+	}
+
+	private void setUserId(Trip trip) {
+		if (FirebaseAuth.getInstance().getCurrentUser() != null) {
+			trip.setUserId(Objects.requireNonNull(FirebaseAuth.getInstance().getCurrentUser()).getUid());
 		}
 	}
 

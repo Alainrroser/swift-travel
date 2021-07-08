@@ -34,10 +34,10 @@ public class SpinnerAdapter extends ArrayAdapter<String> {
 
 	private View getCustomView(final int position, View convertView, ViewGroup parent) {
 		View row = LayoutInflater.from(parent.getContext()).inflate(R.layout.dropdown_spinner, parent, false);
-		final TextView label = (TextView) row.findViewById(R.id.spinner_text);
+		final TextView label = row.findViewById(R.id.spinner_text);
 		label.setText(objects[position]);
-		final ImageView iv = (ImageView) row.findViewById(R.id.spinner_image);
-		switch (position){
+		final ImageView iv = row.findViewById(R.id.spinner_image);
+		switch (position) {
 			case Const.CATEGORY_DEFAULT:
 				iv.setImageResource(0);
 				break;

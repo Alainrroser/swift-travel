@@ -11,6 +11,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.constraintlayout.widget.Group;
 
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.textfield.TextInputLayout;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -131,32 +132,37 @@ public class UserActivity extends UpButtonActivity {
 
 	private void onSubmitButtonClick() {
 		submitButton.setOnClickListener(v -> {
-			List<TextInputLayout> layouts = new ArrayList<>();
+			List<TextInputLayout> inputLayouts = new ArrayList<>();
 			List<EditText> editTexts = new ArrayList<>();
 
-			layouts.add(passwordLayout);
-			layouts.add(newPasswordLayout);
-			layouts.add(newPasswordConfirmLayout);
+			inputLayouts.add(passwordLayout);
+			inputLayouts.add(newPasswordLayout);
+			inputLayouts.add(newPasswordConfirmLayout);
 
 			editTexts.add(password);
 			editTexts.add(newPassword);
 			editTexts.add(newPasswordConfirm);
 
-
-			if (ValidationUtils.areInputsEmpty(UserActivity.this, layouts, editTexts)
-			    && ValidationUtils.isPasswordCorrect(this, currentUser, passwordLayout, password)
-			    && ValidationUtils.doesNewPasswordNotEqualOldPassword(this, newPasswordLayout, password, newPasswordLayout, newPassword)
-			    && ValidationUtils.areInputsEqual(UserActivity.this, newPasswordLayout, newPassword, newPasswordConfirmLayout, newPasswordConfirm)) {
-				currentUser.updatePassword(newPassword.getText().toString()).addOnCompleteListener(task -> {
-					if (!task.isSuccessful()) {
-						generateMessageDialog(getString(R.string.default_error_title), Objects.requireNonNull(task.getException()).getMessage());
-					} else {
-						generateMessageDialog(getString(R.string.success), getString(R.string.password_changed));
-						toggleForm();
-					}
-				});
-			}
+			validateInputsAndChangePassword(inputLayouts, editTexts);
 		});
+	}
+
+	private void validateInputsAndChangePassword(List<TextInputLayout> layouts, List<EditText> editTexts) {
+		if (ValidationUtils.areInputsEmpty(UserActivity.this, layouts, editTexts)
+		    && ValidationUtils.isPasswordCorrect(this, currentUser, passwordLayout, password)
+		    && ValidationUtils.doesNewPasswordNotEqualOldPassword(this, newPasswordLayout, password, newPasswordLayout, newPassword)
+		    && ValidationUtils.areInputsEqual(UserActivity.this, newPasswordLayout, newPassword, newPasswordConfirmLayout, newPasswordConfirm)) {
+			currentUser.updatePassword(newPassword.getText().toString()).addOnCompleteListener(this::changePassword);
+		}
+	}
+
+	private void changePassword(Task<Void> task) {
+		if (!task.isSuccessful()) {
+			generateMessageDialog(getString(R.string.success), getString(R.string.password_changed));
+			toggleForm();
+		} else {
+			generateMessageDialog(getString(R.string.default_error_title), Objects.requireNonNull(task.getException()).getMessage());
+		}
 	}
 
 	private void onLogoutButtonClick() {
@@ -180,7 +186,7 @@ public class UserActivity extends UpButtonActivity {
 
 	private void deleteTrips() {
 		List<Trip> trips = SwiftTravelDatabase.getInstance(getApplicationContext()).getTripDao().getAll();
-		for(Trip trip : trips) {
+		for (Trip trip : trips) {
 			deleteCountries(trip);
 			OnlineDatabaseUtils.delete(Const.TRIPS, trip.getId());
 			SwiftTravelDatabase.getInstance(getApplicationContext()).getTripDao().deleteById(trip.getId());

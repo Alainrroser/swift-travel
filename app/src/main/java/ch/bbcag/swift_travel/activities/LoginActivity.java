@@ -8,6 +8,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 
+import androidx.activity.result.ActivityResult;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
@@ -63,7 +64,7 @@ public class LoginActivity extends UpButtonActivity {
 		GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN).requestIdToken(getString(R.string.default_web_client_id)).requestEmail().build();
 		mGoogleSignInClient = GoogleSignIn.getClient(this, gso);
 
-		initializeActivityResultLauncher();
+		googleLoginActivityResultLauncher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), this::initializeGoogleLogin);
 	}
 
 	@Override
@@ -95,14 +96,12 @@ public class LoginActivity extends UpButtonActivity {
 		return super.onOptionsItemSelected(item);
 	}
 
-	private void initializeActivityResultLauncher() {
-		googleLoginActivityResultLauncher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), result -> {
-			if (result.getResultCode() == Activity.RESULT_OK) {
-				Intent data = result.getData();
-				Task<GoogleSignInAccount> task = GoogleSignIn.getSignedInAccountFromIntent(data);
-				handleGoogleLoginResult(task);
-			}
-		});
+	private void initializeGoogleLogin(ActivityResult result) {
+		if (result.getResultCode() == Activity.RESULT_OK) {
+			Intent data = result.getData();
+			Task<GoogleSignInAccount> task = GoogleSignIn.getSignedInAccountFromIntent(data);
+			handleGoogleLoginResult(task);
+		}
 	}
 
 	private void handleGoogleLoginResult(Task<GoogleSignInAccount> task) {

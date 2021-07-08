@@ -277,6 +277,22 @@ public class CountryDetailsActivity extends UpButtonActivity implements SearchVi
 			localNonExistingCity.setId(newId);
 
 			OnlineDatabaseUtils.add(Const.CITIES, newId, cityDao.getById(newId));
+			updateDays(localNonExistingCity);
+		}
+	}
+
+	private void updateDays(City city) {
+		List<Day> dayList = new ArrayList<>();
+		OnlineDatabaseUtils.getAllFromParentId(Const.DAYS, Const.CITY_ID, city.getId(), task -> updateDayCityIds(task, dayList, city));
+	}
+
+	private void updateDayCityIds(Task<QuerySnapshot> task, List<Day> dayList, City city) {
+		for (QueryDocumentSnapshot document : Objects.requireNonNull(task.getResult())) {
+			dayList.add(document.toObject(Day.class));
+		}
+		for (Day day : dayList) {
+			day.setCityId(city.getId());
+			OnlineDatabaseUtils.add(Const.DAYS, day.getId(), day);
 		}
 	}
 

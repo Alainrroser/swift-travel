@@ -40,6 +40,7 @@ import ch.bbcag.swift_travel.dal.DayDao;
 import ch.bbcag.swift_travel.dal.SwiftTravelDatabase;
 import ch.bbcag.swift_travel.entities.City;
 import ch.bbcag.swift_travel.entities.Day;
+import ch.bbcag.swift_travel.entities.Location;
 import ch.bbcag.swift_travel.utils.Const;
 import ch.bbcag.swift_travel.utils.LayoutUtils;
 import ch.bbcag.swift_travel.utils.OnlineDatabaseUtils;
@@ -287,6 +288,22 @@ public class CityDetailsActivity extends UpButtonActivity implements SearchView.
 			localNonExistingDay.setId(newId);
 
 			OnlineDatabaseUtils.add(Const.DAYS, newId, dayDao.getById(newId));
+			updateLocations(localNonExistingDay);
+		}
+	}
+
+	private void updateLocations(Day day) {
+		List<Location> locationList = new ArrayList<>();
+		OnlineDatabaseUtils.getAllFromParentId(Const.LOCATIONS, Const.DAY_ID, day.getId(), task -> updateLocationDayIds(task, locationList, day));
+	}
+
+	private void updateLocationDayIds(Task<QuerySnapshot> task, List<Location> locationList, Day day) {
+		for (QueryDocumentSnapshot document : Objects.requireNonNull(task.getResult())) {
+			locationList.add(document.toObject(Location.class));
+		}
+		for (Location location : locationList) {
+			location.setDayId(day.getId());
+			OnlineDatabaseUtils.add(Const.LOCATIONS, location.getId(), location);
 		}
 	}
 

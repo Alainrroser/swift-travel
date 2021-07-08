@@ -40,6 +40,7 @@ import ch.bbcag.swift_travel.dal.DayDao;
 import ch.bbcag.swift_travel.dal.LocationDao;
 import ch.bbcag.swift_travel.dal.SwiftTravelDatabase;
 import ch.bbcag.swift_travel.entities.Day;
+import ch.bbcag.swift_travel.entities.Image;
 import ch.bbcag.swift_travel.entities.Location;
 import ch.bbcag.swift_travel.utils.Const;
 import ch.bbcag.swift_travel.utils.DateTimeUtils;
@@ -290,6 +291,22 @@ public class DayDetailsActivity extends UpButtonActivity implements SearchView.O
 			localNonExistingLocation.setId(newId);
 
 			OnlineDatabaseUtils.add(Const.LOCATIONS, newId, locationDao.getById(newId));
+			updateImages(localNonExistingLocation);
+		}
+	}
+
+	private void updateImages(Location location) {
+		List<Image> imageList = new ArrayList<>();
+		OnlineDatabaseUtils.getAllFromParentId(Const.IMAGES, Const.LOCATION_ID, location.getId(), task -> updateImageLocationIds(task, imageList, location));
+	}
+
+	private void updateImageLocationIds(Task<QuerySnapshot> task, List<Image> imageList, Location location) {
+		for (QueryDocumentSnapshot document : Objects.requireNonNull(task.getResult())) {
+			imageList.add(document.toObject(Image.class));
+		}
+		for (Image image : imageList) {
+			image.setLocationId(location.getId());
+			OnlineDatabaseUtils.add(Const.IMAGES, image.getId(), image);
 		}
 	}
 

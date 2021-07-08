@@ -3,6 +3,7 @@ package ch.bbcag.swift_travel.utils;
 import android.app.Activity;
 import android.widget.EditText;
 
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.textfield.TextInputLayout;
 import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.EmailAuthProvider;
@@ -27,15 +28,20 @@ public class ValidationUtils {
 		for (String text : strings) {
 			int position = strings.indexOf(text);
 			TextInputLayout selected = textInputLayouts.get(position);
-			if (text.isEmpty()) {
-				selected.setError(context.getString(R.string.please) + " " + editTexts.get(position).getHint().toString());
-				selected.requestFocus();
-				errorCounter += 1;
-			} else {
-				selected.setError(null);
-			}
+			errorCounter = checkIfInputIsEmpty(context, selected, text, editTexts, position, errorCounter);
 		}
 		return errorCounter == 0;
+	}
+
+	private static int checkIfInputIsEmpty(Activity context, TextInputLayout selected, String text, List<EditText> editTexts, int position, int errorCounter) {
+		if (text.isEmpty()) {
+			selected.setError(context.getString(R.string.please) + " " + editTexts.get(position).getHint().toString());
+			selected.requestFocus();
+			errorCounter += 1;
+		} else {
+			selected.setError(null);
+		}
+		return errorCounter;
 	}
 
 	public static boolean areInputsEqual(Activity context, TextInputLayout TIL1, EditText ET1, TextInputLayout TIL2, EditText ET2) {
@@ -54,17 +60,19 @@ public class ValidationUtils {
 
 	public static boolean isPasswordCorrect(Activity context, FirebaseUser currentUser, TextInputLayout textInputLayout, EditText editText) {
 		AuthCredential credential = EmailAuthProvider.getCredential(Objects.requireNonNull(currentUser.getEmail()), editText.getText().toString());
-		currentUser.reauthenticate(credential).addOnCompleteListener(task -> {
-			if (task.isSuccessful()) {
-				isPasswordValid = true;
-				textInputLayout.setError(null);
-			} else {
-				isPasswordValid = false;
-				textInputLayout.setError(context.getString(R.string.password_does_not_match));
-				textInputLayout.requestFocus();
-			}
-		});
+		currentUser.reauthenticate(credential).addOnCompleteListener(task -> setIsPasswordValid(context, task, textInputLayout));
 		return isPasswordValid;
+	}
+
+	private static void setIsPasswordValid(Activity context, Task<Void> task, TextInputLayout textInputLayout) {
+		if (task.isSuccessful()) {
+			isPasswordValid = true;
+			textInputLayout.setError(null);
+		} else {
+			isPasswordValid = false;
+			textInputLayout.setError(context.getString(R.string.password_does_not_match));
+			textInputLayout.requestFocus();
+		}
 	}
 
 	public static boolean doesNewPasswordNotEqualOldPassword(Activity context, TextInputLayout oldPasswordLayout, EditText oldPassword, TextInputLayout newPasswordLayout, EditText newPassword) {

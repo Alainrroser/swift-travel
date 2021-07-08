@@ -298,6 +298,22 @@ public class TripDetailsActivity extends UpButtonActivity implements SearchView.
 			localNonExistingCountry.setId(newId);
 
 			OnlineDatabaseUtils.add(Const.COUNTRIES, newId, countryDao.getById(newId));
+			updateCities(localNonExistingCountry);
+		}
+	}
+
+	private void updateCities(Country country) {
+		List<City> cityList = new ArrayList<>();
+		OnlineDatabaseUtils.getAllFromParentId(Const.CITIES, Const.COUNTRY_ID, country.getId(), task -> updateCityCountryIds(task, cityList, country));
+	}
+
+	private void updateCityCountryIds(Task<QuerySnapshot> task, List<City> cityList, Country country) {
+		for (QueryDocumentSnapshot document : Objects.requireNonNull(task.getResult())) {
+			cityList.add(document.toObject(City.class));
+		}
+		for (City city : cityList) {
+			city.setCountryId(country.getId());
+			OnlineDatabaseUtils.add(Const.CITIES, city.getId(), city);
 		}
 	}
 
@@ -491,7 +507,7 @@ public class TripDetailsActivity extends UpButtonActivity implements SearchView.
 
 	private void addCitiesToList(Task<QuerySnapshot> task, List<City> cityList, Country country, boolean updateOrigin) {
 		initializeLocalDate(updateOrigin);
-		for(QueryDocumentSnapshot document : Objects.requireNonNull(task.getResult())) {
+		for (QueryDocumentSnapshot document : Objects.requireNonNull(task.getResult())) {
 			cityList.add(document.toObject(City.class));
 		}
 		updateDestinationAndOriginIfLoggedIn(cityList, country, updateOrigin);

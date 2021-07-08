@@ -25,7 +25,6 @@ import static ch.bbcag.swift_travel.R.drawable.category_hotel;
 import static ch.bbcag.swift_travel.R.drawable.category_location;
 import static ch.bbcag.swift_travel.R.drawable.category_restaurant;
 import static ch.bbcag.swift_travel.R.drawable.category_unknown;
-import static ch.bbcag.swift_travel.R.drawable.placeholder_icon;
 import static ch.bbcag.swift_travel.R.drawable.timeline_bottom;
 import static ch.bbcag.swift_travel.R.drawable.timeline_middle;
 import static ch.bbcag.swift_travel.R.drawable.timeline_single;

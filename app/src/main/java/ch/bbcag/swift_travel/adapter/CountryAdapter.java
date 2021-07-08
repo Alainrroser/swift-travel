@@ -75,6 +75,7 @@ public class CountryAdapter extends ArrayAdapter<Country> {
 			deleteCities(country);
 			OnlineDatabaseUtils.delete(Const.COUNTRIES, country.getId());
 			SwiftTravelDatabase.getInstance(tripDetailsActivity.getApplicationContext()).getCountryDao().deleteById(country.getId());
+			tripDetailsActivity.refreshContent();
 		});
 	}
 

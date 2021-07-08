@@ -119,6 +119,7 @@ public class LocationAdapter extends ArrayAdapter<Location> {
 			deleteImages(location);
 			OnlineDatabaseUtils.delete(Const.LOCATIONS, location.getId());
 			SwiftTravelDatabase.getInstance(dayDetailsActivity.getApplicationContext()).getLocationDao().deleteById(location.getId());
+			dayDetailsActivity.refreshContent();
 		});
 	}
 

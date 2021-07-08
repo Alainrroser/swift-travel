@@ -284,6 +284,8 @@ public class CityDetailsActivity extends UpButtonActivity implements SearchView.
 			OnlineDatabaseUtils.delete(Const.DAYS, localNonExistingDay.getId());
 			localNonExistingDay.setId(0);
 			long newId = dayDao.insert(localNonExistingDay);
+			localNonExistingDay.setId(newId);
+
 			OnlineDatabaseUtils.add(Const.DAYS, newId, dayDao.getById(newId));
 		}
 	}

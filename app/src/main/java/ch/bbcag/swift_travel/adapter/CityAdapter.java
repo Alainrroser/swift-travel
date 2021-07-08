@@ -73,6 +73,7 @@ public class CityAdapter extends ArrayAdapter<City> {
 			deleteDays(city);
 			OnlineDatabaseUtils.delete(Const.CITIES, city.getId());
 			SwiftTravelDatabase.getInstance(countryDetailsActivity.getApplicationContext()).getCityDao().deleteById(city.getId());
+			countryDetailsActivity.refreshContent();
 		});
 	}
 

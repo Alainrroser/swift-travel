@@ -295,6 +295,8 @@ public class TripDetailsActivity extends UpButtonActivity implements SearchView.
 			OnlineDatabaseUtils.delete(Const.COUNTRIES, localNonExistingCountry.getId());
 			localNonExistingCountry.setId(0);
 			long newId = countryDao.insert(localNonExistingCountry);
+			localNonExistingCountry.setId(newId);
+
 			OnlineDatabaseUtils.add(Const.COUNTRIES, newId, countryDao.getById(newId));
 		}
 	}
@@ -377,7 +379,7 @@ public class TripDetailsActivity extends UpButtonActivity implements SearchView.
 		countries.setOnItemClickListener(mListClickedHandler);
 	}
 
-	private void refreshContent() {
+	public void refreshContent() {
 		LayoutUtils.setEditableTitleText(titleText, editTitle, selected.getName());
 		LayoutUtils.setEditableText(descriptionText, editDescription, selected.getDescription(), getString(R.string.description_hint));
 		String duration;

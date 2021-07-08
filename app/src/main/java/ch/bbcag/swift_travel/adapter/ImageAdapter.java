@@ -60,6 +60,7 @@ public class ImageAdapter extends ArrayAdapter<Image> {
 			notifyDataSetChanged();
 			OnlineDatabaseUtils.delete(Const.IMAGES, image.getId());
 			SwiftTravelDatabase.getInstance(locationDetailsActivity.getApplicationContext()).getImageDao().deleteById(image.getId());
+			locationDetailsActivity.refreshContent();
 		});
 	}
 

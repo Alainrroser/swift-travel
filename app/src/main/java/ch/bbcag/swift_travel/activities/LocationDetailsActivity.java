@@ -272,6 +272,8 @@ public class LocationDetailsActivity extends UpButtonActivity implements Adapter
 			OnlineDatabaseUtils.delete(Const.LOCATIONS, localNonExistingImage.getId());
 			localNonExistingImage.setId(0);
 			long newId = imageDao.insert(localNonExistingImage);
+			localNonExistingImage.setId(newId);
+
 			OnlineDatabaseUtils.add(Const.LOCATIONS, newId, imageDao.getById(newId));
 		}
 	}
@@ -319,7 +321,7 @@ public class LocationDetailsActivity extends UpButtonActivity implements Adapter
 		});
 	}
 
-	private void refreshContent() {
+	public void refreshContent() {
 		LayoutUtils.setEditableTitleText(titleText, editTitle, selected.getName());
 		LayoutUtils.setEditableText(descriptionText, editDescription, selected.getDescription(), getString(R.string.description_hint));
 		LayoutUtils.setEditableText(transportText, editTransport, selected.getTransport(), getString(R.string.transport_hint));

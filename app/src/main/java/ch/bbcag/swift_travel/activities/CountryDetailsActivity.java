@@ -274,6 +274,8 @@ public class CountryDetailsActivity extends UpButtonActivity implements SearchVi
 			OnlineDatabaseUtils.delete(Const.CITIES, localNonExistingCity.getId());
 			localNonExistingCity.setId(0);
 			long newId = cityDao.insert(localNonExistingCity);
+			localNonExistingCity.setId(newId);
+
 			OnlineDatabaseUtils.add(Const.CITIES, newId, cityDao.getById(newId));
 		}
 	}

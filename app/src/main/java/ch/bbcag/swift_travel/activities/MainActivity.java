@@ -152,7 +152,9 @@ public class MainActivity extends BaseActivity implements SearchView.OnQueryText
 	}
 
 	private void filterAdapter(String searchText) {
-		adapter.getFilter().filter(searchText);
+		if (adapter != null) {
+			adapter.getFilter().filter(searchText);
+		}
 	}
 
 	private void synchronizeTrips(Task<QuerySnapshot> task) {
@@ -200,7 +202,7 @@ public class MainActivity extends BaseActivity implements SearchView.OnQueryText
 	private boolean checkIfExistsLocal(Trip onlineTrip) {
 		boolean existsInLocalDatabase = false;
 		for (Trip localTrip : tripDao.getAll()) {
-			if(localTrip.getStartDate() != null && onlineTrip.getStartDate() != null) {
+			if (localTrip.getStartDate() != null && onlineTrip.getStartDate() != null) {
 				existsInLocalDatabase = !localTrip.getStartDate().equals(onlineTrip.getStartDate());
 			} else {
 				existsInLocalDatabase = !localTrip.getName().equals(onlineTrip.getName());

@@ -188,7 +188,9 @@ public class CityDetailsActivity extends UpButtonActivity implements SearchView.
 	}
 
 	private void filterAdapter(String searchText) {
-		adapter.getFilter().filter(searchText);
+		if (adapter != null) {
+			adapter.getFilter().filter(searchText);
+		}
 	}
 
 	private void checkIfLoggedIn(long id) {

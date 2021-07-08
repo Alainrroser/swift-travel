@@ -126,7 +126,9 @@ public class ChooseCountryActivity extends UpButtonActivity implements SearchVie
 	}
 
 	private void filterAdapter(String searchText) {
-		adapter.getFilter().filter(searchText);
+		if (adapter != null) {
+			adapter.getFilter().filter(searchText);
+		}
 	}
 
 	private void addAllCountriesToClickableList() {

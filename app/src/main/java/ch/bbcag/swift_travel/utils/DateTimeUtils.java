@@ -8,12 +8,12 @@ import java.time.format.DateTimeFormatter;
 public class DateTimeUtils {
 	public static long parseDateToMilliseconds(String dateString) {
 		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy");
-		return LocalDate.parse(dateString, formatter).atStartOfDay().atZone(ZoneId.systemDefault()).toInstant().toEpochMilli();
+		return LocalDate.parse(dateString, formatter).atStartOfDay().atZone(ZoneId.of("+0")).toInstant().toEpochMilli();
 	}
 
 	public static long parseTimeToMilliseconds(String timeString) {
 		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm");
-		return LocalTime.parse(timeString, formatter).atDate(LocalDate.now(ZoneId.systemDefault())).atZone(ZoneId.systemDefault()).toInstant().toEpochMilli();
+		return LocalTime.parse(timeString, formatter).atDate(LocalDate.now(ZoneId.of("+0"))).atZone(ZoneId.systemDefault()).toInstant().toEpochMilli();
 	}
 
 	public static long getDaysCountFromTimeSpan(long startDate, long endDate) {

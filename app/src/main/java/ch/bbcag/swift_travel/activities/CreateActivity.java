@@ -174,16 +174,16 @@ public class CreateActivity extends UpButtonActivity implements AdapterView.OnIt
 	@Override
 	public void onItemSelected(AdapterView<?> parent, View v, int position, long id) {
 		switch (position) {
-			case 0:
+			case Const.CATEGORY_DEFAULT:
 				location.setCategory(Const.CATEGORY_DEFAULT);
 				break;
-			case 1:
+			case Const.CATEGORY_HOTEL:
 				location.setCategory(Const.CATEGORY_HOTEL);
 				break;
-			case 2:
+			case Const.CATEGORY_RESTAURANT:
 				location.setCategory(Const.CATEGORY_RESTAURANT);
 				break;
-			case 3:
+			case Const.CATEGORY_LOCATION:
 				location.setCategory(Const.CATEGORY_LOCATION);
 				break;
 		}
@@ -208,8 +208,8 @@ public class CreateActivity extends UpButtonActivity implements AdapterView.OnIt
 	}
 
 	private void onPositiveMaterialDatePickerClick(Pair<Long, Long> selection) {
-		startDate = (Instant.ofEpochMilli(selection.first).atZone(ZoneId.systemDefault()).toLocalDate().format(DateTimeFormatter.ofPattern("dd.MM.yyyy")));
-		endDate = (Instant.ofEpochMilli(selection.second).atZone(ZoneId.systemDefault()).toLocalDate().format(DateTimeFormatter.ofPattern("dd.MM.yyyy")));
+		startDate = (Instant.ofEpochMilli(selection.first).atZone(ZoneId.of("+0")).toLocalDate().format(DateTimeFormatter.ofPattern("dd.MM.yyyy")));
+		endDate = (Instant.ofEpochMilli(selection.second).atZone(ZoneId.of("+0")).toLocalDate().format(DateTimeFormatter.ofPattern("dd.MM.yyyy")));
 		String dateRange = startDate + "-" + endDate;
 		durationDate.setText(dateRange);
 		dateSelected = true;

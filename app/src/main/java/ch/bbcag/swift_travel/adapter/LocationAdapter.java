@@ -65,32 +65,31 @@ public class LocationAdapter extends ArrayAdapter<Location> {
 
 	private void addInformationToAdapter(LocationAdapterViewHolder viewHolder, Location location) {
 		setItemLineBackground(viewHolder, location);
-		viewHolder.delete.setOnClickListener(v -> generateConfirmDialog(location));
-
+		setImage(viewHolder, location);
 		viewHolder.name.setText(location.getName());
 		String duration = location.getDuration() + ", " + location.getStartTime() + "-" + location.getEndTime();
 		viewHolder.duration.setText(duration);
-		if (location.getImageURI() != null) {
-			LayoutUtils.setRoundedImageURIOnImageView(dayDetailsActivity, viewHolder.image, location.getImageURI());
-		} else {
-			setImage(viewHolder, location);
-		}
+		viewHolder.delete.setOnClickListener(v -> generateConfirmDialog(location));
 	}
 
 	private void setImage(LocationAdapterViewHolder viewHolder, Location location) {
-		switch (location.getCategory()) {
-			case Const.CATEGORY_HOTEL:
-				viewHolder.image.setImageResource(category_hotel);
-				break;
-			case Const.CATEGORY_RESTAURANT:
-				viewHolder.image.setImageResource(category_restaurant);
-				break;
-			case Const.CATEGORY_LOCATION:
-				viewHolder.image.setImageResource(category_location);
-				break;
-			default:
-				viewHolder.image.setImageResource(category_unknown);
-				break;
+		if (location.getImageURI() != null) {
+			LayoutUtils.setImageURIOnImageView(viewHolder.image, location.getImageURI());
+		} else {
+			switch (location.getCategory()) {
+				case Const.CATEGORY_HOTEL:
+					viewHolder.image.setImageResource(category_hotel);
+					break;
+				case Const.CATEGORY_RESTAURANT:
+					viewHolder.image.setImageResource(category_restaurant);
+					break;
+				case Const.CATEGORY_LOCATION:
+					viewHolder.image.setImageResource(category_location);
+					break;
+				default:
+					viewHolder.image.setImageResource(category_unknown);
+					break;
+			}
 		}
 	}
 

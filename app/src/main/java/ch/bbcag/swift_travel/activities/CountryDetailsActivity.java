@@ -177,7 +177,9 @@ public class CountryDetailsActivity extends UpButtonActivity implements SearchVi
 	}
 
 	private void filterAdapter(String searchText) {
-		adapter.getFilter().filter(searchText);
+		if (adapter != null) {
+			adapter.getFilter().filter(searchText);
+		}
 	}
 
 	private void checkIfLoggedIn(long id) {

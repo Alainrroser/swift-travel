@@ -8,10 +8,10 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="72dp"
-        android:descendantFocusability="blocksDescendants"
-        android:elevation="3dp"
         android:layout_margin="15dp"
         android:background="@drawable/rounded_corners_timeline"
+        android:descendantFocusability="blocksDescendants"
+        android:elevation="3dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -36,11 +36,10 @@
             android:layout_marginStart="8dp"
             android:layout_marginEnd="8dp"
             android:padding="2dp"
-            app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@id/name_timeline_list"
             app:layout_constraintStart_toEndOf="@id/image_timeline_list"
-            >
+            app:layout_constraintTop_toTopOf="parent">
 
             <View
                 android:layout_width="11dp"
@@ -57,12 +56,12 @@
             android:layout_marginStart="@dimen/list_image_margin_start"
             android:layout_marginTop="@dimen/list_image_margin_top"
             android:layout_marginEnd="8dp"
+            android:adjustViewBounds="false"
             android:background="@drawable/rounded_corners"
             android:contentDescription="@string/place_holder_image"
             android:elevation="1.5dp"
             android:padding="2dp"
             android:scaleType="fitXY"
-            android:src="@drawable/category_hotel"
             app:layout_constraintBottom_toBottomOf="@id/duration_or_date_timeline_list"
             app:layout_constraintEnd_toStartOf="@id/item_line"
             app:layout_constraintStart_toStartOf="parent"

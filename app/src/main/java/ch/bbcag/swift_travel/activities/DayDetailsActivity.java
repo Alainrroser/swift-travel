@@ -191,7 +191,9 @@ public class DayDetailsActivity extends UpButtonActivity implements SearchView.O
 	}
 
 	private void filterAdapter(String searchText) {
-		adapter.getFilter().filter(searchText);
+		if (adapter != null) {
+			adapter.getFilter().filter(searchText);
+		}
 	}
 
 	private void checkIfLoggedIn(long id) {

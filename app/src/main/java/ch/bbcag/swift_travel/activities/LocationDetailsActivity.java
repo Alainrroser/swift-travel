@@ -148,20 +148,20 @@ public class LocationDetailsActivity extends UpButtonActivity implements Adapter
 	@Override
 	public void onItemSelected(AdapterView<?> parent, View v, int position, long id) {
 		switch (position) {
-			case 0:
+			case Const.CATEGORY_HOTEL:
 				selected.setCategory(Const.CATEGORY_HOTEL);
 				break;
-			case 1:
+			case Const.CATEGORY_RESTAURANT:
 				selected.setCategory(Const.CATEGORY_RESTAURANT);
 				break;
-			case 2:
+			case Const.CATEGORY_LOCATION:
 				selected.setCategory(Const.CATEGORY_LOCATION);
 				break;
 			default:
 				break;
 		}
-
 		locationDao.update(selected);
+		setCategory();
 	}
 
 	@Override

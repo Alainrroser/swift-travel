@@ -162,7 +162,7 @@ public class MainActivity extends BaseActivity implements SearchView.OnQueryText
 			checkIfSavedLocal(localNonExistingTrips, onlineTrip);
 		}
 		addLocal(localNonExistingTrips);
-		onStartAfterListInitialized();
+		runOnUiThread(this::onStartAfterListInitialized);
 	}
 
 	private void addToList(Trip onlineTrip) {
@@ -199,7 +199,11 @@ public class MainActivity extends BaseActivity implements SearchView.OnQueryText
 	private boolean checkIfExistsLocal(Trip onlineTrip) {
 		boolean existsInLocalDatabase = false;
 		for (Trip localTrip : tripDao.getAll()) {
-			existsInLocalDatabase = localTrip.getId() != onlineTrip.getId();
+			if(localTrip.getStartDate() != null && onlineTrip.getStartDate() != null) {
+				existsInLocalDatabase = !localTrip.getStartDate().equals(onlineTrip.getStartDate());
+			} else {
+				existsInLocalDatabase = !localTrip.getName().equals(onlineTrip.getName());
+			}
 		}
 		return existsInLocalDatabase;
 	}
@@ -214,27 +218,29 @@ public class MainActivity extends BaseActivity implements SearchView.OnQueryText
 
 	private void addLocal(List<Trip> localNonExistingTrips) {
 		for (Trip localNonExistingTrip : localNonExistingTrips) {
+			long oldId = localNonExistingTrip.getId();
 			OnlineDatabaseUtils.delete(Const.TRIPS, localNonExistingTrip.getId());
 			localNonExistingTrip.setId(0);
 			long newId = tripDao.insert(localNonExistingTrip);
 			localNonExistingTrip.setId(newId);
+			localNonExistingTrip.setUserId(Objects.requireNonNull(FirebaseAuth.getInstance().getCurrentUser()).getUid());
 
 			OnlineDatabaseUtils.add(Const.TRIPS, newId, tripDao.getById(newId));
-			updateCountries(localNonExistingTrip);
+			updateCountries(oldId, newId);
 		}
 	}
 
-	private void updateCountries(Trip trip) {
+	private void updateCountries(long oldId, long newId) {
 		List<Country> countryList = new ArrayList<>();
-		OnlineDatabaseUtils.getAllFromParentId(Const.COUNTRIES, Const.TRIP_ID, trip.getId(), task -> updateCountryTripIds(task, countryList, trip));
+		OnlineDatabaseUtils.getAllFromParentId(Const.COUNTRIES, Const.TRIP_ID, oldId, task -> updateCountryTripIds(task, countryList, newId));
 	}
 
-	private void updateCountryTripIds(Task<QuerySnapshot> task, List<Country> countryList, Trip trip) {
+	private void updateCountryTripIds(Task<QuerySnapshot> task, List<Country> countryList, long newId) {
 		for (QueryDocumentSnapshot document : Objects.requireNonNull(task.getResult())) {
 			countryList.add(document.toObject(Country.class));
 		}
 		for (Country country : countryList) {
-			country.setTripId(trip.getId());
+			country.setTripId(newId);
 			OnlineDatabaseUtils.add(Const.COUNTRIES, country.getId(), country);
 		}
 	}

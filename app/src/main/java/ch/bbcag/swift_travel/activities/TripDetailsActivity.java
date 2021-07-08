@@ -240,7 +240,7 @@ public class TripDetailsActivity extends UpButtonActivity implements SearchView.
 			checkIfSavedLocal(localNonExistingCountries, onlineCountry);
 		}
 		addLocal(localNonExistingCountries);
-		onStartAfterListInitialized();
+		runOnUiThread(this::onStartAfterListInitialized);
 	}
 
 	private void addToList(Country onlineCountry) {
@@ -292,27 +292,28 @@ public class TripDetailsActivity extends UpButtonActivity implements SearchView.
 
 	private void addLocal(List<Country> localNonExistingCountries) {
 		for (Country localNonExistingCountry : localNonExistingCountries) {
+			long oldId = localNonExistingCountry.getId();
 			OnlineDatabaseUtils.delete(Const.COUNTRIES, localNonExistingCountry.getId());
 			localNonExistingCountry.setId(0);
 			long newId = countryDao.insert(localNonExistingCountry);
 			localNonExistingCountry.setId(newId);
 
 			OnlineDatabaseUtils.add(Const.COUNTRIES, newId, countryDao.getById(newId));
-			updateCities(localNonExistingCountry);
+			updateCities(oldId, newId);
 		}
 	}
 
-	private void updateCities(Country country) {
+	private void updateCities(long oldId, long newId) {
 		List<City> cityList = new ArrayList<>();
-		OnlineDatabaseUtils.getAllFromParentId(Const.CITIES, Const.COUNTRY_ID, country.getId(), task -> updateCityCountryIds(task, cityList, country));
+		OnlineDatabaseUtils.getAllFromParentId(Const.CITIES, Const.COUNTRY_ID, oldId, task -> updateCityCountryIds(task, cityList, newId));
 	}
 
-	private void updateCityCountryIds(Task<QuerySnapshot> task, List<City> cityList, Country country) {
+	private void updateCityCountryIds(Task<QuerySnapshot> task, List<City> cityList, long newId) {
 		for (QueryDocumentSnapshot document : Objects.requireNonNull(task.getResult())) {
 			cityList.add(document.toObject(City.class));
 		}
 		for (City city : cityList) {
-			city.setCountryId(country.getId());
+			city.setCountryId(newId);
 			OnlineDatabaseUtils.add(Const.CITIES, city.getId(), city);
 		}
 	}

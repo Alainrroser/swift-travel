@@ -230,7 +230,7 @@ public class CityDetailsActivity extends UpButtonActivity implements SearchView.
 			checkIfSavedLocal(localNonExistingDays, onlineDay);
 		}
 		addLocal(localNonExistingDays);
-		onStartAfterListInitialized();
+		runOnUiThread(this::onStartAfterListInitialized);
 	}
 
 	private void addToList(Day onlineDay) {
@@ -282,27 +282,28 @@ public class CityDetailsActivity extends UpButtonActivity implements SearchView.
 
 	private void addLocal(List<Day> localNonExistingDays) {
 		for (Day localNonExistingDay : localNonExistingDays) {
+			long oldId = localNonExistingDay.getId();
 			OnlineDatabaseUtils.delete(Const.DAYS, localNonExistingDay.getId());
 			localNonExistingDay.setId(0);
 			long newId = dayDao.insert(localNonExistingDay);
 			localNonExistingDay.setId(newId);
 
 			OnlineDatabaseUtils.add(Const.DAYS, newId, dayDao.getById(newId));
-			updateLocations(localNonExistingDay);
+			updateLocations(oldId, newId);
 		}
 	}
 
-	private void updateLocations(Day day) {
+	private void updateLocations(long oldId, long newId) {
 		List<Location> locationList = new ArrayList<>();
-		OnlineDatabaseUtils.getAllFromParentId(Const.LOCATIONS, Const.DAY_ID, day.getId(), task -> updateLocationDayIds(task, locationList, day));
+		OnlineDatabaseUtils.getAllFromParentId(Const.LOCATIONS, Const.DAY_ID, oldId, task -> updateLocationDayIds(task, locationList, newId));
 	}
 
-	private void updateLocationDayIds(Task<QuerySnapshot> task, List<Location> locationList, Day day) {
+	private void updateLocationDayIds(Task<QuerySnapshot> task, List<Location> locationList, long newId) {
 		for (QueryDocumentSnapshot document : Objects.requireNonNull(task.getResult())) {
 			locationList.add(document.toObject(Location.class));
 		}
 		for (Location location : locationList) {
-			location.setDayId(day.getId());
+			location.setDayId(newId);
 			OnlineDatabaseUtils.add(Const.LOCATIONS, location.getId(), location);
 		}
 	}

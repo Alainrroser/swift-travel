@@ -233,7 +233,7 @@ public class DayDetailsActivity extends UpButtonActivity implements SearchView.O
 			checkIfSavedLocal(localNonExistingLocations, onlineLocation);
 		}
 		addLocal(localNonExistingLocations);
-		onStartAfterListInitialized();
+		runOnUiThread(this::onStartAfterListInitialized);
 	}
 
 	private void addToList(Location onlineLocation) {
@@ -285,27 +285,28 @@ public class DayDetailsActivity extends UpButtonActivity implements SearchView.O
 
 	private void addLocal(List<Location> localNonExistingLocations) {
 		for (Location localNonExistingLocation : localNonExistingLocations) {
+			long oldId = localNonExistingLocation.getId();
 			OnlineDatabaseUtils.delete(Const.LOCATIONS, localNonExistingLocation.getId());
 			localNonExistingLocation.setId(0);
 			long newId = locationDao.insert(localNonExistingLocation);
 			localNonExistingLocation.setId(newId);
 
 			OnlineDatabaseUtils.add(Const.LOCATIONS, newId, locationDao.getById(newId));
-			updateImages(localNonExistingLocation);
+			updateImages(oldId, newId);
 		}
 	}
 
-	private void updateImages(Location location) {
+	private void updateImages(long oldId, long newId) {
 		List<Image> imageList = new ArrayList<>();
-		OnlineDatabaseUtils.getAllFromParentId(Const.IMAGES, Const.LOCATION_ID, location.getId(), task -> updateImageLocationIds(task, imageList, location));
+		OnlineDatabaseUtils.getAllFromParentId(Const.IMAGES, Const.LOCATION_ID, oldId, task -> updateImageLocationIds(task, imageList, newId));
 	}
 
-	private void updateImageLocationIds(Task<QuerySnapshot> task, List<Image> imageList, Location location) {
+	private void updateImageLocationIds(Task<QuerySnapshot> task, List<Image> imageList, long newId) {
 		for (QueryDocumentSnapshot document : Objects.requireNonNull(task.getResult())) {
 			imageList.add(document.toObject(Image.class));
 		}
 		for (Image image : imageList) {
-			image.setLocationId(location.getId());
+			image.setLocationId(newId);
 			OnlineDatabaseUtils.add(Const.IMAGES, image.getId(), image);
 		}
 	}

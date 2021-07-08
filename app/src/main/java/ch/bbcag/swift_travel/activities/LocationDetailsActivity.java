@@ -216,7 +216,7 @@ public class LocationDetailsActivity extends UpButtonActivity implements Adapter
 			checkIfSavedLocal(localNonExistingImages, onlineImage);
 		}
 		addLocal(localNonExistingImages);
-		onStartAfterListInitialized();
+		runOnUiThread(this::onStartAfterListInitialized);
 	}
 
 	private void addToList(Image onlineImage) {

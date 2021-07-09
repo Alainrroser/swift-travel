@@ -165,6 +165,10 @@ public class CityDetailsActivity extends UpButtonActivity implements SearchView.
 		if (resultCode == Activity.RESULT_OK && data != null) {
 			Uri imageURI = data.getData();
 			selected.setImageURI(imageURI.toString());
+			if (selected.getImageCDL() != null) {
+				OnlineDatabaseUtils.deleteOnlineImage(selected.getImageCDL());
+			}
+			selected.setImageCDL(OnlineDatabaseUtils.uploadImage(imageURI));
 			cityDao.update(selected);
 			OnlineDatabaseUtils.add(Const.CITIES, selected.getId(), selected);
 			cityImage.setImageURI(imageURI);

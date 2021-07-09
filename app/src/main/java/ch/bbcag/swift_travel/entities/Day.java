@@ -18,6 +18,8 @@ public class Day {
 	private String description;
 	@ColumnInfo(name = Const.IMAGE_URI)
 	private String imageURI;
+	@ColumnInfo(name = Const.IMAGE_CDL)
+	private String imageCDL;
 	@ColumnInfo(name = Const.CITY_ID)
 	private long cityId;
 	@ColumnInfo(name = Const.DATE)
@@ -70,6 +72,14 @@ public class Day {
 
 	public void setImageURI(String imageURI) {
 		this.imageURI = imageURI;
+	}
+
+	public String getImageCDL() {
+		return imageCDL;
+	}
+
+	public void setImageCDL(String imageCDL) {
+		this.imageCDL = imageCDL;
 	}
 
 	public String getDate() {

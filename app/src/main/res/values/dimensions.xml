@@ -56,8 +56,6 @@
     <dimen name="list_image_margin_start">16dp</dimen>
     <dimen name="list_image_margin_top">16dp</dimen>
 
-    <dimen name="timeline_image_size">50dp</dimen>
-
     <dimen name="standard_button_height">46dp</dimen>
     <dimen name="button_margin_top">8dp</dimen>
 

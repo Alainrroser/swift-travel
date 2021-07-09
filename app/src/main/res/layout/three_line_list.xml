@@ -26,6 +26,9 @@
             android:contentDescription="@string/place_holder_image"
             android:scaleType="fitCenter"
             android:src="@drawable/placeholder_icon"
+            android:background="@drawable/shadow"
+            android:elevation="4dp"
+            android:padding="2dp"
             app:layout_constraintBottom_toBottomOf="@id/duration_three_line_list"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />

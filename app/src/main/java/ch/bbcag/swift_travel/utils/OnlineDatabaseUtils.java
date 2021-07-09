@@ -57,42 +57,23 @@ public class OnlineDatabaseUtils {
 		return storage.getReference();
 	}
 
-	public static String uploadImage(Context context, Uri filePath) {
+	public static String uploadImage(Uri filePath) {
 		if (filePath != null) {
 			String uuid = UUID.randomUUID().toString();
-
-			ProgressDialog progressDialog
-					= new ProgressDialog(context);
-			progressDialog.setTitle("Uploading...");
-			progressDialog.show();
-
-			StorageReference ref
+						StorageReference ref
 					= getStorageReference()
 					.child(
 							Const.STORAGE_PATH
 							+ uuid);
-
 			ref.putFile(filePath)
 			   .addOnSuccessListener(
 					   taskSnapshot -> {
-						   progressDialog.dismiss();
 						   System.out.println("Successfully uploaded image.");
 					   })
 
 			   .addOnFailureListener(e -> {
-				   progressDialog.dismiss();
 				   System.out.println("failed to upload image: " + e.getMessage());
-			   })
-			   .addOnProgressListener(
-					   taskSnapshot -> {
-						   double progress
-								   = (100.0
-								      * taskSnapshot.getBytesTransferred()
-								      / taskSnapshot.getTotalByteCount());
-						   progressDialog.setMessage(
-								   "Uploaded "
-								   + (int) progress + "%");
-					   });
+			   });
 			return uuid;
 		}
 		return null;

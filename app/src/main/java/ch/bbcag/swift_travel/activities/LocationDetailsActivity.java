@@ -122,6 +122,10 @@ public class LocationDetailsActivity extends UpButtonActivity implements Adapter
 		if (requestCode == Const.LOCATION_IMAGE_REQUEST_CODE && resultCode == Activity.RESULT_OK && data != null) {
 			Uri imageURI = data.getData();
 			selected.setImageURI(imageURI.toString());
+			if (selected.getImageCDL() != null) {
+				OnlineDatabaseUtils.deleteOnlineImage(selected.getImageCDL());
+			}
+			selected.setImageCDL(OnlineDatabaseUtils.uploadImage(imageURI));
 			locationDao.update(selected);
 			OnlineDatabaseUtils.add(Const.LOCATIONS, selected.getId(), selected);
 			locationImage.setImageURI(imageURI);

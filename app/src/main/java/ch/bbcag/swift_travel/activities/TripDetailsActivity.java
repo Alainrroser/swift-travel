@@ -176,6 +176,10 @@ public class TripDetailsActivity extends UpButtonActivity implements SearchView.
 		if (resultCode == Activity.RESULT_OK && data != null) {
 			Uri imageURI = data.getData();
 			selected.setImageURI(imageURI.toString());
+			if (selected.getImageCDL() != null) {
+				OnlineDatabaseUtils.deleteOnlineImage(selected.getImageCDL());
+			}
+			selected.setImageCDL(OnlineDatabaseUtils.uploadImage(imageURI));
 			tripDao.update(selected);
 			OnlineDatabaseUtils.add(Const.TRIPS, selected.getId(), selected);
 			tripImage.setImageURI(imageURI);
@@ -356,7 +360,7 @@ public class TripDetailsActivity extends UpButtonActivity implements SearchView.
 			duration = getTripDuration() + " " + getString(R.string.days);
 		}
 		LayoutUtils.setTextOnTextView(durationText, duration);
-		if (selected.getImageCDL() != null){
+		if (selected.getImageCDL() != null) {
 			OnlineDatabaseUtils.setOnlineImageOnImageView(tripImage, selected.getImageCDL());
 		} else if (selected.getImageURI() != null && selected.getImageCDL() == null) {
 			LayoutUtils.setImageURIOnImageView(tripImage, selected.getImageURI());

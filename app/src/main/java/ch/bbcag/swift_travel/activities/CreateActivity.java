@@ -134,8 +134,7 @@ public class CreateActivity extends UpButtonActivity implements AdapterView.OnIt
 		String imageURIString = imageURI.toString();
 		String cdl = "";
 		if (FirebaseAuth.getInstance().getCurrentUser() != null) {
-			cdl = OnlineDatabaseUtils.uploadImage(this, imageURI);
-			System.out.println(cdl);
+			cdl = OnlineDatabaseUtils.uploadImage(imageURI);
 		}
 		Intent intent = getIntent();
 		if (intent.getBooleanExtra(Const.ADD_TRIP, false)) {

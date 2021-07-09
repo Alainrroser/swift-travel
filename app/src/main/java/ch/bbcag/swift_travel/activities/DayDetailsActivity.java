@@ -167,6 +167,10 @@ public class DayDetailsActivity extends UpButtonActivity implements SearchView.O
 		super.onActivityResult(requestCode, resultCode, data);
 		if (resultCode == Activity.RESULT_OK && data != null) {
 			Uri imageURI = data.getData();
+			if (selected.getImageCDL() != null) {
+				OnlineDatabaseUtils.deleteOnlineImage(selected.getImageCDL());
+			}
+			selected.setImageCDL(OnlineDatabaseUtils.uploadImage(imageURI));
 			selected.setImageURI(imageURI.toString());
 			dayDao.update(selected);
 			OnlineDatabaseUtils.add(Const.DAYS, selected.getId(), selected);

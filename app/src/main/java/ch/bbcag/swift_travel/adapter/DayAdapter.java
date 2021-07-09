@@ -14,6 +14,7 @@ import ch.bbcag.swift_travel.R;
 import ch.bbcag.swift_travel.activities.CityDetailsActivity;
 import ch.bbcag.swift_travel.entities.Day;
 import ch.bbcag.swift_travel.utils.LayoutUtils;
+import ch.bbcag.swift_travel.utils.OnlineDatabaseUtils;
 
 public class DayAdapter extends ArrayAdapter<Day> {
 	private CityDetailsActivity cityDetailsActivity;
@@ -51,7 +52,9 @@ public class DayAdapter extends ArrayAdapter<Day> {
 		viewHolder.delete.setVisibility(View.GONE);
 
 		viewHolder.name.setText(day.getName());
-		if (day.getImageURI() != null) {
+		if (day.getImageCDL() != null) {
+			OnlineDatabaseUtils.setOnlineImageOnImageView(viewHolder.image, day.getImageCDL());
+		} else if (day.getImageURI() != null && day.getImageCDL() == null) {
 			LayoutUtils.setImageURIOnImageView(viewHolder.image, day.getImageURI());
 		} else {
 			viewHolder.image.setImageResource(R.drawable.placeholder_icon);

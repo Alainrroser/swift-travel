@@ -356,8 +356,12 @@ public class TripDetailsActivity extends UpButtonActivity implements SearchView.
 			duration = getTripDuration() + " " + getString(R.string.days);
 		}
 		LayoutUtils.setTextOnTextView(durationText, duration);
-		if (selected.getImageURI() != null && !selected.getImageURI().isEmpty()) {
+		if (selected.getImageCDL() != null){
+			OnlineDatabaseUtils.setOnlineImageOnImageView(tripImage, selected.getImageCDL());
+		} else if (selected.getImageURI() != null && selected.getImageCDL() == null) {
 			LayoutUtils.setImageURIOnImageView(tripImage, selected.getImageURI());
+		} else {
+			tripImage.setImageResource(R.drawable.trips_image);
 		}
 
 		setTitle(selected.getName());

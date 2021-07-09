@@ -18,6 +18,8 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -38,6 +40,7 @@ import ch.bbcag.swift_travel.utils.Const;
 import ch.bbcag.swift_travel.utils.DateTimeUtils;
 import ch.bbcag.swift_travel.utils.LayoutUtils;
 import ch.bbcag.swift_travel.utils.OnlineDatabaseUtils;
+import io.grpc.Context;
 
 public class MainActivity extends BaseActivity implements SearchView.OnQueryTextListener, SearchView.OnCloseListener {
 	private SearchView searchView;
@@ -57,6 +60,9 @@ public class MainActivity extends BaseActivity implements SearchView.OnQueryText
 
 	private LocalDate localDate;
 
+	FirebaseStorage storage;
+	StorageReference storageReference;
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -70,6 +76,9 @@ public class MainActivity extends BaseActivity implements SearchView.OnQueryText
 		floatingActionButton = findViewById(R.id.floating_action_button_main);
 		loginButton = findViewById(R.id.login_button);
 		trips = findViewById(R.id.trips);
+
+		storage = FirebaseStorage.getInstance();
+		storageReference = storage.getReference();
 	}
 
 	@Override
@@ -319,6 +328,7 @@ public class MainActivity extends BaseActivity implements SearchView.OnQueryText
 			trip.setName(intent.getStringExtra(Const.TRIP_NAME));
 			trip.setDescription(intent.getStringExtra(Const.TRIP_DESCRIPTION));
 			trip.setImageURI(intent.getStringExtra(Const.IMAGE_URI));
+			trip.setImageCDL(intent.getStringExtra(Const.IMAGE_CDL));
 			setUserId(trip);
 			long id = tripDao.insert(trip);
 			trip.setId(id);

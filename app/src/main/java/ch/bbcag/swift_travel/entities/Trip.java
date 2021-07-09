@@ -18,6 +18,8 @@ public class Trip {
 	private String description;
 	@ColumnInfo(name = Const.IMAGE_URI)
 	private String imageURI;
+	@ColumnInfo(name = Const.IMAGE_CDL)
+	private String imageCDL;
 	@ColumnInfo(name = Const.ORIGIN)
 	private String origin;
 	@ColumnInfo(name = Const.DESTINATION)
@@ -111,6 +113,14 @@ public class Trip {
 
 	public void setImageURI(String imageURI) {
 		this.imageURI = imageURI;
+	}
+
+	public String getImageCDL() {
+		return imageCDL;
+	}
+
+	public void setImageCDL(String imageCDL) {
+		this.imageCDL = imageCDL;
 	}
 
 	public String getUserId() {

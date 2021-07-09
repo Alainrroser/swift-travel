@@ -18,6 +18,8 @@ public class City {
 	private String description;
 	@ColumnInfo(name = Const.IMAGE_URI)
 	private String imageURI;
+	@ColumnInfo(name = Const.IMAGE_CDL)
+	private String imageCDL;
 	@ColumnInfo(name = Const.START_DATE)
 	private String startDate;
 	@ColumnInfo(name = Const.END_DATE)
@@ -68,6 +70,14 @@ public class City {
 
 	public void setImageURI(String imageURI) {
 		this.imageURI = imageURI;
+	}
+
+	public String getImageCDL() {
+		return imageCDL;
+	}
+
+	public void setImageCDL(String imageCDL) {
+		this.imageCDL = imageCDL;
 	}
 
 	public long getCountryId() {

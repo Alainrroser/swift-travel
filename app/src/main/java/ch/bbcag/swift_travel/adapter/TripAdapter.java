@@ -1,5 +1,6 @@
 package ch.bbcag.swift_travel.adapter;
 
+import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -74,7 +75,9 @@ public class TripAdapter extends ArrayAdapter<Trip> {
 			duration = trip.getDuration() + " " + mainActivity.getString(R.string.days);
 		}
 		viewHolder.duration.setText(duration);
-		if (trip.getImageURI() != null) {
+		if (trip.getImageCDL() != null) {
+			OnlineDatabaseUtils.setOnlineImageOnImageView(viewHolder.image, trip.getImageCDL());
+		} else if (trip.getImageURI() != null && trip.getImageCDL() == null) {
 			LayoutUtils.setImageURIOnImageView(viewHolder.image, trip.getImageURI());
 		} else {
 			viewHolder.image.setImageResource(R.drawable.placeholder_icon);

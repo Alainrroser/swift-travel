@@ -21,6 +21,9 @@ import androidx.core.util.Pair;
 import com.github.dhaval2404.imagepicker.ImagePicker;
 import com.google.android.material.datepicker.MaterialDatePicker;
 import com.google.android.material.textfield.TextInputLayout;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 
 import java.time.Instant;
 import java.time.ZoneId;
@@ -34,6 +37,7 @@ import ch.bbcag.swift_travel.entities.Location;
 import ch.bbcag.swift_travel.entities.Trip;
 import ch.bbcag.swift_travel.utils.Const;
 import ch.bbcag.swift_travel.utils.DateTimeUtils;
+import ch.bbcag.swift_travel.utils.OnlineDatabaseUtils;
 import zion830.com.range_picker_dialog.TimeRange;
 import zion830.com.range_picker_dialog.TimeRangePickerDialog;
 
@@ -65,6 +69,9 @@ public class CreateActivity extends UpButtonActivity implements AdapterView.OnIt
 	private String timeDuration;
 	private boolean timeSelected = false;
 
+	FirebaseStorage storage;
+	StorageReference storageReference;
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -85,6 +92,9 @@ public class CreateActivity extends UpButtonActivity implements AdapterView.OnIt
 		selectDurationTime = findViewById(R.id.select_duration_time);
 		categorySpinner = findViewById(R.id.category_spinner);
 		create = findViewById(R.id.create);
+
+		storage = FirebaseStorage.getInstance();
+		storageReference = storage.getReference();
 	}
 
 	@Override
@@ -128,13 +138,27 @@ public class CreateActivity extends UpButtonActivity implements AdapterView.OnIt
 	private Uri setImageURI(Intent data) {
 		Uri imageURI = data.getData();
 		String imageURIString = imageURI.toString();
+		String cdl = "";
+		if (FirebaseAuth.getInstance().getCurrentUser() != null) {
+			cdl = OnlineDatabaseUtils.uploadImage(this, imageURI, storageReference);
+			System.out.println(cdl);
+		}
 		Intent intent = getIntent();
 		if (intent.getBooleanExtra(Const.ADD_TRIP, false)) {
 			trip.setImageURI(imageURIString);
+			if (!cdl.equals("")) {
+				trip.setImageCDL(cdl);
+			}
 		} else if (intent.getBooleanExtra(Const.ADD_CITY, false)) {
 			city.setImageURI(imageURIString);
+			if (!cdl.equals("")) {
+				city.setImageCDL(cdl);
+			}
 		} else if (intent.getBooleanExtra(Const.ADD_LOCATION, false)) {
 			location.setImageURI(imageURIString);
+			if (!cdl.equals("")) {
+				location.setImageCDL(cdl);
+			}
 		}
 		return imageURI;
 	}
@@ -270,6 +294,7 @@ public class CreateActivity extends UpButtonActivity implements AdapterView.OnIt
 		intent.putExtra(Const.TRIP_NAME, trip.getName());
 
 		intent.putExtra(Const.IMAGE_URI, trip.getImageURI());
+		intent.putExtra(Const.IMAGE_CDL, trip.getImageCDL());
 
 		if (descriptionEdit.getText() == null) {
 			descriptionEdit.setText("");
@@ -290,6 +315,7 @@ public class CreateActivity extends UpButtonActivity implements AdapterView.OnIt
 		intent.putExtra(Const.CITY_NAME, city.getName());
 
 		intent.putExtra(Const.IMAGE_URI, city.getImageURI());
+		intent.putExtra(Const.IMAGE_CDL, city.getImageCDL());
 
 		if (descriptionEdit.getText() == null) {
 			descriptionEdit.setText("");
@@ -321,6 +347,7 @@ public class CreateActivity extends UpButtonActivity implements AdapterView.OnIt
 		intent.putExtra(Const.LOCATION_NAME, location.getName());
 
 		intent.putExtra(Const.IMAGE_URI, location.getImageURI());
+		intent.putExtra(Const.IMAGE_CDL, location.getImageCDL());
 
 		if (descriptionEdit.getText() == null) {
 			descriptionEdit.setText("");

@@ -73,7 +73,9 @@ public class LocationAdapter extends ArrayAdapter<Location> {
 	}
 
 	private void setImage(LocationAdapterViewHolder viewHolder, Location location) {
-		if (location.getImageURI() != null) {
+		if (location.getImageCDL() != null) {
+			OnlineDatabaseUtils.setOnlineImageOnImageView(viewHolder.image, location.getImageCDL());
+		} else if (location.getImageURI() != null && location.getImageCDL() == null) {
 			LayoutUtils.setImageURIOnImageView(viewHolder.image, location.getImageURI());
 		} else {
 			switch (location.getCategory()) {

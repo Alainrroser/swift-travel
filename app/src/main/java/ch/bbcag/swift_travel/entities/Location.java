@@ -18,6 +18,8 @@ public class Location {
 	private String description;
 	@ColumnInfo(name = Const.IMAGE_URI)
 	private String imageURI;
+	@ColumnInfo(name = Const.IMAGE_CDL)
+	private String imageCDL;
 	@ColumnInfo(name = Const.START_TIME)
 	private String startTime;
 	@ColumnInfo(name = Const.END_TIME)
@@ -94,6 +96,14 @@ public class Location {
 
 	public void setImageURI(String imageURI) {
 		this.imageURI = imageURI;
+	}
+
+	public String getImageCDL() {
+		return imageCDL;
+	}
+
+	public void setImageCDL(String imageCDL) {
+		this.imageCDL = imageCDL;
 	}
 
 	public long getDayId() {

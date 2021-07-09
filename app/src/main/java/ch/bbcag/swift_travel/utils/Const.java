@@ -11,11 +11,14 @@ public class Const {
 	public static final int CATEGORY_RESTAURANT = 2;
 	public static final int CATEGORY_LOCATION = 3;
 
+	public static final String STORAGE_PATH = "images/";
+
 	public static final String ID = "id";
 	public static final String NAME = "name";
 	public static final String CODE = "code";
 	public static final String DESCRIPTION = "description";
 	public static final String IMAGE_URI = "imageURI";
+	public static final String IMAGE_CDL = "imageCDL";
 	public static final String ORIGIN = "origin";
 	public static final String DESTINATION = "destination";
 	public static final String DATE = "date";

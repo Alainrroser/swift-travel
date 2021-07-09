@@ -59,7 +59,9 @@ public class CityAdapter extends ArrayAdapter<City> {
 		viewHolder.name.setText(city.getName());
 		String dateRange = city.getStartDate() + "-" + city.getEndDate();
 		viewHolder.duration.setText(dateRange);
-		if (city.getImageURI() != null) {
+		if (city.getImageCDL() != null) {
+			OnlineDatabaseUtils.setOnlineImageOnImageView(viewHolder.image, city.getImageCDL());
+		} else if (city.getImageURI() != null && city.getImageCDL() == null) {
 			LayoutUtils.setImageURIOnImageView(viewHolder.image, city.getImageURI());
 		} else {
 			viewHolder.image.setImageResource(R.drawable.placeholder_icon);

@@ -330,6 +330,7 @@ public class DayDetailsActivity extends UpButtonActivity implements SearchView.O
 			location.setDescription(intent.getStringExtra(Const.LOCATION_DESCRIPTION));
 			location.setTransport(intent.getStringExtra(Const.TRANSPORT));
 			location.setImageURI(intent.getStringExtra(Const.IMAGE_URI));
+			location.setImageCDL(intent.getStringExtra(Const.IMAGE_CDL));
 			location.setStartTime(intent.getStringExtra(Const.START_TIME));
 			location.setEndTime(intent.getStringExtra(Const.END_TIME));
 			location.setDuration(intent.getStringExtra(Const.TIME_DURATION));

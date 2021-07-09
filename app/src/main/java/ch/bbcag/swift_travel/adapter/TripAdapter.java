@@ -1,6 +1,5 @@
 package ch.bbcag.swift_travel.adapter;
 
-import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -87,6 +86,9 @@ public class TripAdapter extends ArrayAdapter<Trip> {
 	private void generateConfirmDialog(Trip trip) {
 		MainActivity mainActivity = (MainActivity) getContext();
 		mainActivity.generateConfirmDialog(mainActivity.getString(R.string.delete_entry_title), mainActivity.getString(R.string.delete_entry_text), () -> {
+			if (trip.getImageCDL() != null) {
+				OnlineDatabaseUtils.deleteOnlineImage(trip.getImageCDL());
+			}
 			remove(trip);
 			notifyDataSetChanged();
 			deleteCountries(trip);
@@ -107,6 +109,9 @@ public class TripAdapter extends ArrayAdapter<Trip> {
 	private void deleteCities(Country country) {
 		List<City> cities = SwiftTravelDatabase.getInstance(mainActivity.getApplicationContext()).getCityDao().getAllFromCountry(country.getId());
 		for (City city : cities) {
+			if (city.getImageCDL() != null) {
+				OnlineDatabaseUtils.deleteOnlineImage(city.getImageCDL());
+			}
 			deleteDays(city);
 			OnlineDatabaseUtils.delete(Const.CITIES, city.getId());
 			SwiftTravelDatabase.getInstance(mainActivity.getApplicationContext()).getCityDao().deleteById(city.getId());
@@ -125,6 +130,9 @@ public class TripAdapter extends ArrayAdapter<Trip> {
 	private void deleteLocations(Day day) {
 		List<Location> locations = SwiftTravelDatabase.getInstance(mainActivity.getApplicationContext()).getLocationDao().getAllFromDay(day.getId());
 		for (Location location : locations) {
+			if (location.getImageCDL() != null) {
+				OnlineDatabaseUtils.deleteOnlineImage(location.getImageCDL());
+			}
 			deleteImages(location);
 			OnlineDatabaseUtils.delete(Const.LOCATIONS, location.getId());
 			SwiftTravelDatabase.getInstance(mainActivity.getApplicationContext()).getLocationDao().deleteById(location.getId());

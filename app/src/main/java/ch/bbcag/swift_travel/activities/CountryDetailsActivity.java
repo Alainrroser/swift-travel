@@ -309,6 +309,7 @@ public class CountryDetailsActivity extends UpButtonActivity implements SearchVi
 			city.setDescription(intent.getStringExtra(Const.CITY_DESCRIPTION));
 			city.setTransport(intent.getStringExtra(Const.TRANSPORT));
 			city.setImageURI(intent.getStringExtra(Const.IMAGE_URI));
+			city.setImageCDL(intent.getStringExtra(Const.IMAGE_CDL));
 			city.setStartDate(intent.getStringExtra(Const.START_DATE));
 			city.setEndDate(intent.getStringExtra(Const.END_DATE));
 

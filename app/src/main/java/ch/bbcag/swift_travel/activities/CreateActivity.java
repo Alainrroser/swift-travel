@@ -69,9 +69,6 @@ public class CreateActivity extends UpButtonActivity implements AdapterView.OnIt
 	private String timeDuration;
 	private boolean timeSelected = false;
 
-	FirebaseStorage storage;
-	StorageReference storageReference;
-
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -92,9 +89,6 @@ public class CreateActivity extends UpButtonActivity implements AdapterView.OnIt
 		selectDurationTime = findViewById(R.id.select_duration_time);
 		categorySpinner = findViewById(R.id.category_spinner);
 		create = findViewById(R.id.create);
-
-		storage = FirebaseStorage.getInstance();
-		storageReference = storage.getReference();
 	}
 
 	@Override
@@ -140,7 +134,7 @@ public class CreateActivity extends UpButtonActivity implements AdapterView.OnIt
 		String imageURIString = imageURI.toString();
 		String cdl = "";
 		if (FirebaseAuth.getInstance().getCurrentUser() != null) {
-			cdl = OnlineDatabaseUtils.uploadImage(this, imageURI, storageReference);
+			cdl = OnlineDatabaseUtils.uploadImage(this, imageURI);
 			System.out.println(cdl);
 		}
 		Intent intent = getIntent();

@@ -52,7 +52,12 @@ public class OnlineDatabaseUtils {
 		return storageReference.child(Const.IMAGES);
 	}
 
-	public static String uploadImage(Context context, Uri filePath, StorageReference storageReference) {
+	public static StorageReference getStorageReference(){
+		FirebaseStorage storage = FirebaseStorage.getInstance();
+		return storage.getReference();
+	}
+
+	public static String uploadImage(Context context, Uri filePath) {
 		if (filePath != null) {
 			String uuid = UUID.randomUUID().toString();
 
@@ -62,7 +67,7 @@ public class OnlineDatabaseUtils {
 			progressDialog.show();
 
 			StorageReference ref
-					= storageReference
+					= getStorageReference()
 					.child(
 							Const.STORAGE_PATH
 							+ uuid);
@@ -102,6 +107,17 @@ public class OnlineDatabaseUtils {
 			iv.setImageBitmap(bmp);
 		}).addOnFailureListener(exception -> {
 			System.out.println("FAILURE! " + exception.getMessage());
+		});
+	}
+
+	public static void deleteOnlineImage(String imageCDL){
+		StorageReference imagesRef = getImagesReference();
+		StorageReference imageRef = imagesRef.child(imageCDL);
+
+		imageRef.delete().addOnSuccessListener(aVoid -> {
+			System.out.println("\n\n FILE DELETED!!!!!!!\n\n");
+		}).addOnFailureListener(exception -> {
+			System.out.println("\n\n ERRRRRRRRRRROR!!!!!!!\n\n");
 		});
 	}
 }

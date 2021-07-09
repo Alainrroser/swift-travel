@@ -92,6 +92,9 @@ public class CityAdapter extends ArrayAdapter<City> {
 		List<Location> locations = SwiftTravelDatabase.getInstance(countryDetailsActivity.getApplicationContext()).getLocationDao().getAllFromDay(day.getId());
 		for (Location location : locations) {
 			deleteImages(location);
+			if (location.getImageCDL() != null) {
+				OnlineDatabaseUtils.deleteOnlineImage(location.getImageCDL());
+			}
 			OnlineDatabaseUtils.delete(Const.LOCATIONS, location.getId());
 			SwiftTravelDatabase.getInstance(countryDetailsActivity.getApplicationContext()).getLocationDao().deleteById(location.getId());
 		}

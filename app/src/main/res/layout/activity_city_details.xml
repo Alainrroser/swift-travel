@@ -22,7 +22,7 @@
         android:layout_marginTop="@dimen/title_image_margin_top"
         android:background="@android:color/transparent"
         android:contentDescription="@string/place_holder_image"
-        android:scaleType="fitXY"
+        android:scaleType="centerCrop"
         android:src="@drawable/trips_image"
         android:visibility="visible"
         app:layout_constraintDimensionRatio="21:9"

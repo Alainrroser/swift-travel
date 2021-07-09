@@ -1,5 +1,6 @@
 package ch.bbcag.swift_travel.adapter;
 
+import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -7,6 +8,8 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import com.google.firebase.auth.FirebaseAuth;
 
 import java.util.List;
 
@@ -52,14 +55,27 @@ public class DayAdapter extends ArrayAdapter<Day> {
 		viewHolder.delete.setVisibility(View.GONE);
 
 		viewHolder.name.setText(day.getName());
-		if (day.getImageCDL() != null) {
-			OnlineDatabaseUtils.setOnlineImageOnImageView(viewHolder.image, day.getImageCDL());
-		} else if (day.getImageURI() != null && day.getImageCDL() == null) {
-			LayoutUtils.setImageURIOnImageView(viewHolder.image, day.getImageURI());
-		} else {
-			viewHolder.image.setImageResource(R.drawable.placeholder_icon);
-		}
+		setImage(viewHolder, day);
 		viewHolder.date.setText(day.getDate());
+	}
+
+	private void setImage(DayAdapterViewHolder viewHolder, Day day) {
+		if(FirebaseAuth.getInstance().getCurrentUser() != null) {
+			if (day.getImageCDL() != null) {
+				OnlineDatabaseUtils.setOnlineImageOnImageView(viewHolder.image, day.getImageCDL());
+			} else if (day.getImageURI() != null && day.getImageCDL() == null) {
+				day.setImageCDL(OnlineDatabaseUtils.uploadImage(Uri.parse(day.getImageURI())));
+				OnlineDatabaseUtils.setOnlineImageOnImageView(viewHolder.image, day.getImageCDL());
+			} else {
+				viewHolder.image.setImageResource(R.drawable.placeholder_icon);
+			}
+		} else {
+			if (day.getImageURI() != null) {
+				LayoutUtils.setImageURIOnImageView(viewHolder.image, day.getImageURI());
+			} else {
+				viewHolder.image.setImageResource(R.drawable.placeholder_icon);
+			}
+		}
 	}
 
 	public static class DayAdapterViewHolder {

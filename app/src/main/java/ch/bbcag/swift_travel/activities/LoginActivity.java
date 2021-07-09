@@ -31,7 +31,7 @@ import java.util.List;
 import java.util.Objects;
 
 import ch.bbcag.swift_travel.R;
-import ch.bbcag.swift_travel.utils.Const;
+import ch.bbcag.swift_travel.utils.NetworkUtils;
 import ch.bbcag.swift_travel.utils.ValidationUtils;
 
 public class LoginActivity extends UpButtonActivity {
@@ -71,6 +71,10 @@ public class LoginActivity extends UpButtonActivity {
 	protected void onStart() {
 		super.onStart();
 		getProgressBar().setVisibility(View.GONE);
+
+		if(!NetworkUtils.isNetworkAvailable(getApplicationContext())) {
+			generateMessageDialogAndCloseActivity(getString(R.string.internet_connection_error_title), getString(R.string.internet_connection_error_text));
+		}
 
 		FirebaseUser currentUser = mAuth.getCurrentUser();
 		if (currentUser != null) {
@@ -121,7 +125,6 @@ public class LoginActivity extends UpButtonActivity {
 	private void checkIfTaskWasSuccessful(Task<AuthResult> task) {
 		if (task.isSuccessful()) {
 			Intent intent = new Intent(getApplicationContext(), UserActivity.class);
-			intent.putExtra(Const.SAFE_ONLINE, true);
 			startActivity(intent);
 		} else {
 			generateMessageDialog(getString(R.string.login_unsuccessful_title), Objects.requireNonNull(task.getException()).getMessage());

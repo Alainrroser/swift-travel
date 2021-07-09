@@ -1,11 +1,14 @@
 package ch.bbcag.swift_travel.adapter;
 
+import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+
+import com.google.firebase.auth.FirebaseAuth;
 
 import java.util.List;
 
@@ -49,8 +52,17 @@ public class ImageAdapter extends ArrayAdapter<Image> {
 	private void addInformationToAdapter(ImageAdapterViewHolder viewHolder, Image image) {
 		viewHolder.delete.setOnClickListener(v -> generateConfirmDialog(image));
 
-		if (image.getImageURI() != null) {
-			LayoutUtils.setImageURIOnImageView(viewHolder.image, image.getImageURI());
+		if(FirebaseAuth.getInstance().getCurrentUser() != null) {
+			if (image.getImageCDL() != null) {
+				OnlineDatabaseUtils.setOnlineImageOnImageView(viewHolder.image, image.getImageCDL());
+			} else if (image.getImageURI() != null && image.getImageCDL() == null) {
+				image.setImageCDL(OnlineDatabaseUtils.uploadImage(Uri.parse(image.getImageURI())));
+				OnlineDatabaseUtils.setOnlineImageOnImageView(viewHolder.image, image.getImageCDL());
+			}
+		} else {
+			if (image.getImageURI() != null) {
+				LayoutUtils.setImageURIOnImageView(viewHolder.image, image.getImageURI());
+			}
 		}
 	}
 

@@ -72,8 +72,6 @@ public class Const {
 
 	public static final String IMAGES = "images";
 
-	public static final String SAFE_ONLINE = "safeOnline";
-
 	public static final int LOCATION_IMAGE_REQUEST_CODE = 1;
 	public static final int ADD_IMAGE_REQUEST_CODE = 2;
 	public static final int REPLACE_IMAGE_REQUEST_CODE = 3;

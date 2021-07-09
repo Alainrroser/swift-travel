@@ -17,7 +17,6 @@ public class DateTimeUtils {
 	}
 
 	public static long getDaysCountFromTimeSpan(long startDate, long endDate) {
-		// Add a day because otherwise the last day would be missing
 		return ((endDate + (1000 * 60 * 60 * 24)) - startDate) / (1000 * 60 * 60 * 24);
 	}
 

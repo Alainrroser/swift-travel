@@ -40,6 +40,7 @@ import ch.bbcag.swift_travel.entities.Image;
 import ch.bbcag.swift_travel.entities.Location;
 import ch.bbcag.swift_travel.utils.Const;
 import ch.bbcag.swift_travel.utils.LayoutUtils;
+import ch.bbcag.swift_travel.utils.NetworkUtils;
 import ch.bbcag.swift_travel.utils.OnlineDatabaseUtils;
 
 public class LocationDetailsActivity extends UpButtonActivity implements AdapterView.OnItemSelectedListener {
@@ -119,36 +120,57 @@ public class LocationDetailsActivity extends UpButtonActivity implements Adapter
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
 		super.onActivityResult(requestCode, resultCode, data);
-		if (requestCode == Const.LOCATION_IMAGE_REQUEST_CODE && resultCode == Activity.RESULT_OK && data != null) {
-			Uri imageURI = data.getData();
-			selected.setImageURI(imageURI.toString());
-			if (selected.getImageCDL() != null) {
-				OnlineDatabaseUtils.deleteOnlineImage(selected.getImageCDL());
-			}
-			selected.setImageCDL(OnlineDatabaseUtils.uploadImage(imageURI));
-			locationDao.update(selected);
-			OnlineDatabaseUtils.add(Const.LOCATIONS, selected.getId(), selected);
-			locationImage.setImageURI(imageURI);
-		} else if (requestCode == Const.ADD_IMAGE_REQUEST_CODE && resultCode == Activity.RESULT_OK && data != null) {
-			Uri imageURI = data.getData();
-			Image image = new Image();
-			image.setImageURI(imageURI.toString());
-			image.setLocationId(selected.getId());
-			long id = imageDao.insert(image);
-			image.setId(id);
-
-			OnlineDatabaseUtils.add(Const.IMAGES, image.getId(), image);
-
-			imageAdapter.add(image);
-		} else if (requestCode == Const.REPLACE_IMAGE_REQUEST_CODE && resultCode == Activity.RESULT_OK && data != null) {
-			Uri imageURI = data.getData();
-			clickedImage.setImageURI(imageURI.toString());
-			imageDao.update(clickedImage);
-			OnlineDatabaseUtils.add(Const.IMAGES, clickedImage.getId(), clickedImage);
-			imageAdapter.clear();
-			List<Image> images = imageDao.getAllFromLocation(selected.getId());
-			imageAdapter.addAll(images);
+		if (data != null && resultCode == Activity.RESULT_OK) {
+			setImages(data, requestCode);
 		}
+	}
+
+	private void setImages(Intent data, int requestCode) {
+		Uri imageURI = data.getData();
+		if (requestCode == Const.LOCATION_IMAGE_REQUEST_CODE) {
+			setLocationImage(imageURI);
+		} else if (requestCode == Const.ADD_IMAGE_REQUEST_CODE) {
+			addImage(imageURI);
+		} else if (requestCode == Const.REPLACE_IMAGE_REQUEST_CODE) {
+			replaceImage(imageURI);
+		}
+	}
+
+	private void setLocationImage(Uri imageURI) {
+		selected.setImageURI(imageURI.toString());
+		if (selected.getImageCDL() != null) {
+			OnlineDatabaseUtils.deleteOnlineImage(selected.getImageCDL());
+		}
+		selected.setImageCDL(OnlineDatabaseUtils.uploadImage(imageURI));
+		locationDao.update(selected);
+		OnlineDatabaseUtils.add(Const.LOCATIONS, selected.getId(), selected);
+		locationImage.setImageURI(imageURI);
+	}
+
+	private void addImage(Uri imageURI) {
+		Image image = new Image();
+		image.setImageURI(imageURI.toString());
+		if (FirebaseAuth.getInstance().getCurrentUser() != null) {
+			image.setImageCDL(OnlineDatabaseUtils.uploadImage(imageURI));
+		}
+		image.setLocationId(selected.getId());
+		long id = imageDao.insert(image);
+		image.setId(id);
+		OnlineDatabaseUtils.add(Const.IMAGES, image.getId(), image);
+		imageAdapter.add(image);
+	}
+
+	private void replaceImage(Uri imageURI) {
+		clickedImage.setImageURI(imageURI.toString());
+		if (selected.getImageCDL() != null) {
+			OnlineDatabaseUtils.deleteOnlineImage(selected.getImageCDL());
+		}
+		selected.setImageCDL(OnlineDatabaseUtils.uploadImage(imageURI));
+		imageDao.update(clickedImage);
+		OnlineDatabaseUtils.add(Const.IMAGES, clickedImage.getId(), clickedImage);
+		imageAdapter.clear();
+		List<Image> images = imageDao.getAllFromLocation(selected.getId());
+		imageAdapter.addAll(images);
 	}
 
 	@Override
@@ -183,10 +205,18 @@ public class LocationDetailsActivity extends UpButtonActivity implements Adapter
 
 	private void checkIfLoggedIn(long id) {
 		if (FirebaseAuth.getInstance().getCurrentUser() != null) {
-			OnlineDatabaseUtils.getById(Const.LOCATIONS, id, task -> setObject(task, () -> initializeSelected(task, id)));
+			ifNetworkAvailable(id);
 		} else {
 			selected = locationDao.getById(id);
 			onStartAfterSelectedInitialized();
+		}
+	}
+
+	private void ifNetworkAvailable(long id) {
+		if(NetworkUtils.isNetworkAvailable(getApplicationContext())) {
+			OnlineDatabaseUtils.getById(Const.LOCATIONS, id, task -> setObject(task, () -> initializeSelected(task, id)));
+		} else {
+			generateMessageDialogAndCloseActivity(getString(R.string.internet_connection_error_title), getString(R.string.internet_connection_error_text));
 		}
 	}
 

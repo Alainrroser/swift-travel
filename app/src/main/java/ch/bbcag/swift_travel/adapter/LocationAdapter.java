@@ -1,6 +1,7 @@
 package ch.bbcag.swift_travel.adapter;
 
 import android.annotation.SuppressLint;
+import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -9,6 +10,8 @@ import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import com.google.firebase.auth.FirebaseAuth;
 
 import java.util.List;
 
@@ -73,25 +76,39 @@ public class LocationAdapter extends ArrayAdapter<Location> {
 	}
 
 	private void setImage(LocationAdapterViewHolder viewHolder, Location location) {
-		if (location.getImageCDL() != null) {
-			OnlineDatabaseUtils.setOnlineImageOnImageView(viewHolder.image, location.getImageCDL());
-		} else if (location.getImageURI() != null && location.getImageCDL() == null) {
-			LayoutUtils.setImageURIOnImageView(viewHolder.image, location.getImageURI());
-		} else {
-			switch (location.getCategory()) {
-				case Const.CATEGORY_HOTEL:
-					viewHolder.image.setImageResource(category_hotel);
-					break;
-				case Const.CATEGORY_RESTAURANT:
-					viewHolder.image.setImageResource(category_restaurant);
-					break;
-				case Const.CATEGORY_LOCATION:
-					viewHolder.image.setImageResource(category_location);
-					break;
-				default:
-					viewHolder.image.setImageResource(category_unknown);
-					break;
+		if(FirebaseAuth.getInstance().getCurrentUser() != null) {
+			if (location.getImageCDL() != null) {
+				OnlineDatabaseUtils.setOnlineImageOnImageView(viewHolder.image, location.getImageCDL());
+			} else if (location.getImageURI() != null && location.getImageCDL() == null) {
+				location.setImageCDL(OnlineDatabaseUtils.uploadImage(Uri.parse(location.getImageURI())));
+				OnlineDatabaseUtils.setOnlineImageOnImageView(viewHolder.image, location.getImageCDL());
+			} else {
+				setCategory(location, viewHolder);
 			}
+		} else {
+			if (location.getImageURI() != null) {
+				LayoutUtils.setImageURIOnImageView(viewHolder.image, location.getImageURI());
+			} else {
+				setCategory(location, viewHolder);
+			}
+		}
+
+	}
+
+	private void setCategory(Location location, LocationAdapterViewHolder viewHolder) {
+		switch (location.getCategory()) {
+			case Const.CATEGORY_HOTEL:
+				viewHolder.image.setImageResource(category_hotel);
+				break;
+			case Const.CATEGORY_RESTAURANT:
+				viewHolder.image.setImageResource(category_restaurant);
+				break;
+			case Const.CATEGORY_LOCATION:
+				viewHolder.image.setImageResource(category_location);
+				break;
+			default:
+				viewHolder.image.setImageResource(category_unknown);
+				break;
 		}
 	}
 
@@ -130,6 +147,9 @@ public class LocationAdapter extends ArrayAdapter<Location> {
 	private void deleteImages(Location location) {
 		List<Image> images = SwiftTravelDatabase.getInstance(dayDetailsActivity.getApplicationContext()).getImageDao().getAllFromLocation(location.getId());
 		for (Image image : images) {
+			if(image.getImageCDL() != null) {
+				OnlineDatabaseUtils.deleteOnlineImage(image.getImageCDL());
+			}
 			OnlineDatabaseUtils.delete(Const.IMAGES, image.getId());
 			SwiftTravelDatabase.getInstance(dayDetailsActivity.getApplicationContext()).getImageDao().deleteById(image.getId());
 		}

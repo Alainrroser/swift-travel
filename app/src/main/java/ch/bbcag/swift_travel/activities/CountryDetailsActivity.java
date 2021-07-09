@@ -42,6 +42,7 @@ import ch.bbcag.swift_travel.entities.Day;
 import ch.bbcag.swift_travel.utils.Const;
 import ch.bbcag.swift_travel.utils.DateTimeUtils;
 import ch.bbcag.swift_travel.utils.LayoutUtils;
+import ch.bbcag.swift_travel.utils.NetworkUtils;
 import ch.bbcag.swift_travel.utils.OnlineDatabaseUtils;
 
 import static java.lang.Math.max;
@@ -184,10 +185,18 @@ public class CountryDetailsActivity extends UpButtonActivity implements SearchVi
 
 	private void checkIfLoggedIn(long id) {
 		if (FirebaseAuth.getInstance().getCurrentUser() != null) {
-			OnlineDatabaseUtils.getById(Const.COUNTRIES, id, task -> setObject(task, () -> initializeSelected(task, id)));
+			ifNetworkAvailable(id);
 		} else {
 			selected = countryDao.getById(id);
 			onStartAfterSelectedInitialized();
+		}
+	}
+
+	private void ifNetworkAvailable(long id) {
+		if(NetworkUtils.isNetworkAvailable(getApplicationContext())) {
+			OnlineDatabaseUtils.getById(Const.COUNTRIES, id, task -> setObject(task, () -> initializeSelected(task, id)));
+		} else {
+			generateMessageDialogAndCloseActivity(getString(R.string.internet_connection_error_title), getString(R.string.internet_connection_error_text));
 		}
 	}
 
@@ -401,6 +410,13 @@ public class CountryDetailsActivity extends UpButtonActivity implements SearchVi
 	public void refreshContent() {
 		LayoutUtils.setTitleText(titleText, selected.getName());
 		LayoutUtils.setEditableText(descriptionText, editDescription, selected.getDescription(), getString(R.string.description_hint));
+		setDuration();
+		if (selected.getImageURI() != null && !selected.getImageURI().isEmpty()) {
+			LayoutUtils.setFlagImageURIOnImageView(getApplicationContext(), countryImage, selected.getImageURI());
+		}
+	}
+
+	private void setDuration() {
 		String duration;
 		if (getCountryDuration() == 1) {
 			duration = getCountryDuration() + " " + getString(R.string.day);
@@ -408,9 +424,6 @@ public class CountryDetailsActivity extends UpButtonActivity implements SearchVi
 			duration = getCountryDuration() + " " + getString(R.string.days);
 		}
 		LayoutUtils.setTextOnTextView(durationText, duration);
-		if (selected.getImageURI() != null && !selected.getImageURI().isEmpty()) {
-			LayoutUtils.setFlagImageURIOnImageView(getApplicationContext(), countryImage, selected.getImageURI());
-		}
 	}
 
 	private long getCountryDuration() {

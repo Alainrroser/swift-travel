@@ -13,6 +13,8 @@ public class Image {
 	private long id;
 	@ColumnInfo(name = Const.IMAGE_URI)
 	private String imageURI;
+	@ColumnInfo(name = Const.IMAGE_CDL)
+	private String imageCDL;
 	@ColumnInfo(name = Const.LOCATION_ID)
 	private long locationId;
 
@@ -30,6 +32,14 @@ public class Image {
 
 	public void setImageURI(String imageURI) {
 		this.imageURI = imageURI;
+	}
+
+	public String getImageCDL() {
+		return imageCDL;
+	}
+
+	public void setImageCDL(String imageCDL) {
+		this.imageCDL = imageCDL;
 	}
 
 	public long getLocationId() {

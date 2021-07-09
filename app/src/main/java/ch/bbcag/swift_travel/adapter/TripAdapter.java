@@ -1,5 +1,6 @@
 package ch.bbcag.swift_travel.adapter;
 
+import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -7,6 +8,8 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import com.google.firebase.auth.FirebaseAuth;
 
 import java.util.List;
 
@@ -58,15 +61,22 @@ public class TripAdapter extends ArrayAdapter<Trip> {
 
 	private void addInformationToAdapter(TripAdapterViewHolder viewHolder, Trip trip) {
 		viewHolder.delete.setOnClickListener(v -> generateConfirmDialog(trip));
-
 		viewHolder.name.setText(trip.getName());
+		setOriginAndDestination(viewHolder, trip);
+		setImage(viewHolder, trip);
+		setDuration(viewHolder, trip);
+	}
+
+	private void setOriginAndDestination(TripAdapterViewHolder viewHolder, Trip trip) {
 		if (trip.getOrigin() != null && trip.getDestination() != null) {
 			String originDestination = trip.getOrigin() + "-" + trip.getDestination();
 			viewHolder.originDestination.setText(originDestination);
 		} else {
 			viewHolder.originDestination.setText(mainActivity.getString(R.string.trip_origin_destination));
 		}
+	}
 
+	private void setDuration(TripAdapterViewHolder viewHolder, Trip trip) {
 		String duration;
 		if (trip.getDuration() == 1) {
 			duration = trip.getDuration() + " " + mainActivity.getString(R.string.day);
@@ -74,12 +84,24 @@ public class TripAdapter extends ArrayAdapter<Trip> {
 			duration = trip.getDuration() + " " + mainActivity.getString(R.string.days);
 		}
 		viewHolder.duration.setText(duration);
-		if (trip.getImageCDL() != null) {
-			OnlineDatabaseUtils.setOnlineImageOnImageView(viewHolder.image, trip.getImageCDL());
-		} else if (trip.getImageURI() != null && trip.getImageCDL() == null) {
-			LayoutUtils.setImageURIOnImageView(viewHolder.image, trip.getImageURI());
+	}
+
+	private void setImage(TripAdapterViewHolder viewHolder, Trip trip) {
+		if(FirebaseAuth.getInstance().getCurrentUser() != null) {
+			if (trip.getImageCDL() != null) {
+				OnlineDatabaseUtils.setOnlineImageOnImageView(viewHolder.image, trip.getImageCDL());
+			} else if (trip.getImageURI() != null && trip.getImageCDL() == null) {
+				trip.setImageCDL(OnlineDatabaseUtils.uploadImage(Uri.parse(trip.getImageURI())));
+				OnlineDatabaseUtils.setOnlineImageOnImageView(viewHolder.image, trip.getImageCDL());
+			} else {
+				viewHolder.image.setImageResource(R.drawable.placeholder_icon);
+			}
 		} else {
-			viewHolder.image.setImageResource(R.drawable.placeholder_icon);
+			if (trip.getImageURI() != null) {
+				LayoutUtils.setImageURIOnImageView(viewHolder.image, trip.getImageURI());
+			} else {
+				viewHolder.image.setImageResource(R.drawable.placeholder_icon);
+			}
 		}
 	}
 
@@ -122,6 +144,9 @@ public class TripAdapter extends ArrayAdapter<Trip> {
 		List<Day> days = SwiftTravelDatabase.getInstance(mainActivity.getApplicationContext()).getDayDao().getAllFromCity(city.getId());
 		for (Day day : days) {
 			deleteLocations(day);
+			if(day.getImageCDL() != null) {
+				OnlineDatabaseUtils.deleteOnlineImage(day.getImageCDL());
+			}
 			OnlineDatabaseUtils.delete(Const.DAYS, day.getId());
 			SwiftTravelDatabase.getInstance(mainActivity.getApplicationContext()).getDayDao().deleteById(day.getId());
 		}
@@ -142,6 +167,9 @@ public class TripAdapter extends ArrayAdapter<Trip> {
 	private void deleteImages(Location location) {
 		List<Image> images = SwiftTravelDatabase.getInstance(mainActivity.getApplicationContext()).getImageDao().getAllFromLocation(location.getId());
 		for (Image image : images) {
+			if(image.getImageCDL() != null) {
+				OnlineDatabaseUtils.deleteOnlineImage(image.getImageCDL());
+			}
 			OnlineDatabaseUtils.delete(Const.IMAGES, image.getId());
 			SwiftTravelDatabase.getInstance(mainActivity.getApplicationContext()).getImageDao().deleteById(image.getId());
 		}

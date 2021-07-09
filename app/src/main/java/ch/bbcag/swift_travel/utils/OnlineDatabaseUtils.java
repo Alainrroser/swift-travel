@@ -1,17 +1,11 @@
 package ch.bbcag.swift_travel.utils;
 
-import android.app.ProgressDialog;
-import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.widget.ImageView;
 
-import androidx.annotation.NonNull;
-
 import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -46,13 +40,13 @@ public class OnlineDatabaseUtils {
 		}
 	}
 
-	public static StorageReference getImagesReference(){
+	public static StorageReference getImagesReference() {
 		FirebaseStorage storage = FirebaseStorage.getInstance();
 		StorageReference storageReference = storage.getReference();
 		return storageReference.child(Const.IMAGES);
 	}
 
-	public static StorageReference getStorageReference(){
+	public static StorageReference getStorageReference() {
 		FirebaseStorage storage = FirebaseStorage.getInstance();
 		return storage.getReference();
 	}
@@ -60,20 +54,8 @@ public class OnlineDatabaseUtils {
 	public static String uploadImage(Uri filePath) {
 		if (filePath != null) {
 			String uuid = UUID.randomUUID().toString();
-						StorageReference ref
-					= getStorageReference()
-					.child(
-							Const.STORAGE_PATH
-							+ uuid);
-			ref.putFile(filePath)
-			   .addOnSuccessListener(
-					   taskSnapshot -> {
-						   System.out.println("Successfully uploaded image.");
-					   })
-
-			   .addOnFailureListener(e -> {
-				   System.out.println("failed to upload image: " + e.getMessage());
-			   });
+			StorageReference ref = getStorageReference().child(Const.STORAGE_PATH + uuid);
+			ref.putFile(filePath);
 			return uuid;
 		}
 		return null;
@@ -86,19 +68,13 @@ public class OnlineDatabaseUtils {
 		imageRef.getBytes(ONE_MEGABYTE).addOnSuccessListener(bytes -> {
 			Bitmap bmp = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
 			iv.setImageBitmap(bmp);
-		}).addOnFailureListener(exception -> {
-			System.out.println("FAILURE! " + exception.getMessage());
 		});
 	}
 
-	public static void deleteOnlineImage(String imageCDL){
+	public static void deleteOnlineImage(String imageCDL) {
 		StorageReference imagesRef = getImagesReference();
 		StorageReference imageRef = imagesRef.child(imageCDL);
 
-		imageRef.delete().addOnSuccessListener(aVoid -> {
-			System.out.println("\n\n FILE DELETED!!!!!!!\n\n");
-		}).addOnFailureListener(exception -> {
-			System.out.println("\n\n ERRRRRRRRRRROR!!!!!!!\n\n");
-		});
+		imageRef.delete();
 	}
 }

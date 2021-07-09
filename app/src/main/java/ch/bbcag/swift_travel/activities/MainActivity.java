@@ -39,29 +39,24 @@ import ch.bbcag.swift_travel.entities.Trip;
 import ch.bbcag.swift_travel.utils.Const;
 import ch.bbcag.swift_travel.utils.DateTimeUtils;
 import ch.bbcag.swift_travel.utils.LayoutUtils;
+import ch.bbcag.swift_travel.utils.NetworkUtils;
 import ch.bbcag.swift_travel.utils.OnlineDatabaseUtils;
-import io.grpc.Context;
 
 public class MainActivity extends BaseActivity implements SearchView.OnQueryTextListener, SearchView.OnCloseListener {
+	FirebaseStorage storage;
+	StorageReference storageReference;
 	private SearchView searchView;
 	private MenuItem searchItem;
-
 	private FloatingActionButton floatingActionButton;
 	private ImageButton loginButton;
 	private TripAdapter adapter;
 	private ListView trips;
-
 	private TripDao tripDao;
 	private CountryDao countryDao;
 	private CityDao cityDao;
-
 	private List<Trip> tripList;
 	private List<Country> countryList;
-
 	private LocalDate localDate;
-
-	FirebaseStorage storage;
-	StorageReference storageReference;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -87,7 +82,7 @@ public class MainActivity extends BaseActivity implements SearchView.OnQueryText
 
 		tripList = tripDao.getAll();
 		if (FirebaseAuth.getInstance().getCurrentUser() != null) {
-			OnlineDatabaseUtils.getAllTripsFromUser(Objects.requireNonNull(FirebaseAuth.getInstance().getCurrentUser()).getUid(), task -> addToList(task, () -> synchronizeTrips(task)));
+			ifNetworkAvailable();
 		} else {
 			getProgressBar().setVisibility(View.GONE);
 			onStartAfterListInitialized();
@@ -163,6 +158,14 @@ public class MainActivity extends BaseActivity implements SearchView.OnQueryText
 	private void filterAdapter(String searchText) {
 		if (adapter != null) {
 			adapter.getFilter().filter(searchText);
+		}
+	}
+
+	private void ifNetworkAvailable() {
+		if(NetworkUtils.isNetworkAvailable(getApplicationContext())) {
+			OnlineDatabaseUtils.getAllTripsFromUser(Objects.requireNonNull(FirebaseAuth.getInstance().getCurrentUser()).getUid(), task -> addToList(task, () -> synchronizeTrips(task)));
+		} else {
+			generateMessageDialog(getString(R.string.internet_connection_error_title), getString(R.string.internet_connection_error_text));
 		}
 	}
 

@@ -24,7 +24,7 @@
     <string name="default_error_title">Error</string>
     <string name="default_error_text">An error occurred, please contact the owner of the app</string>
     <string name="internet_connection_error_title">Internet connection error</string>
-    <string name="internet_connection_error_text">You have to be connected to the internet to add a country, try again later</string>
+    <string name="internet_connection_error_text">You have to be connected to the internet, connect to a network and try again</string>
     <string name="add_entry_to_list_error_title">List entries</string>
     <string name="add_entries_to_list_error_text">An error occurred with listing the entries, try again later</string>
     <string name="duration_overlap_error_title">Duration Overlap</string>

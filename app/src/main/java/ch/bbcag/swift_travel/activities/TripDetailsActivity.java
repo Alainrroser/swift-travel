@@ -48,6 +48,7 @@ import ch.bbcag.swift_travel.entities.Trip;
 import ch.bbcag.swift_travel.utils.Const;
 import ch.bbcag.swift_travel.utils.DateTimeUtils;
 import ch.bbcag.swift_travel.utils.LayoutUtils;
+import ch.bbcag.swift_travel.utils.NetworkUtils;
 import ch.bbcag.swift_travel.utils.OnlineDatabaseUtils;
 
 public class TripDetailsActivity extends UpButtonActivity implements SearchView.OnQueryTextListener, SearchView.OnCloseListener {
@@ -210,10 +211,18 @@ public class TripDetailsActivity extends UpButtonActivity implements SearchView.
 
 	private void checkIfLoggedIn(long id) {
 		if (FirebaseAuth.getInstance().getCurrentUser() != null) {
-			OnlineDatabaseUtils.getById(Const.TRIPS, id, task -> setObject(task, () -> initializeSelected(task, id)));
+			ifNetworkAvailable(id);
 		} else {
 			selected = tripDao.getById(id);
 			onStartAfterSelectedInitialized();
+		}
+	}
+
+	private void ifNetworkAvailable(long id) {
+		if(NetworkUtils.isNetworkAvailable(getApplicationContext())) {
+			OnlineDatabaseUtils.getById(Const.TRIPS, id, task -> setObject(task, () -> initializeSelected(task, id)));
+		} else {
+			generateMessageDialogAndCloseActivity(getString(R.string.internet_connection_error_title), getString(R.string.internet_connection_error_text));
 		}
 	}
 
@@ -353,6 +362,14 @@ public class TripDetailsActivity extends UpButtonActivity implements SearchView.
 	public void refreshContent() {
 		LayoutUtils.setEditableTitleText(titleText, editTitle, selected.getName());
 		LayoutUtils.setEditableText(descriptionText, editDescription, selected.getDescription(), getString(R.string.description_hint));
+		setDuration();
+		if (selected.getImageURI() != null && !selected.getImageURI().isEmpty()) {
+			LayoutUtils.setImageURIOnImageView(tripImage, selected.getImageURI());
+		}
+		setTitle(selected.getName());
+	}
+
+	private void setDuration() {
 		String duration;
 		if (getTripDuration() == 1) {
 			duration = getTripDuration() + " " + getString(R.string.day);
@@ -360,15 +377,6 @@ public class TripDetailsActivity extends UpButtonActivity implements SearchView.
 			duration = getTripDuration() + " " + getString(R.string.days);
 		}
 		LayoutUtils.setTextOnTextView(durationText, duration);
-		if (selected.getImageCDL() != null) {
-			OnlineDatabaseUtils.setOnlineImageOnImageView(tripImage, selected.getImageCDL());
-		} else if (selected.getImageURI() != null && selected.getImageCDL() == null) {
-			LayoutUtils.setImageURIOnImageView(tripImage, selected.getImageURI());
-		} else {
-			tripImage.setImageResource(R.drawable.trips_image);
-		}
-
-		setTitle(selected.getName());
 	}
 
 	private void toggleForm() {

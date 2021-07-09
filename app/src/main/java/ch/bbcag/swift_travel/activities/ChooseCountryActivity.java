@@ -1,8 +1,6 @@
 package ch.bbcag.swift_travel.activities;
 
-import android.content.Context;
 import android.content.Intent;
-import android.net.ConnectivityManager;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -28,6 +26,7 @@ import ch.bbcag.swift_travel.dal.CountryDao;
 import ch.bbcag.swift_travel.dal.SwiftTravelDatabase;
 import ch.bbcag.swift_travel.entities.Country;
 import ch.bbcag.swift_travel.utils.Const;
+import ch.bbcag.swift_travel.utils.NetworkUtils;
 
 public class ChooseCountryActivity extends UpButtonActivity implements SearchView.OnQueryTextListener, SearchView.OnCloseListener {
 	private SearchView searchView;
@@ -132,7 +131,7 @@ public class ChooseCountryActivity extends UpButtonActivity implements SearchVie
 	}
 
 	private void addAllCountriesToClickableList() {
-		if (isNetworkAvailable()) {
+		if (NetworkUtils.isNetworkAvailable(getApplicationContext())) {
 			Response.Listener<JSONArray> responseListener = this::addAllCountriesToAdapter;
 			Response.ErrorListener errorListener = error -> generateMessageDialogAndCloseActivity(getString(R.string.add_entry_to_list_error_title), getString(R.string.add_entries_to_list_error_text));
 			ApiRepository.getJsonArray(getApplicationContext(), Const.COUNTRIES_URL, responseListener, errorListener);
@@ -148,11 +147,6 @@ public class ChooseCountryActivity extends UpButtonActivity implements SearchVie
 		onCountryClick(allCountries);
 		getProgressBar().setVisibility(View.GONE);
 		countriesLoaded = true;
-	}
-
-	private boolean isNetworkAvailable() {
-		ConnectivityManager connectivityManager = (ConnectivityManager) getApplicationContext().getSystemService(Context.CONNECTIVITY_SERVICE);
-		return connectivityManager.getNetworkCapabilities(connectivityManager.getActiveNetwork()) != null;
 	}
 
 	private void onCountryClick(ListView allCountries) {

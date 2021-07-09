@@ -43,7 +43,7 @@
             android:background="@drawable/rounded_button"
             android:backgroundTint="@android:color/darker_gray"
             android:contentDescription="@string/place_holder_image"
-            android:scaleType="center"
+            android:scaleType="centerCrop"
             android:src="@drawable/placeholder_image"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/create_title" />

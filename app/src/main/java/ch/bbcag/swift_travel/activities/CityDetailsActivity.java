@@ -42,6 +42,7 @@ import ch.bbcag.swift_travel.entities.City;
 import ch.bbcag.swift_travel.entities.Day;
 import ch.bbcag.swift_travel.utils.Const;
 import ch.bbcag.swift_travel.utils.LayoutUtils;
+import ch.bbcag.swift_travel.utils.NetworkUtils;
 import ch.bbcag.swift_travel.utils.OnlineDatabaseUtils;
 
 public class CityDetailsActivity extends UpButtonActivity implements SearchView.OnQueryTextListener, SearchView.OnCloseListener {
@@ -199,12 +200,21 @@ public class CityDetailsActivity extends UpButtonActivity implements SearchView.
 
 	private void checkIfLoggedIn(long id) {
 		if (FirebaseAuth.getInstance().getCurrentUser() != null) {
-			OnlineDatabaseUtils.getById(Const.CITIES, id, task -> setObject(task, () -> initializeSelected(task, id)));
+			ifNetworkAvailable(id);
 		} else {
 			selected = cityDao.getById(id);
 			onStartAfterSelectedInitialized();
 		}
 	}
+
+	private void ifNetworkAvailable(long id) {
+		if(NetworkUtils.isNetworkAvailable(getApplicationContext())) {
+			OnlineDatabaseUtils.getById(Const.CITIES, id, task -> setObject(task, () -> initializeSelected(task, id)));
+		} else {
+			generateMessageDialogAndCloseActivity(getString(R.string.internet_connection_error_title), getString(R.string.internet_connection_error_text));
+		}
+	}
+
 
 	private void initializeSelected(Task<DocumentSnapshot> selectedTask, long id) {
 		if (Objects.requireNonNull(selectedTask.getResult()).toObject(City.class) == null) {
@@ -310,6 +320,14 @@ public class CityDetailsActivity extends UpButtonActivity implements SearchView.
 		LayoutUtils.setEditableTitleText(titleText, editTitle, selected.getName());
 		LayoutUtils.setEditableText(descriptionText, editDescription, selected.getDescription(), getString(R.string.description_hint));
 		LayoutUtils.setEditableText(transportText, editTransport, selected.getTransport(), getString(R.string.transport_hint));
+		setDuration();
+		if (selected.getImageURI() != null && !selected.getImageURI().isEmpty()) {
+			LayoutUtils.setImageURIOnImageView(cityImage, selected.getImageURI());
+		}
+		setTitle(selected.getName());
+	}
+
+	private void setDuration() {
 		String duration;
 		if (selected.getDuration() == 1) {
 			duration = selected.getDuration() + " " + getString(R.string.day);
@@ -317,12 +335,8 @@ public class CityDetailsActivity extends UpButtonActivity implements SearchView.
 			duration = selected.getDuration() + " " + getString(R.string.days);
 		}
 		LayoutUtils.setTextOnTextView(durationText, duration);
-		if (selected.getImageURI() != null && !selected.getImageURI().isEmpty()) {
-			LayoutUtils.setImageURIOnImageView(cityImage, selected.getImageURI());
-		}
-
-		setTitle(selected.getName());
 	}
+
 
 	private void editName() {
 		TextInputLayout editTitleLayout = findViewById(R.id.trip_edit_title_layout);

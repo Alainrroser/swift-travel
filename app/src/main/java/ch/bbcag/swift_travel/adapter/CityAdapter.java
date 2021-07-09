@@ -1,5 +1,6 @@
 package ch.bbcag.swift_travel.adapter;
 
+import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -7,6 +8,8 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import com.google.firebase.auth.FirebaseAuth;
 
 import java.util.List;
 
@@ -59,12 +62,25 @@ public class CityAdapter extends ArrayAdapter<City> {
 		viewHolder.name.setText(city.getName());
 		String dateRange = city.getStartDate() + "-" + city.getEndDate();
 		viewHolder.duration.setText(dateRange);
-		if (city.getImageCDL() != null) {
-			OnlineDatabaseUtils.setOnlineImageOnImageView(viewHolder.image, city.getImageCDL());
-		} else if (city.getImageURI() != null && city.getImageCDL() == null) {
-			LayoutUtils.setImageURIOnImageView(viewHolder.image, city.getImageURI());
+		setImage(city, viewHolder);
+	}
+
+	private void setImage(City city, CityAdapterViewHolder viewHolder) {
+		if(FirebaseAuth.getInstance().getCurrentUser() != null) {
+			if (city.getImageCDL() != null) {
+				OnlineDatabaseUtils.setOnlineImageOnImageView(viewHolder.image, city.getImageCDL());
+			} else if (city.getImageURI() != null && city.getImageCDL() == null) {
+				city.setImageCDL(OnlineDatabaseUtils.uploadImage(Uri.parse(city.getImageURI())));
+				OnlineDatabaseUtils.setOnlineImageOnImageView(viewHolder.image, city.getImageCDL());
+			} else {
+				viewHolder.image.setImageResource(R.drawable.placeholder_icon);
+			}
 		} else {
-			viewHolder.image.setImageResource(R.drawable.placeholder_icon);
+			if (city.getImageURI() != null) {
+				LayoutUtils.setImageURIOnImageView(viewHolder.image, city.getImageURI());
+			} else {
+				viewHolder.image.setImageResource(R.drawable.placeholder_icon);
+			}
 		}
 	}
 
@@ -73,6 +89,9 @@ public class CityAdapter extends ArrayAdapter<City> {
 			remove(city);
 			notifyDataSetChanged();
 			deleteDays(city);
+			if(city.getImageCDL() != null) {
+				OnlineDatabaseUtils.deleteOnlineImage(city.getImageCDL());
+			}
 			OnlineDatabaseUtils.delete(Const.CITIES, city.getId());
 			SwiftTravelDatabase.getInstance(countryDetailsActivity.getApplicationContext()).getCityDao().deleteById(city.getId());
 			countryDetailsActivity.refreshContent();
@@ -83,6 +102,9 @@ public class CityAdapter extends ArrayAdapter<City> {
 		List<Day> days = SwiftTravelDatabase.getInstance(countryDetailsActivity.getApplicationContext()).getDayDao().getAllFromCity(city.getId());
 		for (Day day : days) {
 			deleteLocations(day);
+			if(day.getImageCDL() != null) {
+				OnlineDatabaseUtils.deleteOnlineImage(day.getImageCDL());
+			}
 			OnlineDatabaseUtils.delete(Const.DAYS, day.getId());
 			SwiftTravelDatabase.getInstance(countryDetailsActivity.getApplicationContext()).getDayDao().deleteById(day.getId());
 		}
@@ -104,6 +126,9 @@ public class CityAdapter extends ArrayAdapter<City> {
 		List<Image> images = SwiftTravelDatabase.getInstance(countryDetailsActivity.getApplicationContext()).getImageDao().getAllFromLocation(location.getId());
 		for (Image image : images) {
 			OnlineDatabaseUtils.delete(Const.IMAGES, image.getId());
+			if(image.getImageCDL() != null) {
+				OnlineDatabaseUtils.deleteOnlineImage(image.getImageCDL());
+			}
 			SwiftTravelDatabase.getInstance(countryDetailsActivity.getApplicationContext()).getImageDao().deleteById(image.getId());
 		}
 	}

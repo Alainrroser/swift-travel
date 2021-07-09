@@ -22,8 +22,6 @@ import com.github.dhaval2404.imagepicker.ImagePicker;
 import com.google.android.material.datepicker.MaterialDatePicker;
 import com.google.android.material.textfield.TextInputLayout;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.storage.FirebaseStorage;
-import com.google.firebase.storage.StorageReference;
 
 import java.time.Instant;
 import java.time.ZoneId;
@@ -96,6 +94,12 @@ public class CreateActivity extends UpButtonActivity implements AdapterView.OnIt
 		super.onStart();
 		getProgressBar().setVisibility(View.GONE);
 
+		setGroupVisibility();
+		create.setOnClickListener(v -> startIntentOrShowError());
+		chooseImage.setOnClickListener(v -> ImagePicker.with(this).crop().start());
+	}
+
+	private void setGroupVisibility() {
 		Group cityDuration = findViewById(R.id.city_duration);
 		Group locationDuration = findViewById(R.id.location_duration);
 		if (getIntent().getBooleanExtra(Const.ADD_CITY, false)) {
@@ -115,8 +119,6 @@ public class CreateActivity extends UpButtonActivity implements AdapterView.OnIt
 			categorySpinner.setVisibility(View.GONE);
 			findViewById(R.id.add_transport_layout).setVisibility(View.GONE);
 		}
-		create.setOnClickListener(v -> startIntentOrShowError());
-		chooseImage.setOnClickListener(v -> ImagePicker.with(this).crop().start());
 	}
 
 	@Override
@@ -136,24 +138,40 @@ public class CreateActivity extends UpButtonActivity implements AdapterView.OnIt
 		if (FirebaseAuth.getInstance().getCurrentUser() != null) {
 			cdl = OnlineDatabaseUtils.uploadImage(imageURI);
 		}
+		setImages(cdl, imageURIString);
+		return imageURI;
+	}
+
+	private void setImages(String cdl, String imageURIString) {
 		Intent intent = getIntent();
 		if (intent.getBooleanExtra(Const.ADD_TRIP, false)) {
-			trip.setImageURI(imageURIString);
-			if (!cdl.equals("")) {
-				trip.setImageCDL(cdl);
-			}
+			setTripImage(cdl, imageURIString);
 		} else if (intent.getBooleanExtra(Const.ADD_CITY, false)) {
-			city.setImageURI(imageURIString);
-			if (!cdl.equals("")) {
-				city.setImageCDL(cdl);
-			}
+			setCityImage(cdl, imageURIString);
 		} else if (intent.getBooleanExtra(Const.ADD_LOCATION, false)) {
-			location.setImageURI(imageURIString);
-			if (!cdl.equals("")) {
-				location.setImageCDL(cdl);
-			}
+			setLocationImage(cdl, imageURIString);
 		}
-		return imageURI;
+	}
+
+	private void setTripImage(String cdl, String imageURIString) {
+		trip.setImageURI(imageURIString);
+		if (!cdl.equals("")) {
+			trip.setImageCDL(cdl);
+		}
+	}
+
+	private void setCityImage(String cdl, String imageURIString) {
+		city.setImageURI(imageURIString);
+		if (!cdl.equals("")) {
+			city.setImageCDL(cdl);
+		}
+	}
+
+	private void setLocationImage(String cdl, String imageURIString) {
+		location.setImageURI(imageURIString);
+		if (!cdl.equals("")) {
+			location.setImageCDL(cdl);
+		}
 	}
 
 	private void setDatePicker() {

@@ -44,6 +44,7 @@ import ch.bbcag.swift_travel.entities.Location;
 import ch.bbcag.swift_travel.utils.Const;
 import ch.bbcag.swift_travel.utils.DateTimeUtils;
 import ch.bbcag.swift_travel.utils.LayoutUtils;
+import ch.bbcag.swift_travel.utils.NetworkUtils;
 import ch.bbcag.swift_travel.utils.OnlineDatabaseUtils;
 
 import static java.lang.Math.max;
@@ -202,10 +203,18 @@ public class DayDetailsActivity extends UpButtonActivity implements SearchView.O
 
 	private void checkIfLoggedIn(long id) {
 		if (FirebaseAuth.getInstance().getCurrentUser() != null) {
-			OnlineDatabaseUtils.getById(Const.DAYS, id, task -> setObject(task, () -> initializeSelected(task, id)));
+			ifNetworkAvailable(id);
 		} else {
 			selected = dayDao.getById(id);
 			onStartAfterSelectedInitialized();
+		}
+	}
+
+	private void ifNetworkAvailable(long id) {
+		if(NetworkUtils.isNetworkAvailable(getApplicationContext())) {
+			OnlineDatabaseUtils.getById(Const.DAYS, id, task -> setObject(task, () -> initializeSelected(task, id)));
+		} else {
+			generateMessageDialogAndCloseActivity(getString(R.string.internet_connection_error_title), getString(R.string.internet_connection_error_text));
 		}
 	}
 

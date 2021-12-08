@@ -15,6 +15,7 @@ public class Const {
 
 	public static final String ID = "id";
 	public static final String NAME = "name";
+	public static final String NAME_OFFICIAL = "official";
 	public static final String CODE = "code";
 	public static final String DESCRIPTION = "description";
 	public static final String IMAGE_URI = "imageURI";
@@ -45,10 +46,11 @@ public class Const {
 	public static final String COUNTRY_ID = "countryId";
 	public static final String COUNTRY_NAME = "countryName";
 	public static final String COUNTRY_CODE = "countryCode";
-	public static final String COUNTRIES_URL = "https://restcountries.eu/rest/v2/all";
+	public static final String COUNTRIES_URL = "https://restcountries.com/v3.1/all";
 	public static final String ADD_COUNTRY = "addCountry";
-	public static final String ALPHA_2_CODE = "alpha2Code";
-	public static final String FLAG = "flag";
+	public static final String ALPHA_2_CODE = "cca2";
+	public static final String FLAG = "svg";
+	public static final String FLAGS = "flags";
 	public static final String FLAG_URI = "flagURI";
 
 	public static final String CITIES = "cities";

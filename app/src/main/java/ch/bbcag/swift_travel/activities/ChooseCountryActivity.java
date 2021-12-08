@@ -179,9 +179,9 @@ public class ChooseCountryActivity extends UpButtonActivity implements SearchVie
 	private void addCountryToList(JSONArray response, List<Country> allCountries) throws JSONException {
 		for (int position = 0; position < response.length(); position++) {
 			Country country = new Country();
-			country.setName(response.getJSONObject(position).getString(Const.NAME));
+			country.setName(response.getJSONObject(position).getJSONObject(Const.NAME).getString(Const.NAME_OFFICIAL));
 			country.setCode(response.getJSONObject(position).getString(Const.ALPHA_2_CODE));
-			country.setImageURI(response.getJSONObject(position).getString(Const.FLAG));
+			country.setImageURI(response.getJSONObject(position).getJSONObject(Const.FLAGS).getString(Const.FLAG));
 			checkIfCountryWasAdded(country);
 			if (!countryWasAdded) {
 				allCountries.add(country);

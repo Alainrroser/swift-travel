@@ -188,7 +188,7 @@ public class UserActivity extends UpButtonActivity {
 		List<Trip> trips = SwiftTravelDatabase.getInstance(getApplicationContext()).getTripDao().getAll();
 		for (Trip trip : trips) {
 			deleteCountries(trip);
-			if(trip.getImageCDL() != null) {
+			if (trip.getImageCDL() != null) {
 				OnlineDatabaseUtils.deleteOnlineImage(trip.getImageCDL());
 			}
 			OnlineDatabaseUtils.delete(Const.TRIPS, trip.getId());
@@ -209,7 +209,7 @@ public class UserActivity extends UpButtonActivity {
 		List<City> cities = SwiftTravelDatabase.getInstance(getApplicationContext()).getCityDao().getAllFromCountry(country.getId());
 		for (City city : cities) {
 			deleteDays(city);
-			if(city.getImageCDL() != null) {
+			if (city.getImageCDL() != null) {
 				OnlineDatabaseUtils.deleteOnlineImage(city.getImageCDL());
 			}
 			OnlineDatabaseUtils.delete(Const.CITIES, city.getId());
@@ -221,7 +221,7 @@ public class UserActivity extends UpButtonActivity {
 		List<Day> days = SwiftTravelDatabase.getInstance(getApplicationContext()).getDayDao().getAllFromCity(city.getId());
 		for (Day day : days) {
 			deleteLocations(day);
-			if(day.getImageCDL() != null) {
+			if (day.getImageCDL() != null) {
 				OnlineDatabaseUtils.deleteOnlineImage(day.getImageCDL());
 			}
 			OnlineDatabaseUtils.delete(Const.DAYS, day.getId());
@@ -233,7 +233,7 @@ public class UserActivity extends UpButtonActivity {
 		List<Location> locations = SwiftTravelDatabase.getInstance(getApplicationContext()).getLocationDao().getAllFromDay(day.getId());
 		for (Location location : locations) {
 			deleteImages(location);
-			if(location.getImageCDL() != null) {
+			if (location.getImageCDL() != null) {
 				OnlineDatabaseUtils.deleteOnlineImage(location.getImageCDL());
 			}
 			OnlineDatabaseUtils.delete(Const.LOCATIONS, location.getId());
@@ -244,7 +244,7 @@ public class UserActivity extends UpButtonActivity {
 	private void deleteImages(Location location) {
 		List<Image> images = SwiftTravelDatabase.getInstance(getApplicationContext()).getImageDao().getAllFromLocation(location.getId());
 		for (Image image : images) {
-			if(image.getImageCDL() != null) {
+			if (image.getImageCDL() != null) {
 				OnlineDatabaseUtils.deleteOnlineImage(image.getImageCDL());
 			}
 			OnlineDatabaseUtils.delete(Const.IMAGES, image.getId());

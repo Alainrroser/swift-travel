@@ -1,5 +1,14 @@
 package ch.bbcag.swift_travel.adapter;
 
+import static ch.bbcag.swift_travel.R.drawable.category_hotel;
+import static ch.bbcag.swift_travel.R.drawable.category_location;
+import static ch.bbcag.swift_travel.R.drawable.category_restaurant;
+import static ch.bbcag.swift_travel.R.drawable.category_unknown;
+import static ch.bbcag.swift_travel.R.drawable.timeline_bottom;
+import static ch.bbcag.swift_travel.R.drawable.timeline_middle;
+import static ch.bbcag.swift_travel.R.drawable.timeline_single;
+import static ch.bbcag.swift_travel.R.drawable.timeline_top;
+
 import android.annotation.SuppressLint;
 import android.net.Uri;
 import android.view.LayoutInflater;
@@ -23,15 +32,6 @@ import ch.bbcag.swift_travel.entities.Location;
 import ch.bbcag.swift_travel.utils.Const;
 import ch.bbcag.swift_travel.utils.LayoutUtils;
 import ch.bbcag.swift_travel.utils.OnlineDatabaseUtils;
-
-import static ch.bbcag.swift_travel.R.drawable.category_hotel;
-import static ch.bbcag.swift_travel.R.drawable.category_location;
-import static ch.bbcag.swift_travel.R.drawable.category_restaurant;
-import static ch.bbcag.swift_travel.R.drawable.category_unknown;
-import static ch.bbcag.swift_travel.R.drawable.timeline_bottom;
-import static ch.bbcag.swift_travel.R.drawable.timeline_middle;
-import static ch.bbcag.swift_travel.R.drawable.timeline_single;
-import static ch.bbcag.swift_travel.R.drawable.timeline_top;
 
 public class LocationAdapter extends ArrayAdapter<Location> {
 	private DayDetailsActivity dayDetailsActivity;
@@ -76,7 +76,7 @@ public class LocationAdapter extends ArrayAdapter<Location> {
 	}
 
 	private void setImage(LocationAdapterViewHolder viewHolder, Location location) {
-		if(FirebaseAuth.getInstance().getCurrentUser() != null) {
+		if (FirebaseAuth.getInstance().getCurrentUser() != null) {
 			if (location.getImageCDL() != null) {
 				OnlineDatabaseUtils.setOnlineImageOnImageView(viewHolder.image, location.getImageCDL());
 			} else if (location.getImageURI() != null && location.getImageCDL() == null) {
@@ -147,7 +147,7 @@ public class LocationAdapter extends ArrayAdapter<Location> {
 	private void deleteImages(Location location) {
 		List<Image> images = SwiftTravelDatabase.getInstance(dayDetailsActivity.getApplicationContext()).getImageDao().getAllFromLocation(location.getId());
 		for (Image image : images) {
-			if(image.getImageCDL() != null) {
+			if (image.getImageCDL() != null) {
 				OnlineDatabaseUtils.deleteOnlineImage(image.getImageCDL());
 			}
 			OnlineDatabaseUtils.delete(Const.IMAGES, image.getId());

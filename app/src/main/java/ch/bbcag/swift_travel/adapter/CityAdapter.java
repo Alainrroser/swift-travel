@@ -66,7 +66,7 @@ public class CityAdapter extends ArrayAdapter<City> {
 	}
 
 	private void setImage(City city, CityAdapterViewHolder viewHolder) {
-		if(FirebaseAuth.getInstance().getCurrentUser() != null) {
+		if (FirebaseAuth.getInstance().getCurrentUser() != null) {
 			if (city.getImageCDL() != null) {
 				OnlineDatabaseUtils.setOnlineImageOnImageView(viewHolder.image, city.getImageCDL());
 			} else if (city.getImageURI() != null && city.getImageCDL() == null) {
@@ -89,7 +89,7 @@ public class CityAdapter extends ArrayAdapter<City> {
 			remove(city);
 			notifyDataSetChanged();
 			deleteDays(city);
-			if(city.getImageCDL() != null) {
+			if (city.getImageCDL() != null) {
 				OnlineDatabaseUtils.deleteOnlineImage(city.getImageCDL());
 			}
 			OnlineDatabaseUtils.delete(Const.CITIES, city.getId());
@@ -102,7 +102,7 @@ public class CityAdapter extends ArrayAdapter<City> {
 		List<Day> days = SwiftTravelDatabase.getInstance(countryDetailsActivity.getApplicationContext()).getDayDao().getAllFromCity(city.getId());
 		for (Day day : days) {
 			deleteLocations(day);
-			if(day.getImageCDL() != null) {
+			if (day.getImageCDL() != null) {
 				OnlineDatabaseUtils.deleteOnlineImage(day.getImageCDL());
 			}
 			OnlineDatabaseUtils.delete(Const.DAYS, day.getId());
@@ -126,7 +126,7 @@ public class CityAdapter extends ArrayAdapter<City> {
 		List<Image> images = SwiftTravelDatabase.getInstance(countryDetailsActivity.getApplicationContext()).getImageDao().getAllFromLocation(location.getId());
 		for (Image image : images) {
 			OnlineDatabaseUtils.delete(Const.IMAGES, image.getId());
-			if(image.getImageCDL() != null) {
+			if (image.getImageCDL() != null) {
 				OnlineDatabaseUtils.deleteOnlineImage(image.getImageCDL());
 			}
 			SwiftTravelDatabase.getInstance(countryDetailsActivity.getApplicationContext()).getImageDao().deleteById(image.getId());

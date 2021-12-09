@@ -72,7 +72,7 @@ public class LoginActivity extends UpButtonActivity {
 		super.onStart();
 		getProgressBar().setVisibility(View.GONE);
 
-		if(!NetworkUtils.isNetworkAvailable(getApplicationContext())) {
+		if (!NetworkUtils.isNetworkAvailable(getApplicationContext())) {
 			generateMessageDialogAndCloseActivity(getString(R.string.internet_connection_error_title), getString(R.string.internet_connection_error_text));
 		}
 

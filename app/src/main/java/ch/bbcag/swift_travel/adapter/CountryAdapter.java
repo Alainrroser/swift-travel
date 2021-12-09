@@ -95,7 +95,7 @@ public class CountryAdapter extends ArrayAdapter<Country> {
 		List<Day> days = SwiftTravelDatabase.getInstance(tripDetailsActivity.getApplicationContext()).getDayDao().getAllFromCity(city.getId());
 		for (Day day : days) {
 			deleteLocations(day);
-			if(day.getImageCDL() != null) {
+			if (day.getImageCDL() != null) {
 				OnlineDatabaseUtils.deleteOnlineImage(day.getImageCDL());
 			}
 			OnlineDatabaseUtils.delete(Const.DAYS, day.getId());
@@ -118,7 +118,7 @@ public class CountryAdapter extends ArrayAdapter<Country> {
 	private void deleteImages(Location location) {
 		List<Image> images = SwiftTravelDatabase.getInstance(tripDetailsActivity.getApplicationContext()).getImageDao().getAllFromLocation(location.getId());
 		for (Image image : images) {
-			if(image.getImageCDL() != null) {
+			if (image.getImageCDL() != null) {
 				OnlineDatabaseUtils.deleteOnlineImage(image.getImageCDL());
 			}
 			OnlineDatabaseUtils.delete(Const.IMAGES, image.getId());

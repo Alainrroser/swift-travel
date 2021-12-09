@@ -14,20 +14,48 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.SwiftTravel"
         android:usesCleartextTraffic="true">
-        <activity android:name=".activities.ImageDetailsActivity" />
-        <activity android:name=".activities.UserActivity" />
-        <activity android:name=".activities.LoginActivity" />
-        <activity android:name=".activities.RegisterActivity" />
-        <activity android:name=".activities.LocationDetailsActivity" />
-        <activity android:name=".activities.DayDetailsActivity" />
-        <activity android:name=".activities.CityDetailsActivity" />
-        <activity android:name=".activities.ChooseCountryActivity" />
-        <activity android:name=".activities.CreateActivity" />
-        <activity android:name=".activities.BaseActivity" />
-        <activity android:name=".activities.UpButtonActivity" />
-        <activity android:name=".activities.TripDetailsActivity" />
-        <activity android:name=".activities.CountryDetailsActivity" />
-        <activity android:name=".activities.MainActivity">
+        <activity
+            android:name=".activities.ImageDetailsActivity"
+            android:exported="false" />
+        <activity
+            android:name=".activities.UserActivity"
+            android:exported="false" />
+        <activity
+            android:name=".activities.LoginActivity"
+            android:exported="false" />
+        <activity
+            android:name=".activities.RegisterActivity"
+            android:exported="false" />
+        <activity
+            android:name=".activities.LocationDetailsActivity"
+            android:exported="false" />
+        <activity
+            android:name=".activities.DayDetailsActivity"
+            android:exported="false" />
+        <activity
+            android:name=".activities.CityDetailsActivity"
+            android:exported="false" />
+        <activity
+            android:name=".activities.ChooseCountryActivity"
+            android:exported="false" />
+        <activity
+            android:name=".activities.CreateActivity"
+            android:exported="false" />
+        <activity
+            android:name=".activities.BaseActivity"
+            android:exported="false" />
+        <activity
+            android:name=".activities.UpButtonActivity"
+            android:exported="false" />
+        <activity
+            android:name=".activities.TripDetailsActivity"
+            android:exported="false" />
+        <activity
+            android:name=".activities.CountryDetailsActivity"
+            android:exported="false" />
+        <activity
+            android:name=".activities.MainActivity"
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />

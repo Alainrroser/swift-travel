@@ -219,7 +219,7 @@ public class TripDetailsActivity extends UpButtonActivity implements SearchView.
 	}
 
 	private void ifNetworkAvailable(long id) {
-		if(NetworkUtils.isNetworkAvailable(getApplicationContext())) {
+		if (NetworkUtils.isNetworkAvailable(getApplicationContext())) {
 			OnlineDatabaseUtils.getById(Const.TRIPS, id, task -> setObject(task, () -> initializeSelected(task, id)));
 		} else {
 			generateMessageDialogAndCloseActivity(getString(R.string.internet_connection_error_title), getString(R.string.internet_connection_error_text));

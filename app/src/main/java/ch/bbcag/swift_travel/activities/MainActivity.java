@@ -162,7 +162,7 @@ public class MainActivity extends BaseActivity implements SearchView.OnQueryText
 	}
 
 	private void ifNetworkAvailable() {
-		if(NetworkUtils.isNetworkAvailable(getApplicationContext())) {
+		if (NetworkUtils.isNetworkAvailable(getApplicationContext())) {
 			OnlineDatabaseUtils.getAllTripsFromUser(Objects.requireNonNull(FirebaseAuth.getInstance().getCurrentUser()).getUid(), task -> addToList(task, () -> synchronizeTrips(task)));
 		} else {
 			generateMessageDialog(getString(R.string.internet_connection_error_title), getString(R.string.internet_connection_error_text));

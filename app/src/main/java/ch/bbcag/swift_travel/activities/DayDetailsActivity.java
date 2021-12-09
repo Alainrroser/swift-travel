@@ -1,5 +1,8 @@
 package ch.bbcag.swift_travel.activities;
 
+import static java.lang.Math.max;
+import static java.lang.Math.min;
+
 import android.app.Activity;
 import android.content.Intent;
 import android.net.Uri;
@@ -46,9 +49,6 @@ import ch.bbcag.swift_travel.utils.DateTimeUtils;
 import ch.bbcag.swift_travel.utils.LayoutUtils;
 import ch.bbcag.swift_travel.utils.NetworkUtils;
 import ch.bbcag.swift_travel.utils.OnlineDatabaseUtils;
-
-import static java.lang.Math.max;
-import static java.lang.Math.min;
 
 public class DayDetailsActivity extends UpButtonActivity implements SearchView.OnQueryTextListener, SearchView.OnCloseListener {
 	private SearchView searchView;
@@ -211,7 +211,7 @@ public class DayDetailsActivity extends UpButtonActivity implements SearchView.O
 	}
 
 	private void ifNetworkAvailable(long id) {
-		if(NetworkUtils.isNetworkAvailable(getApplicationContext())) {
+		if (NetworkUtils.isNetworkAvailable(getApplicationContext())) {
 			OnlineDatabaseUtils.getById(Const.DAYS, id, task -> setObject(task, () -> initializeSelected(task, id)));
 		} else {
 			generateMessageDialogAndCloseActivity(getString(R.string.internet_connection_error_title), getString(R.string.internet_connection_error_text));

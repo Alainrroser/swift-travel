@@ -52,7 +52,7 @@ public class ImageAdapter extends ArrayAdapter<Image> {
 	private void addInformationToAdapter(ImageAdapterViewHolder viewHolder, Image image) {
 		viewHolder.delete.setOnClickListener(v -> generateConfirmDialog(image));
 
-		if(FirebaseAuth.getInstance().getCurrentUser() != null) {
+		if (FirebaseAuth.getInstance().getCurrentUser() != null) {
 			if (image.getImageCDL() != null) {
 				OnlineDatabaseUtils.setOnlineImageOnImageView(viewHolder.image, image.getImageCDL());
 			} else if (image.getImageURI() != null && image.getImageCDL() == null) {

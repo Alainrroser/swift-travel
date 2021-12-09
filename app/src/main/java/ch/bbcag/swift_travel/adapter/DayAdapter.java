@@ -60,7 +60,7 @@ public class DayAdapter extends ArrayAdapter<Day> {
 	}
 
 	private void setImage(DayAdapterViewHolder viewHolder, Day day) {
-		if(FirebaseAuth.getInstance().getCurrentUser() != null) {
+		if (FirebaseAuth.getInstance().getCurrentUser() != null) {
 			if (day.getImageCDL() != null) {
 				OnlineDatabaseUtils.setOnlineImageOnImageView(viewHolder.image, day.getImageCDL());
 			} else if (day.getImageURI() != null && day.getImageCDL() == null) {

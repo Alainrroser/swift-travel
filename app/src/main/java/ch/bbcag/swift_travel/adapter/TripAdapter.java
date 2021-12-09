@@ -87,7 +87,7 @@ public class TripAdapter extends ArrayAdapter<Trip> {
 	}
 
 	private void setImage(TripAdapterViewHolder viewHolder, Trip trip) {
-		if(FirebaseAuth.getInstance().getCurrentUser() != null) {
+		if (FirebaseAuth.getInstance().getCurrentUser() != null) {
 			if (trip.getImageCDL() != null) {
 				OnlineDatabaseUtils.setOnlineImageOnImageView(viewHolder.image, trip.getImageCDL());
 			} else if (trip.getImageURI() != null && trip.getImageCDL() == null) {
@@ -144,7 +144,7 @@ public class TripAdapter extends ArrayAdapter<Trip> {
 		List<Day> days = SwiftTravelDatabase.getInstance(mainActivity.getApplicationContext()).getDayDao().getAllFromCity(city.getId());
 		for (Day day : days) {
 			deleteLocations(day);
-			if(day.getImageCDL() != null) {
+			if (day.getImageCDL() != null) {
 				OnlineDatabaseUtils.deleteOnlineImage(day.getImageCDL());
 			}
 			OnlineDatabaseUtils.delete(Const.DAYS, day.getId());
@@ -167,7 +167,7 @@ public class TripAdapter extends ArrayAdapter<Trip> {
 	private void deleteImages(Location location) {
 		List<Image> images = SwiftTravelDatabase.getInstance(mainActivity.getApplicationContext()).getImageDao().getAllFromLocation(location.getId());
 		for (Image image : images) {
-			if(image.getImageCDL() != null) {
+			if (image.getImageCDL() != null) {
 				OnlineDatabaseUtils.deleteOnlineImage(image.getImageCDL());
 			}
 			OnlineDatabaseUtils.delete(Const.IMAGES, image.getId());

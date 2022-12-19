@@ -16,7 +16,8 @@
 * [Jan Henke](https://git.bbcag.ch/bhenkj) (Product Owner, Team Member)
 
 ## Abstract
-Swift-Travel ist ein Projekt bei dem der Benutzer seine zukünftigen Reisen planen, sowie auch seine bereits getätigten Reisen festhalten und später wieder betrachten kann Man hat dafür Trips, welche man hinzufügen kann, worin man Länder, welche man auf diesem Trip besucht, hinzufügen kann dort wiederum hat man die Möglichkeit Städte in den einzelnen Ländern hinzuzufügen Pro Stadt hat man dann Tage (Die Anzahl entspricht der Zeitspanne, welche man in dieser Stadt verbringt) in welchen man dann festhalten kann, was man hier gemacht hat
+Swift-Travel is a project where the user can plan his next journeys, and also document and watch his already made journeys.
+You have trips which you can add, countries in them which you visited, cities and you can even document what you did each day in each city. 
 
 ## Dokumentation
 * [Documentation](docs/documentation/documentation.md)
